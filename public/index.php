@@ -201,19 +201,19 @@ function switcherUser(){
 
         /** Using weeklyTasksControler */
 
-        case 'todolist':
-
-            if (isset($_POST['base'])) {
-                createSheetToDo($_POST['base']);
-            }
-            if (isset($_POST['site'])) {
-                $selectedBase = $_POST['site'];
+        case 'homeWeeklyTasks':
+            if(isset($_POST['selectBase'])){
+                $selectedBase = $_POST['selectBase'];
             } else {
-                $selectedBase = $_SESSION['base']['id'];
+                $selectedBase = $_SESSION['base']['name']; // $_SESSION à modifier ?
             }
-            if (!isset($_POST['newtodo'])) {
-                todoListHomePage($selectedBase);
-            }
+            homeWeeklyTasks($selectedBase);
+            break;
+        case 'toDoDetails':
+            unknownPage(); // :D
+            break;
+        case 'addWeek':
+
             break;
         case 'edittod':
             $sheetid = $_GET['sheetid'];
