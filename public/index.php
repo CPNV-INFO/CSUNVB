@@ -202,10 +202,10 @@ function switcherUser(){
         /** Using weeklyTasksControler */
 
         case 'homeWeeklyTasks':
-            if(isset($_POST['selectBase'])){
-                $selectedBase = $_POST['selectBase'];
+            if(isset($_POST['selectBaseID'])){
+                $selectedBase = $_POST['selectBaseID'];
             } else {
-                $selectedBase = $_SESSION['base']['name']; // $_SESSION à modifier ?
+                $selectedBase = $_SESSION['base']['id']; // $_SESSION à modifier ?
             }
             homeWeeklyTasks($selectedBase);
             break;

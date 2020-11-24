@@ -22,9 +22,10 @@ function weeksNbrForOpen($base)
 }
 
 function getBasesName(){
-    $query = "SELECT b.name FROM bases b;";
+    $query = "SELECT * FROM bases;";
     return selectMany($query, []);
 }
+
 
 function getDatesFromWeekNumber($weekNumber){
     $year = 2000 + intdiv($weekNumber,100);

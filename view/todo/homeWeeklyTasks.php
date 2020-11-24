@@ -16,11 +16,11 @@ $title = "CSU-NVB - Tâches hebdomadaires";
 
 <div>
     <form method='POST' action="index.php?action=homeWeeklyTasks">
-        <select onchange="this.form.submit()" name="selectBase">
+        <select onchange="this.form.submit()" name="selectBaseID">
             <?php
                 foreach ($baseList as $base) {
-                    echo "<option value='".$base['name']."'";
-                    if($base['name'] == $selectedBase){
+                    echo "<option value='".$base['id']."'";
+                    if($base['id'] == $selectedBaseID){
                         echo "selected='selected'";
                     }
                     echo ">".$base['name'];
@@ -28,7 +28,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
         </select>
     </form>
     <?php if ($_SESSION['username']['admin'] == 1) { ?> <!-- A MODIFIER -->
-        <a href="index.php?action=addWeek&base=<?= $selectedBase ?>" class="btn btn-primary m-1 pull-right">Nouvelle semaine</a>
+        <a href="index.php?action=addWeek&base=<?= $selectedBaseID ?>" class="btn btn-primary m-1 pull-right">Nouvelle semaine</a>
     <?php } ?>
 </div>
 
