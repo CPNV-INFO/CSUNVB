@@ -15,7 +15,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
 </div>
 
 <div>
-    <form method='POST' action="index.php?action=homeWeeklyTasks">
+    <form method='POST' action="?action=homeWeeklyTasks">
         <select onchange="this.form.submit()" name="selectBaseID">
             <?php
                 foreach ($baseList as $base) {
@@ -27,14 +27,14 @@ $title = "CSU-NVB - Tâches hebdomadaires";
                 }?>
         </select>
     </form>
-    <?php if ($_SESSION['username']['admin'] == 1) { ?> <!-- A MODIFIER -->
-        <a href="index.php?action=addWeek&base=<?= $selectedBaseID ?>" class="btn btn-primary m-1 pull-right">Nouvelle semaine</a>
+    <?php if ($_SESSION['username']['admin'] == 1) { ?>
+        <a href="?action=addWeek&base=<?= $selectedBaseID ?>" class="btn btn-primary m-1 pull-right">Nouvelle semaine</a>
     <?php } ?>
 </div>
 
 <div>
     <h3>Semaine en cours</h3>
-    <?php if(isset($activeWeekNbr['week'])): ?>
+    <?php if(isset($activeWeek['week'])): ?>
         <table class="table">
             <thead class="thead-dark">
                 <th>Semaine n°</th>
@@ -43,9 +43,15 @@ $title = "CSU-NVB - Tâches hebdomadaires";
             </thead>
             <tbody>
             <tr>
-                <td>Semaine <?=$activeWeekNbr['week']?></td>
+                <td>Semaine <?=$activeWeek['week']?></td>
                 <td>En cours</td>
-                <td><a href='index.php?action=toDoDetails&weekNbr=<?=$activeWeekNbr['week']?>' class="btn btn-primary">Détails</a></td>
+                <td>
+                    <form action="?action=toDoDetails" method="POST">
+                        <input type="hidden" name="weekID" value="<?= $activeWeek['id'] ?>">
+                        <input type="hidden" name="weekNbr" value="<?= $activeWeek['week'] ?>">
+                        <button type="submit" class='btn btn-primary m-1 float-right'>Détails</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -65,11 +71,17 @@ $title = "CSU-NVB - Tâches hebdomadaires";
             <th>Actions</th>
             </thead>
             <tbody>
-            <?php foreach ($weeksNbrList as $weekNbr):?>
+            <?php foreach ($weeksNbrList as $week):?>
                 <tr>
-                    <td>Semaine <?=$weekNbr['week']?></td>
+                    <td>Semaine <?=$week['week']?></td>
                     <td>Cloturé</td>
-                    <td><a href='index.php?action=toDoDetails&weekNbr=<?=$weekNbr['week']?>' class="btn btn-primary" >Détails</a></td>
+                    <td>
+                        <form action="?action=toDoDetails" method="POST">
+                            <input type="hidden" name="weekID" value="<?= $week['id'] ?>">
+                            <input type="hidden" name="weekNbr" value="<?= $week['week'] ?>">
+                            <button type="submit" class='btn btn-primary m-1 float-right'>Détails</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

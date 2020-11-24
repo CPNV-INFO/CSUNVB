@@ -205,21 +205,21 @@ function switcherUser(){
             if(isset($_POST['selectBaseID'])){
                 $selectedBase = $_POST['selectBaseID'];
             } else {
-                $selectedBase = $_SESSION['base']['id']; // $_SESSION à modifier ?
+                $selectedBase = $_SESSION['base']['id'];
             }
             homeWeeklyTasks($selectedBase);
             break;
         case 'toDoDetails':
-            showWeeklyTasks($_GET['weekNbr']);
+            showWeeklyTasks($_POST['weekID'], $_POST['weekNbr']);
             break;
         case 'addWeek':
 
             break;
+        case 'closeWeek':
+
+            break;
         case 'reOpenToDo':
             reOpenToDo();
-            break;
-        case 'closedToDo':
-            closeToDo();
             break;
         default :
             unknownPage();

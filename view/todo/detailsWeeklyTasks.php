@@ -5,9 +5,11 @@ $title = "CSU-NVB - Tâches hebdomadaires";
 <div>
     <h1>Tâches hebdomadaires</h1>
     <h2>Semaine <?= $weekNbr?></h2>
-    <!-- A implémenter -->
-    <a href='index.php?action=openWeeks&weekNbr=<?=$weekNbr?>' class="btn btn-primary">Ouvrir</a>
-    <a href='index.php?action=closeWeek&weekNbr=<?=$weekNbr?>' class="btn btn-primary">Cloturer</a>
+    <div>
+        <!-- A implémenter -->
+        <a href='index.php?action=openWeek&weekID=<?=$weekID?>' class="btn btn-primary">Ouvrir</a>
+        <a href='index.php?action=closeWeek&weekID=<?=$weekID?>' class="btn btn-primary">Cloturer</a>
+    </div>
 </div>
 <div>
     <table class="table">
@@ -17,6 +19,9 @@ $title = "CSU-NVB - Tâches hebdomadaires";
         } ?>
         </thead>
         <tbody>
+            <tr>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </div>
