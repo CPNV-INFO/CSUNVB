@@ -210,14 +210,10 @@ function switcherUser(){
             homeWeeklyTasks($selectedBase);
             break;
         case 'toDoDetails':
-            unknownPage(); // :D
+            showWeeklyTasks($_GET['weekNbr']);
             break;
         case 'addWeek':
 
-            break;
-        case 'edittod':
-            $sheetid = $_GET['sheetid'];
-            edittodopage($sheetid);
             break;
         case 'reOpenToDo':
             reOpenToDo();

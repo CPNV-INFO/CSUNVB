@@ -21,9 +21,25 @@ function weeksNbrForOpen($base)
     return selectOne($query, []);
 }
 
-
 function getBasesName(){
     $query = "SELECT b.name FROM bases b;";
     return selectMany($query, []);
+}
+
+function getDatesFromWeekNumber($weekNumber){
+    $year = 2000 + intdiv($weekNumber,100);
+    $week = $weekNumber%100;
+
+    $dates = Array();
+    //setlocale(LC_TIME, 'fr'); <- Vérification que cette ligne ne posera aucun problème !
+    $time = strtotime(sprintf("%4dW%02d", $year, $week));
+
+    for($i = 0; $i < 7; $i++){
+        $day = date(strtotime("+".$i." day", $time));
+        $fullDate = strftime('%A %e %b %Y', $day);
+        $dates[] = $fullDate;
+    }
+
+    return $dates;
 }
 ?>
