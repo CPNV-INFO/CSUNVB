@@ -5,7 +5,7 @@
  **/
 
 
-function getGuardsheets()
+function getGuardSheets()
 {
     return selectMany('SELECT * FROM guardsheets', []);
 }
@@ -184,10 +184,10 @@ function getGuardsheetForBase($base_id)
     from guardsheets where base_id=:base_id',["base_id" => $base_id]);
 }
 
-function addNewShiftSheet ($state,$idBase){
+function addNewShiftSheet ($idBase){
 
     return execute("Insert into guardsheets(date,state,base_id)
-values(current_timestamp(),:state,:idBase)",['state'=>$state,'idBase'=>$idBase]);
+values(current_timestamp(),:state,:idBase)",['state'=>"En préparation",'idBase'=>$idBase]);
     $gid =$dbh->LastindexOfid();
 
     return execute("Insert into guard_use_nova(nova_id,guardsheet_id,day)

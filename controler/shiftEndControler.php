@@ -9,7 +9,7 @@
  */
 function newShiftSheet($baseID)
 {
-    $result = addNewShiftSheet("en préparation", $baseID);
+    $result = addNewShiftSheet($baseID);
     if ($result == false) {
         $_SESSION['flashmessage'] = "Une erreur est survenue. Impossible d'ajouter la Nova.";
     } else {
@@ -17,10 +17,12 @@ function newShiftSheet($baseID)
     }
     adminGuardSheet();
 }
+
+
 function adminGuardSheet()
 {
-    $guardsheets = getGuardsheets();
-    require_once VIEW . 'viewsShiftEnd/ListShiftEnd.php';
+    $guardsheets = getGuardSheets();
+    require_once VIEW . 'viewsShiftEnd/shiftEndHome.php';
 }
 
 function reOpenShift()
@@ -34,15 +36,15 @@ function closeShift()
     require_once VIEW . 'main/home.php';
 }
 
-function listShiftEnd($base_id)
+function listShiftEnd($baseID)
 {
-    $site = getbasebyid($base_id)["name"];
+    $site = getbasebyid($baseID)["name"];
     $TitlesLines = getGuardLines();
     $Titles = getSectionsTitles();
     $admin = getUserAdmin($_SESSION["username"]["admin"]);
     $Bases = getbases();
     $list = Guardsheet();
-    $guardsheets = getGuardsheetForBase($base_id);
+    $guardsheets = getGuardsheetForBase($baseID);
     require_once VIEW . 'viewsShiftEnd/shiftEndHome.php';
 }
 

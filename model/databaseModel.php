@@ -6,7 +6,7 @@
  */
 function getPDO()
 {
-    require_once "configDatabase.php";
+    require_once ".const.php";
     $dbh = null;
     try{
         $dbh = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USERNAME, DB_PASSWORD);

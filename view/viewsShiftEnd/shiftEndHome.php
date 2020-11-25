@@ -15,21 +15,22 @@ $title = "CSU-NVB - Remise de garde";
 <div class="row">
     <FORM action="?action=listShiftEnd" method="post" class="col">
         <SELECT onchange="this.form.submit()" name="site" size="1">
-            <?php foreach ($Bases
-
-            as $base) { ?>
-            <OPTION value="<?= $base['id'] ?>" <?php if ($base_id == $base['id']) { ?>
+            <?php foreach ($Bases as $base) { ?>
+            <OPTION value="<?= $base['id'] ?>" <?php if ($baseID == $base['id']) { ?>
                 selected="selected"
             <?php } ?>
                     name="site"><?= $base['name'] ?>
                 <?php } ?>
         </SELECT>
     </FORM>
-    <?php if ($admin['admin'] == 1) { ?>
-        <div class="col">
-            <a href="?action=newSheet" class='btn btn-primary m-1 float-right'>Nouvelle Feuille de garde</a>
-        </div>
-    <?php } ?>
+    <form action="?action=newSheet" method="post">
+        <?php if ($admin['admin'] == 1) { ?>
+            <div class="col">
+                <input type="hidden" name="baseID" value="<?= $baseID ?>">
+                <a href="?" class='btn btn-primary m-1 float-right'>Nouvelle Feuille de garde</a>
+            </div>
+        <?php } ?>
+    </form>
 </div>
 <div class="row m-2">
     <?php

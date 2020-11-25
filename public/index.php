@@ -19,7 +19,7 @@ require  CONTROLER . "shiftEndControler.php";
 require  CONTROLER . "weeklyTasksControler.php";
 
 
-require MODEL . "configDatabase.php";
+require MODEL . ".const.php";
 require MODEL . "databaseModel.php";
 
 require MODEL ."baseModel.php";
@@ -108,7 +108,7 @@ function switcherAdmin(){
             break;
         //---- ShiftSheet ----
         case 'newSheet':
-            newShiftSheet($_POST['site']);
+            newShiftSheet($_POST['baseID']);
             break;
         default :
             switcherUser();
@@ -186,11 +186,11 @@ function switcherUser(){
 
         case 'listShiftEnd':
             if (isset($_POST["site"])) {
-                $base_id = $_POST["site"];
+                $baseID = $_POST["site"];
             } else {
-                $base_id = $_SESSION['base']['id'];
+                $baseID = $_SESSION['base']['id'];
             }
-            listShiftEnd($base_id);
+            listShiftEnd($baseID);
             break;
         case 'reOpenShift':
             reOpenShift();
