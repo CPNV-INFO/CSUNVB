@@ -55,6 +55,7 @@ ob_start();
                 <td></td>
                 <?php foreach ($novas as $nova): ?>
                     <?php $ncheck = getNovaCheckByDateAndDrug($date, $drug['id'], $nova['id'], $drugsheet['id']); // not great practice, but it spares repeated queries on the db
+                    if($ncheck == false) $ncheck = array("start" => 0,"end"=>0);
                     ?>
                     <?php $UID = 'n' . $nova["number"] . 'd' . $drug["id"] . 'D' . $date ?>
                     <?php if($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div ?>
@@ -82,6 +83,7 @@ ob_start();
             <?php foreach ($batchesByDrugId[$drug["id"]] as $batch): ?>
                 <?php $UID = "pharma_" . 'b' . $batch['id'] . 'D' . $date ?>
                 <?php $pcheck = getPharmaCheckByDateAndBatch($date, $batch['id'], $drugsheet['id']);
+                if($pcheck == false) $pcheck = array("start" => 0,"end"=>0);
                 ?>
                 <tr>
                     <td class="text-right"><?= $batch['number'] ?></td>
