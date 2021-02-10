@@ -23,7 +23,7 @@ ob_start();
 </div>
 <button class='btn btn-primary m-1 float-right' id="save" hidden onclick="sendData()">Enregistrer les données</button>
 <div class="float-right d-print-none">
-    <?= slugButtons("drug", $drugsheet, $drugsheet['slug']) ?>
+    <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
 </div>
 <?php foreach ($dates as $date): ?>
     <table border="1" class="table table-bordered">

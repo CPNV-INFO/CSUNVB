@@ -30,13 +30,11 @@ function buttonTask($initials, $desription, $taskID, $type, $slug, $edition, $da
             $messageQuittance = 'Vous êtes sur le point de retirer la quittance de la tâche suivante : <br> "' . $desription . '".';
             return "<button type='button' class='btn btn-success toggleTodoModal btn-block m-1 tasks' data-title='Retirer une quittance' data-id='" . $taskID . "' data-status='invalidate' data-type='" . $type . "' data-content='" . $messageQuittance . "'>" . $desription . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
         }
-    }elseif($slug == 'blank' && $edition)
-    {
+    } elseif ($slug == 'blank' && $edition) {
         $date = displayDate($day, 0);
-        $messageSuppression = 'Êtes-vous sûr(e) de vouloir supprimer la tâche  <br> "' . $desription . '" du '.$date.'?';
+        $messageSuppression = 'Êtes-vous sûr(e) de vouloir supprimer la tâche  <br> "' . $desription . '" du ' . $date . '?';
         return "<button type='button' class='btn btn-secondary btn-block m-1 tasks' disabled >" . $desription . "<div class='rounded mt-1 trashButtons' data-title='Suppression de une tâche' data-id='" . $taskID . "' data-content='" . $messageSuppression . "'><i class='fas fa-trash'></i><br></div></button>";
-    }
-    else {
+    } else {
         if (empty($initials)) {
             return "<button type='button' class='btn btn-secondary btn-block m-1 tasks' disabled >" . $desription . "<div class='bg-white rounded mt-1'><br></div></button>";
         } else {
@@ -127,9 +125,9 @@ function listSheet($page, $sheets)
 
 function listTodoOrDrugSheet($slug, $sheets, $zone)
 {
-    if($zone == 'drug'){
+    if ($zone == 'drug') {
         $detailAction = "showDrugSheet";
-    }else{
+    } else {
         $detailAction = "showtodo";
     }
 
@@ -153,11 +151,11 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
 
             $html = $html . "<td><div class='d-flex justify-content-around'>
                                         <form>
-                                            <input type='hidden' name='action' value='".$detailAction."'>
+                                            <input type='hidden' name='action' value='" . $detailAction . "'>
                                             <input type='hidden' name='id' value='" . $sheet['id'] . "'>
                                             <button type='submit' class='btn btn-primary m-1'>Détails</button>
                                         </form>
-                                        " . slugButtons($zone, $sheet, $slug) . "</div></td>";
+                                        " .slugBtns($zone, $sheet, $slug) . "</div></td>";
         }
 
         $html = $html . "</tr> </tbody> </table></div>";
@@ -187,10 +185,10 @@ function listShiftSheet($slug, $shiftList, $zone)
         foreach ($shiftList as $shift) {
             $body .= "<tr>
                 <td>" . date('d.m.Y', strtotime($shift['date']));
-            if(isset($shift["modelImage"])){
+            if (isset($shift["modelImage"])) {
                 $body .= "<i class='fas fa-file-alt template' title='Modèle : " . $shift["modelImage"] . "'></i>";
             }
-                $body .= "</td>
+            $body .= "</td>
                 <td>Jour : " . $shift['novaDay'] . "<br>Nuit : " . $shift['novaNight'] . "</td>
                 <td>Jour : " . $shift['bossDay'] . "<br>Nuit : " . $shift['bossNight'] . "</td>
                 <td>Jour : " . $shift['teammateDay'] . "<br>Nuit : " . $shift['teammateNight'] . "</td>";
@@ -200,7 +198,7 @@ function listShiftSheet($slug, $shiftList, $zone)
                                     <input type='hidden' name='id' value='" . $shift['id'] . "'>
                                     <button type='submit' class='btn btn-primary m-1'>Détails</button>
                                 </form>
-            " . slugButtons("shift", $shift, $slug) . "</div></td>";
+            " . slugBtns("shift", $shift, $slug) . "</div></td>";
             $body .= "</td></tr>";
         }
         $foot = "</table>";
@@ -277,34 +275,55 @@ function slugButtons($page, $sheet, $slug)
     return $buttons;
 }
 
-function slugBtns($page, $sheet, $slug){
-    $buttonList ="";
+function slugBtns($page, $sheet, $slug)
+{
+    $buttonList = "";
     switch ($slug) {
-        case "archive":
-            if (ican('deletesheet')) {
-                //... slugBtn()
+        case "blank":
+            if (ican('opensheet')) {
+                // Test pour vérifier si un autre rapport est déjà ouverte
+                $a = checkOpen($page, $sheet['base_id']);
+                $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Activer","","open");
             }
+        case "archive":
+            if (ican('deletesheet')) $buttonList .= slugBtn($page, $sheet['id'], "DeleteSheet", "Supprimer");
+            break;
+        case "open":
+            if (ican('closesheet')) $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+            break;
+        case "reopen":
+            if (ican('closesheet')) $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Refermer","","close");
+            break;
+        case "close":
+            if (ican('opensheet')) $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Corriger","","reopen");
+            if (ican('archivesheet')) $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Archiver","","archive");
+            break;
+        default:
             break;
     }
+    return $buttonList;
 }
-// possible action : SheetSwitchState ...
 
-function slugBtn($page, $id, $action, $actionName, $newSlug = 0){
-    $btn = "<form  method='POST' action='?action=" . $page . $action ."'>
-                    <input type='hidden' name='id' value='" . $id . "'>
-                    <input type='hidden' name='newSlug' value='.$newSlug.'>
-                    <button type='submit' class='btn btn-primary m-1'>".$actionName."</button>
-                    </form>";
+function slugBtn($page, $id, $action, $actionName, $disableReason = "", $newSlug = "")
+{
+    $btn = "<form  method='POST' action='?action=$page$action'>";
+    $btn .= "<input type='hidden' name='id' value='$id'>";
+    if (!$newSlug == "") $btn .= "<input type='hidden' name='newSlug' value='$newSlug'>";
+    if ($disableReason == "") {
+        $btn .= "<button type='submit' class='btn btn-primary m-1'>" . $actionName . "</button></form>";
+    } else {
+        $btn .= "<form><span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='$disableReason'><button type='submit' class='btn btn-primary m-1' disabled>$actionName</button></span></form>";
+    }
     return $btn;
 }
 
 
-
-function checkOpen($page, $baseID){
+function checkOpen($page, $baseID)
+{
     $openSheets = 0;
     $count = 1;
 
-    switch($page){
+    switch ($page) {
         case 'drug':
             $openSheets = getOpenDrugSheetNumber($baseID);
             break;
@@ -316,9 +335,9 @@ function checkOpen($page, $baseID){
             break;
     }
 
-    if(!isset($openSheets) || $openSheets < $count){
+    if (!isset($openSheets) || $openSheets < $count) {
         return false; // A sheet can be open
-    }else{
+    } else {
         return true; // Max number of sheets already open
     }
 }
@@ -339,13 +358,13 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
             $switchBaseAction = "listshift";
             $newSheetAction = "?action=newShiftSheet&id=" . $selectedBaseID;
             $newSheetBtnName = "Nouveau Rapport de garde";
-            $dateInput = "<input type='date' name='date' value='".getNextDateForShift($selectedBaseID)."'>";
+            $dateInput = "<input type='date' name='date' value='" . getNextDateForShift($selectedBaseID) . "'>";
             // <input type="week" name="week" value="2017-W01"> exemple for week
             break;
         default:
             return "<h1>Header pour la page non défini</h1>";
     }
-    $header = "<div class='row'><h1 class='mr-3'>".$title."</h1>";
+    $header = "<div class='row'><h1 class='mr-3'>" . $title . "</h1>";
     //Liste déroulante pour le choix de la base
     $header .= "<form><input type='hidden' name='action' value='" . $switchBaseAction . "'><select onchange='this.form.submit()' name='id' size='1' class='bigfont mb-3'>";
     foreach ($bases as $base) {
@@ -360,7 +379,7 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
     //Création d'une nouveau rapport
     if (ican('createsheet') && $_SESSION['base']['id'] == $selectedBaseID) {
         $header .= "<div class='newSheetZone'><form method='POST' action='" . $newSheetAction . "' class='float-right'>Utiliser le modèle :<select name='selectedModel'>";
-        if($emptyBase == false){
+        if ($emptyBase == false) {
             $header .= "<option value='lastModel' selected=selected>Dernier rapport clôturé</option>";
         }
         foreach ($models as $model) {
@@ -378,27 +397,28 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
  * @param array $missingTasks Ensemble des tâches manquantes dans une semaine (todoSheet)
  * @return string
  */
-function dropdownTodoMissingTask($missingTasks){
+function dropdownTodoMissingTask($missingTasks)
+{
     $html = "<label for='task' class='d-none' id='missingTaskLabel' style='padding-right: 15px'>Tâche</label>";
 
     foreach ($missingTasks[0] as $index => $nightTask) {
-        $html = $html."<select name='task".$index."time0' id='day".$index."time0' class='missingTodoTaskList d-none'>";
+        $html = $html . "<select name='task" . $index . "time0' id='day" . $index . "time0' class='missingTodoTaskList d-none'>";
 
         foreach ($nightTask as $task) {
-            $html = $html."<option value=".$task['id'].">".$task['description']."</option>";
+            $html = $html . "<option value=" . $task['id'] . ">" . $task['description'] . "</option>";
 
         }
-        $html = $html."</select>";
+        $html = $html . "</select>";
     }
 
     foreach ($missingTasks[1] as $index => $dayTask) {
-        $html = $html."<select name='task".$index."time1' id='day".$index."time1' class='missingTodoTaskList d-none'>";
+        $html = $html . "<select name='task" . $index . "time1' id='day" . $index . "time1' class='missingTodoTaskList d-none'>";
 
         foreach ($dayTask as $task) {
-            $html = $html."<option value=".$task['id'].">".$task['description']."</option>";
+            $html = $html . "<option value=" . $task['id'] . ">" . $task['description'] . "</option>";
 
         }
-        $html = $html."</select>";
+        $html = $html . "</select>";
     }
 
     return $html;

@@ -8,7 +8,7 @@ $title = "CSU-NVB - Remise de garde";
         [<?= $shiftsheet['displayname'] ?>]</h2>
     <input type="hidden" id="shiftDate" value="<?=$shiftsheet['date']?>">
     <div class='d-flex justify-content-end d-print-none'>
-        <?= slugButtons("shift", $shiftsheet, $shiftsheet["status"]) ?>
+        <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
         <form method='POST'>
             <input type='hidden' name='id' value='" . $sheet["id"] . "'>
             <input type='hidden' name='newSlug' value='open'>
