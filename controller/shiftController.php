@@ -23,14 +23,14 @@ function newShiftSheet($baseID)
     } else {
         setFlashMessage("le rapport de garde a bien été créé !");
     }
-    redirect("listshift", $baseID);
+    redirect("shiftList", $baseID);
 }
 
 /**
- * listshift : show a list of all existing shiftsheet for a selected base
+ * shiftList : show a list of all existing shiftsheet for a selected base
  * @param int $selectedBaseID : id of the base we want to show the shiftsheets for. By default it is the based selected when logging in..
  */
-function listshift($selectedBaseID = null)
+function shiftList($selectedBaseID = null)
 {
     if ($selectedBaseID == null) $selectedBaseID = $_SESSION['base']['id'];
     $bases = getbases();
@@ -54,10 +54,10 @@ function listshift($selectedBaseID = null)
 }
 
 /**
- * showshift : show the detailed view of a shiftsheet
+ * shiftShow : show the detailed view of a shiftsheet
  * @param int $shiftid : id of the sheet we want to see
  */
-function showshift($shiftid)
+function shiftShow($shiftid)
 {
     $shiftsheet = getshiftsheetByID($shiftid);
     $sections = getshiftsections($shiftid, $shiftsheet["baseID"]);
@@ -82,7 +82,7 @@ function checkShift()
     } else {
         setFlashMessage("La tâche a bien été validée !");
     }
-    redirect("showshift", $_POST["shiftSheet_id"]);
+    redirect("shiftShow", $_POST["shiftSheet_id"]);
 }
 
 /**
@@ -98,7 +98,7 @@ function commentShift()
     } else {
         setFlashMessage("Le commentaire a bien été ajouté au rapport !");
     }
-    redirect("showshift", $_POST["shiftSheet_id"]);
+    redirect("shiftShow", $_POST["shiftSheet_id"]);
 }
 
 /**
@@ -114,7 +114,7 @@ function updateShift()
     } else {
         setFlashMessage("Les données ont été correctement enregistrées.");
     }
-    redirect("showshift", $_GET["id"]);
+    redirect("shiftShow", $_GET["id"]);
 }
 /**
  * addActionForShift : add an action to a shiftsheet
@@ -130,7 +130,7 @@ function addActionForShift($sheetID)
     } else {
         setFlashMessage("L'action <strong>" . getShiftActionName($_POST["actionID"]) . "</strong> à été ajoutée au rapport");
     }
-    redirect("showshift", $sheetID);
+    redirect("shiftShow", $sheetID);
 }
 
 /**
@@ -152,7 +152,7 @@ function creatActionForShift($sheetID)
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter l'action.");
         }
-    redirect("showshift", $sheetID);
+    redirect("shiftShow", $sheetID);
 }
 
 /**
@@ -169,7 +169,7 @@ function removeActionForShift($sheetID)
     } else {
         setFlashMessage("l'action <strong>" . getShiftActionName($_POST["action"]) . "</strong> a été suprimée");
     }
-    redirect("showshift", $sheetID);
+    redirect("shiftShow", $sheetID);
 }
 
 /**
@@ -201,7 +201,7 @@ function shiftSheetSwitchState()
     } else {
         setFlashMessage("L'état du rapport de garde a été correctement modifié.");
     }
-    redirect("listshift", getBaseIDForShift($_POST["id"]));
+    redirect("shiftList", getBaseIDForShift($_POST["id"]));
 }
 
 /**
@@ -216,7 +216,7 @@ function shiftDeleteSheet()
     } else {
         setFlashMessage("le rapport de garde a été correctement supprimé.");
     }
-    redirect("listshift", getBaseIDForShift($_POST["id"]));
+    redirect("shiftList", getBaseIDForShift($_POST["id"]));
 }
 
 /**
@@ -230,7 +230,7 @@ function removeShiftModel(){
     } else {
         setFlashMessage("Le modèle a été correctement retiré de la liste des modèles disponibles.");
     }
-    redirect("showShift",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["shiftSheet_id"]);
 }
 
 /**
@@ -244,7 +244,7 @@ function addShiftModel(){
     } else {
         setFlashMessage("Le modèle a été correctement ajouté.");
     }
-    redirect("showShift",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["shiftSheet_id"]);
 }
 
 
@@ -255,5 +255,7 @@ function reAddShiftModel(){
     } else {
         setFlashMessage("Le modèle a été correctement réactivé.");
     }
-    redirect("showShift",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["shiftSheet_id"]);
 }
+
+

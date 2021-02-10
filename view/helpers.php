@@ -192,13 +192,9 @@ function listShiftSheet($slug, $shiftList, $zone)
                 <td>Jour : " . $shift['novaDay'] . "<br>Nuit : " . $shift['novaNight'] . "</td>
                 <td>Jour : " . $shift['bossDay'] . "<br>Nuit : " . $shift['bossNight'] . "</td>
                 <td>Jour : " . $shift['teammateDay'] . "<br>Nuit : " . $shift['teammateNight'] . "</td>";
-            $body .= "<td><div class='d-flex justify-content-around'>
-                                <form>
-                                    <input type='hidden' name='action' value='showShift'>
-                                    <input type='hidden' name='id' value='" . $shift['id'] . "'>
-                                    <button type='submit' class='btn btn-primary m-1'>Détails</button>
-                                </form>
-            " . slugBtns("shift", $shift, $slug) . "</div></td>";
+            $body .= "<td><div class='d-flex justify-content-around'>";
+            $body .= buttonForSheet("shift",$shift['id'],"Show&id=".$shift['id'],"Détails");
+            $body .= slugBtns("shift", $shift, $slug) . "</div></td>";
             $body .= "</td></tr>";
         }
         $foot = "</table>";
@@ -210,70 +206,6 @@ function listShiftSheet($slug, $shiftList, $zone)
     return $html;
 }
 
-function slugButtons($page, $sheet, $slug)
-{
-    $buttons = "";
-    switch ($slug) {
-        case "blank":
-            if (ican('opensheet')) {
-                // Test pour vérifier si un autre rapport est déjà ouverte
-                if (!checkOpen($page, $sheet['base_id'])) {
-                    $buttons .= "<form  method='POST' action='?action=" . $page . "SheetSwitchState'>
-                    <input type='hidden' name='id' value='" . $sheet['id'] . "'>
-                    <input type='hidden' name='newSlug' value='open'>
-                    <button type='submit' class='btn btn-primary m-1'>Activer</button>
-                    </form>";
-                } else {
-                    $buttons .= "<form><span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='un autre rapport est déjà ouvert'><button type='submit' class='btn btn-primary m-1' disabled>Activer</button></span></form>";
-                }
-            }
-        case "archive":
-            if (ican('deletesheet')) { // TODO : ajouter une verification de la part de l'utilisateur (VB)
-                $buttons .= "<form  method='POST' action='?action=" . $page . "DeleteSheet'>
-                    <input type='hidden' name='id' value='" . $sheet['id'] . "'>
-                    <button type='submit' class='btn btn-primary m-1'>Supprimer</button>
-                    </form>";
-            }
-            break;
-        case "open":
-            if (ican('closesheet')) {
-                $buttons .= "<form  method='POST' action='?action=" . $page . "SheetSwitchState'>
-                    <input type='hidden' name='id' value='" . $sheet['id'] . "'>
-                    <input type='hidden' name='newSlug' value='close'>
-                    <button type='submit' class='btn btn-primary m-1'>Clôturer</button>
-                    </form>";
-            }
-            break;
-        case "reopen":
-            if (ican('closesheet')) {
-                $buttons .= "<form  method='POST' action='?action=" . $page . "SheetSwitchState'>
-                    <input type='hidden' name='id' value='" . $sheet["id"] . "'>
-                    <input type='hidden' name='newSlug' value='close'>
-                    <button type='submit' class='btn btn-primary m-1'>Refermer</button>
-                    </form>";
-            }
-            break;
-        case "close":
-            if (ican('opensheet')) {
-                $buttons .= "<form  method='POST' action='?action=" . $page . "SheetSwitchState'>
-                    <input type='hidden' name='id' value='" . $sheet["id"] . "'>
-                    <input type='hidden' name='newSlug' value='reopen'>
-                    <button type='submit' class='btn btn-primary m-1'>Corriger</button>
-                    </form>";
-            }
-            if (ican('archivesheet')) {
-                $buttons .= "<form  method='POST' action='?action=" . $page . "SheetSwitchState'>
-                    <input type='hidden' name='id' value='" . $sheet["id"] . "'>
-                    <input type='hidden' name='newSlug' value='archive'>
-                    <button type='submit' class='btn btn-primary m-1'>Archiver</button>
-                    </form>";
-            }
-            break;
-        default:
-            break;
-    }
-    return $buttons;
-}
 
 function slugBtns($page, $sheet, $slug)
 {
@@ -281,22 +213,25 @@ function slugBtns($page, $sheet, $slug)
     switch ($slug) {
         case "blank":
             if (ican('opensheet')) {
+                $disableReason = "";
+                // Test pour vérifier si le rapport est prêt
+                if(!sheetIsReady($page, $sheet['id']))$disableReason = "Définissez les équipes avant d&#39activer le rapport";
                 // Test pour vérifier si un autre rapport est déjà ouverte
-                $a = checkOpen($page, $sheet['base_id']);
-                $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Activer","","open");
+                if(checkOpen($page, $sheet['base_id']))$disableReason = "un autre rapport est déjà ouvert";
+                $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Activer",$disableReason,"open");
             }
         case "archive":
-            if (ican('deletesheet')) $buttonList .= slugBtn($page, $sheet['id'], "DeleteSheet", "Supprimer");
+            if (ican('deletesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "DeleteSheet", "Supprimer");
             break;
         case "open":
-            if (ican('closesheet')) $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+            if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
             break;
         case "reopen":
-            if (ican('closesheet')) $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Refermer","","close");
+            if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer","","close");
             break;
         case "close":
-            if (ican('opensheet')) $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Corriger","","reopen");
-            if (ican('archivesheet')) $buttonList .= slugBtn($page, $sheet['id'], "SheetSwitchState", "Archiver","","archive");
+            if (ican('opensheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger","","reopen");
+            if (ican('archivesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver","","archive");
             break;
         default:
             break;
@@ -304,13 +239,13 @@ function slugBtns($page, $sheet, $slug)
     return $buttonList;
 }
 
-function slugBtn($page, $id, $action, $actionName, $disableReason = "", $newSlug = "")
+function buttonForSheet($page, $id, $action, $actionName, $disableReason = "", $newSlug = "")
 {
     $btn = "<form  method='POST' action='?action=$page$action'>";
     $btn .= "<input type='hidden' name='id' value='$id'>";
     if (!$newSlug == "") $btn .= "<input type='hidden' name='newSlug' value='$newSlug'>";
     if ($disableReason == "") {
-        $btn .= "<button type='submit' class='btn btn-primary m-1'>" . $actionName . "</button></form>";
+        $btn .= "<button type='submit' class='btn btn-primary m-1'>$actionName</button></form>";
     } else {
         $btn .= "<form><span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='$disableReason'><button type='submit' class='btn btn-primary m-1' disabled>$actionName</button></span></form>";
     }
@@ -420,6 +355,18 @@ function dropdownTodoMissingTask($missingTasks)
         }
         $html = $html . "</select>";
     }
-
     return $html;
+}
+
+function sheetIsReady($page, $id){
+    switch ($page) {
+        case 'drug':
+            return true;
+        case 'todo':
+            return true;
+        case 'shift':
+            $shiftsheet = getshiftsheetByID($id);
+            if(!empty($shiftsheet["teammateDay"]) and !empty($shiftsheet["teammateNight"]) and !empty($shiftsheet["novaNight"]) and !empty($shiftsheet["bossDay"]) and !empty($shiftsheet["bossNight"]) and !empty($shiftsheet["novaDay"]))return true;
+            return false;
+    }
 }
