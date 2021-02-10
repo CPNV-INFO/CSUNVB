@@ -3,3 +3,4 @@ node_modules
 .const.php
 .mailconf.php
 *_icescrum*
+*.mwb.bak
