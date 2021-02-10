@@ -2,3 +2,4 @@ node_modules
 *.idea/*
 .const.php
 *_icescrum*
+*.mwb.bak
