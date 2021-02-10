@@ -45,8 +45,8 @@
         </li>
         <li>
             Le code Icescrum de votre projet:
-            <span class="code">projectId = 'XXXXXXX'</span>
-            <p class="small text-secondary">Vous trouverez ce code dans l'url quand vous êtes sur votre projet dans Icescrum</p>
+            <span class="code">projectId = 'XXXXXX'</span>
+            <p class="small text-secondary">Vous trouverez ce code dans l'url quand vous êtes sur votre projet dans Icescrum (https://icescrum.cpnv.ch/p/XXXXXX/#/project)</p>
         </li>
         </ol>
         <p>Veillez également à ce que le fichier <span class="code">_icescrum_api.js</span> soit exclu du système de versionning, si vous ne voulez pas que votre token se retrouve sur Github!</p>
@@ -78,6 +78,7 @@
         return response.json()
     }).then(function (data) {
         spnProjName.innerText = 'Projet ' + data.name
+        document.title = 'Projet ' + data.name
     })
 
     function loadData()
@@ -109,7 +110,7 @@
             }).then(function () { // feed those tasks to the pivot table
                 $("#output").pivotUI(tasks,
                     {
-                        rows: ["date", "story", "task"],
+                        rows: ["date", "story", "tâche"],
                         cols: ["owner"]
                     }
                 );
