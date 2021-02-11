@@ -206,7 +206,13 @@ function listShiftSheet($slug, $shiftList, $zone)
     return $html;
 }
 
-
+/**
+ * function qui retourne le code html pour les boutons possibles de changement d'état et de suppression en fonction de son status et du rôle de l'autilisateur
+ * @param string $page le type rapport depuis lequel la function est appelée, ex : 'shift'
+ * @param array $sheet tableau contenant les informations du rapport
+ * @param array $slug slug du status du rapport, ex. 'open
+ * @return string code html
+ */
 function slugBtns($page, $sheet, $slug)
 {
     $buttonList = "";
@@ -239,6 +245,17 @@ function slugBtns($page, $sheet, $slug)
     return $buttonList;
 }
 
+
+/**
+ * function qui retourne le code html pour un bouton d'un rapport
+ * @param string $page le type rapport depuis lequel la function est appelée, ex : 'shift'
+ * @param int $id id du rapport
+ * @param string $action action du bouton, ex. 'SheetSwitchState'
+ * @param string $actionName nom de l'action affichée sur le bouton, ex. 'Clôturer'
+ * @param string $disableReason si = "" bouton activé, sinon bouton désactivé avec la variable comme indication
+ * @param string $newSlug optionnel, nouveau slug pour l'état du rapport si celui-ci change avec l'action, ex. 'open'
+ * @return string code html
+ */
 function buttonForSheet($page, $id, $action, $actionName, $disableReason = "", $newSlug = "")
 {
     $btn = "<form  method='POST' action='?action=$page$action'>";
@@ -358,6 +375,12 @@ function dropdownTodoMissingTask($missingTasks)
     return $html;
 }
 
+
+/**
+ * @param string $page type de rapport, ex. 'shift'
+ * @param int $id id du rapport
+ * @return bool true si le rapport est prêt
+ */
 function sheetIsReady($page, $id){
     switch ($page) {
         case 'drug':
