@@ -45,7 +45,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
                 <button type="submit" class='btn btn-warning m-1 float-right'><?= $text ?></button>
             </form>
         <?php endif; ?>
-        <?=  slugButtons("todo", $week, $week['slug'])?>
+        <?=  slugBtns("todo", $week, $week['slug'])?>
     </div>
 </div>
 
