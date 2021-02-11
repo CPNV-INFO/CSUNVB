@@ -31,8 +31,8 @@ $title = "CSU-NVB - Remise de garde";
                 <table>
                     <tr>
                         <td class=""></td>
-                        <td class=" text-center">Jour</td>
-                        <td class=" text-center">Nuit</td>
+                        <td class="text-center" style="width: 50px;"><strong>Jour</strong></td>
+                        <td class="text-center" style="width: 50px;"><strong>Nuit</strong></td>
                     </tr>
                     <tr>
                         <td class=" text-right">Novas</td>
@@ -130,7 +130,7 @@ $title = "CSU-NVB - Remise de garde";
         <thead class="thead-dark">
         <th></th>
         <th class="SH_checkCase">Jour</th>
-        <th class="">Nuit</th>
+        <th class="SH_checkCase">Nuit</th>
         <th>Remarques</th>
         </thead>
         <tbody>
