@@ -107,4 +107,12 @@ Un slug est un identifiant sous contrôle du code de l’application. Il se situ
 
 Voir [cette référence](https://medium.com/dailyjs/web-developer-playbook-slug-a6dcbe06c284) (parmi tant d'autres)
 
+### Qu'est-ce que c'est que le 'flashmessage' ?
 
+Le flash message est un message en haut de la page utilisé pour indiquer à l'utlisateur si une action s'est effectuée correctement ou si il y a une erreur.
+
+![flashMessage image](images/flashMessage.PNG)
+
+Celui-ci peut être affiché de deux manières différentes :
+ - En php, avec la fonction : setFlashMessage("mon message") lors du chargemement d'une nouvelle page
+ - En javascript, avec la fonction : flashMessage("mon message") si la page n'est pas rechargée
