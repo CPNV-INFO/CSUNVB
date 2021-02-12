@@ -29,7 +29,8 @@ ob_start();
 <div class="float-right d-print-none">
     <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
 </div>
-<?php foreach ($dates as $date): ?>
+<?php if($drugsheet['slug'] != "blank"): // We check if the drugsheet slug is "blank" or not to change the page to a preparation's page if it is?>
+    <?php foreach ($dates as $date): ?>
     <table border="1" class="table table-bordered">
         <thead class="thead-dark">
         <tr>
@@ -139,6 +140,47 @@ ob_start();
         </tbody>
     </table>
 <?php endforeach; ?>
+<?php else: ?>
+    <table border="1" class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>
+                <?php //TODO: th a supprimer? ?>
+            </th>
+            <th>Pharmacie (matin)</th>
+            <?php foreach ($novas as $nova): ?>
+                <th><?= $nova["number"] ?></th>
+            <?php endforeach; ?>
+            <th>Pharmacie (soir)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($drugs as $drug): ?>
+            <tr>
+                <td class="font-weight-bold"><?= $drug["name"] ?></td>
+                <td></td>
+                <?php foreach ($novas as $nova): ?>
+                    <td></td>
+                <?php endforeach; ?>
+                <td></td>
+            </tr>
+            <?php foreach ($batchesByDrugId[$drug["id"]] as $batch): ?>
+                <tr>
+                    <td class="text-right"><?= $batch['number'] ?></td>
+                    <td class="text-center">
+                    </td>
+
+                    <?php foreach ($novas as $nova): ?>
+                        <td></td>
+                    <?php endforeach; ?>
+                    <td></td>
+                </tr>
+
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
 <script>
 <?php
         foreach ($UIDs as $UID) {
