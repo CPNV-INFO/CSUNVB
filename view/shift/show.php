@@ -218,7 +218,7 @@ $title = "CSU-NVB - Remise de garde";
                             <?php endforeach; ?>
 
 
-                            <button type="submit" class="btn bg-white btn-block m-1 toggleShiftModal d-print-none"
+                            <button type="submit" class="btn btn-secondary btn-block m-1 toggleShiftModal d-print-none"
                                     data-content="Ajouter un commentaire  à <?= $action['text'] ?>"
                                     data-action_id="<?= $action['id'] ?>" data-action="?action=commentShift"
                                     data-comment="text" style="width:200px;">
