@@ -142,6 +142,10 @@ function checkActionForShift($action_id, $shiftSheet_id, $day)
     return execute("Insert into shiftchecks(day,shiftsheet_id,shiftaction_id,user_id)values(:day,:shiftSheet_id,:action_id,:user_id)", ["day" => $day, "user_id" => $_SESSION['user']['id'], "shiftSheet_id" => $shiftSheet_id, "action_id" => $action_id]);
 }
 
+function unCheckActionForShift($action_id, $shiftSheet_id, $day){
+    return execute("Delete from shiftchecks where shiftsheet_id=:shiftSheet_id and day = :day and shiftaction_id =:action_id", ["day" => $day, "shiftSheet_id" => $shiftSheet_id, "action_id" => $action_id]);
+}
+
 function commentActionForShift($action_id, $shiftSheet_id, $message)
 {
     return execute("Insert into shiftcomments(shiftsheet_id,shiftaction_id,user_id,message)values(:shiftSheet_id,:action_id,:user_id,:message)", ["user_id" => $_SESSION['user']['id'], "shiftSheet_id" => $shiftSheet_id, "action_id" => $action_id, "message" => $message]);

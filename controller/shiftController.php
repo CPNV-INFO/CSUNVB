@@ -86,6 +86,21 @@ function checkShift()
 }
 
 /**
+ * checkShift : Mark a task as not completed
+ * @param none
+ * shows a message to confirm action or an error message
+ */
+function uncheckShift(){
+    $res = unCheckActionForShift($_POST["action_id"], $_POST["shiftSheet_id"], $_POST["day"]);
+    if ($res == false) {
+        setFlashMessage("Une erreur est survenue. Impossible d'annuler la tâche");
+    } else {
+        setFlashMessage("La tâche a bien été annulée !");
+    }
+    redirect("shiftShow", $_POST["shiftSheet_id"]);
+}
+
+/**
  * commentShift : add a comment to a task
  * @param none
  * shows a message to confirm action or an error message
