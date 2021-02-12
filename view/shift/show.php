@@ -6,7 +6,7 @@ $title = "CSU-NVB - Remise de garde";
     <h1>Remise de Garde</h1>
     <h2>Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?> - Base de <?= $shiftsheet['baseName'] ?>
         [<?= $shiftsheet['displayname'] ?>]</h2>
-    <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>">
+    <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
     <div class='d-flex justify-content-end d-print-none'>
         <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
         <form method='POST'>
