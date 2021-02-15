@@ -149,5 +149,5 @@ function getDrugsWithUsableBatches($baseID){
 }
 
 function getUsableBatches($baseID){
-    return(selectMany("SELECT drugs.name, batches.number, batches.state AS name FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
+    return(selectMany("SELECT drugs.name as name, batches.number as number, batches.state AS state FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
 }

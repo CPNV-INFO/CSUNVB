@@ -166,18 +166,19 @@ ob_start();
                 <div class="d-flex">
                     <div>
                         <label for="drugToAddList" style="padding: 0 15px">stupéfiant </label>
-                        <select name="day" id="drugToAddList" class='missingTasksChoice' style="width: 100px;">
+                        <select name="drugToAddList" id="drugToAddList" class='missingDrugChoice' required style="width: 100px;" onchange="drugListUpdate()">
                             <option value="default"></option>
-                            <?php foreach ($DrugsWithUsableBatch as $index => $DrugWithUsableBatch) : ?>
-                                <option name="Drug" value="<?= $index + 1 ?>" ><?= $DrugWithUsableBatch['name'] ?></option>
+                            <?php foreach ($DrugsWithUsableBatches as $DrugWithUsableBatches) : ?>
+                                <option name="Drug" value="<?= $DrugWithUsableBatches['name'] ?>" ><?= $DrugWithUsableBatches['name'] ?></option>
                             <?php endforeach; ?>
                         </select>
                         <br>
-                        <label for="missingTaskTime" style="padding: 0 15px">lot </label>
-                        <select name="dayTime" id="missingTaskTime" style="width: 100px;" class="missingTasksChoice float-right">
+                        <label for="batchToAddList" style="padding: 0 15px">lot </label>
+                        <select name="batchToAddList" id="batchToAddList" style="width: 100px;" required class="missingDrugChoice float-right">
                             <option value="default"></option>
-                            <option name="dayTime" value="1" >Jour</option>
-                            <option name="dayTime" value="0" >Nuit</option>
+                            <?php foreach ($UsableBatches as $UsableBatch): ?>
+                            <option name="Batch" value="<?= $UsableBatch['number'] ?>" hidden class="drug_<?= $UsableBatch['name'] ?>"><?= $UsableBatch['number'] . " - ". $UsableBatch['state'] ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 

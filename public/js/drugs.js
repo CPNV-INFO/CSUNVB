@@ -52,3 +52,22 @@ function drugCheck(UID) {
         }
     }
 }
+
+function drugListUpdate() {
+    var drugList = document.getElementById('drugToAddList')
+    var batchListOptions = document.getElementById('batchToAddList')
+
+    batchListOptions.selectedIndex = 0
+
+    for(var i = 1; i <= batchListOptions.length -1; i++){
+        console.log("drug_"+ drugList.value)
+        if(batchListOptions[i].classList.contains("drug_"+ drugList.value)){
+
+            batchListOptions[i].hidden = false
+        }else{
+            batchListOptions[i].hidden = true
+        }
+
+    }
+}
+

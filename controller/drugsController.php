@@ -36,6 +36,7 @@ function showDrugSheet($drugSheetID, $edition = false) {
 
         $DrugsWithUsableBatches = getDrugsWithUsableBatches($drugsheet['base_id']);
         $UsableBatches = getUsableBatches($drugsheet['base_id']);
+
     }
 
     require_once VIEW . 'drugs/show.php';
