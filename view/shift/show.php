@@ -6,7 +6,7 @@ $title = "CSU-NVB - Remise de garde";
     <h1>Remise de Garde</h1>
     <h2>Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?> - Base de <?= $shiftsheet['baseName'] ?>
         [<?= $shiftsheet['displayname'] ?>]</h2>
-    <input type="hidden" id="shiftDate" value="<?=$shiftsheet['date']?>">
+    <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
     <div class='d-flex justify-content-end d-print-none'>
         <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
         <form method='POST'>
@@ -31,8 +31,8 @@ $title = "CSU-NVB - Remise de garde";
                 <table>
                     <tr>
                         <td class=""></td>
-                        <td class=" text-center">Jour</td>
-                        <td class=" text-center">Nuit</td>
+                        <td class="text-center" style="width: 50px;"><strong>Jour</strong></td>
+                        <td class="text-center" style="width: 50px;"><strong>Nuit</strong></td>
                     </tr>
                     <tr>
                         <td class=" text-right">Novas</td>
@@ -124,155 +124,161 @@ $title = "CSU-NVB - Remise de garde";
     </form>
 </div>
 <div class="container">
-<?php foreach ($sections as $section): ?>
-    <div class="row SH_sectionName"><?= $section["title"] ?></div>
-    <table class="table table-bordered float-left">
-        <thead class="thead-dark">
-        <th></th>
-        <th class="SH_checkCase">Jour</th>
-        <th class="">Nuit</th>
-        <th>Remarques</th>
-        </thead>
-        <tbody>
-        <?php
-        foreach ($section["actions"] as $action): ?>
-            <tr>
-                <td class="SH_actionCase">
-                    <form action="?action=removeActionForShift&id=<?= $shiftsheet['id'] ?>" method="post">
-                        <?php if ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true): ?>
+    <?php foreach ($sections as $section): ?>
+        <div class="row SH_sectionName"><?= $section["title"] ?></div>
+        <table class="table table-bordered float-left">
+            <thead class="thead-dark">
+            <th></th>
+            <th class="SH_checkCase">Jour</th>
+            <th class="SH_checkCase">Nuit</th>
+            <th>Remarques</th>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($section["actions"] as $action): ?>
+                <tr>
+                    <td class="SH_actionCase">
+                        <form action="?action=removeActionForShift&id=<?= $shiftsheet['id'] ?>" method="post">
+                            <?php if ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true): ?>
 
-                            <input type="hidden" name="model" value="<?= $shiftsheet['model'] ?>">
-                            <input type="hidden" name="action" value="<?= $action['id'] ?>">
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        <?php endif; ?>
-                        <div class="SH_actionName"><?= $action['text'] ?></div>
-                    </form>
-                </td>
-                <?php if ($enableshiftsheetFilling): ?>
-                    <td class="SH_checkCase">
-                        <button type="submit"
-                                class="btn <?= (count($action["checksDay"]) == 0) ? 'btn-warning' : 'btn-success' ?> toggleShiftModal"
-                                data-content="Valider <?= $action['text'] ?> : Jour"
-                                data-action_id="<?= $action['id'] ?>" data-day="1" data-action="?action=checkShift"
-                                data-comment="hidden">
-                            <?php if (count($action["checksDay"]) == 0): ?>
-                                A Valider
-                            <?php else: ?>
-                                Validé Par
-                                <div class="text-success bg-white rounded mt-1">
-                                    <?php foreach ($action["checksDay"] as $check): ?>
-                                        <?= $check["initials"] ?>
-                                    <?php endforeach; ?>
-                                </div>
+                                <input type="hidden" name="model" value="<?= $shiftsheet['model'] ?>">
+                                <input type="hidden" name="action" value="<?= $action['id'] ?>">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-times"></i>
+                                </button>
                             <?php endif; ?>
-                        </button>
+                            <div class="SH_actionName"><?= $action['text'] ?></div>
+                        </form>
                     </td>
+                    <?php if ($enableshiftsheetFilling): ?>
+                        <td class="SH_checkCase">
+                            <button type="submit"
+                                <?php if (count($action["checksDay"]) == 0): ?>
+                                    class="btn btn-warning toggleShiftModal"
+                                    data-content="Valider <?= $action['text'] ?> : Jour"
+                                    data-action_id="<?= $action['id'] ?>" data-day="1" data-action="?action=checkShift"
+                                    data-comment="hidden">
+                                    A Valider
+                                <?php else: ?>
+                                    class="btn btn-success toggleShiftModal"
+                                    data-content="Annuler <?= $action['text'] ?> : Jour"
+                                    data-action_id="<?= $action['id'] ?>" data-day="1" data-action="?action=uncheckShift"
+                                    data-comment="hidden">
+                                    Validé Par
+                                    <div class="text-success bg-white rounded mt-1">
+                                        <?php foreach ($action["checksDay"] as $check): ?>
+                                            <?= $check["initials"] ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </button>
+                        </td>
+                        <td class="SH_checkCase">
+                            <button type="submit"
+                                <?php if (count($action["checksNight"]) == 0): ?>
+                                    class="btn btn-warning toggleShiftModal"
+                                    data-content="Valider <?= $action['text'] ?> : Nuit"
+                                    data-action_id="<?= $action['id'] ?>" data-day="0" data-action="?action=checkShift"
+                                    data-comment="hidden">
+                                A Valider
+                                <?php else: ?>
+                                    class="btn btn-success toggleShiftModal"
+                                    data-content="Annuler <?= $action['text'] ?> : Nuit"
+                                    data-action_id="<?= $action['id'] ?>" data-day="0" data-action="?action=uncheckShift"
+                                    data-comment="hidden">
+                                    Validé Par
+                                    <div class="text-success bg-white rounded mt-1">
+                                        <?php foreach ($action["checksNight"] as $check): ?>
+                                            <?= $check["initials"] ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </button>
+                        </td>
+                        <td>
+                            <?php foreach ($action["comments"] as $comment): ?>
+                                <div class="<?= ($comment['carryOn'] == 1 and $comment['endOfCarryOn'] == null) ? 'carry' : 'notCarry' ?>"
+                                     id="comment-<?= $comment['id'] ?>">
 
-                    <td class="SH_checkCase">
-                        <button type="submit"
-                                class="btn <?= (count($action["checksNight"]) == 0) ? 'btn-warning' : 'btn-success' ?> toggleShiftModal"
-                                data-content="Valider <?= $action['text'] ?> : Nuit"
-                                data-action_id="<?= $action['id'] ?>" data-day="0" data-action="?action=checkShift"
-                                data-comment="hidden"
-                        ">
-                        <?php if (count($action["checksNight"]) == 0): ?>
-                            A Valider
-                        <?php else: ?>
-                            Validé Par
-                            <div class="text-success bg-white rounded mt-1">
-                                <?php foreach ($action["checksNight"] as $check): ?>
-                                    <?= $check["initials"] ?>
-                                <?php endforeach; ?>
+                                    <button class="removeCarryOnBtn carried" value=<?= $comment['id'] ?>>
+                                        <i class="fas fa-thumbtack fa-lg" style="color:#000000"></i>
+                                    </button>
+
+                                    <button class="addCarryOnBtn addCarry" value=<?= $comment['id'] ?>>
+                                        <i class="fas fa-thumbtack fa-rotate-90 fa-lg" style="color:#777777"></i>
+                                    </button>
+
+                                    <strong>[ <?= $comment['initials'] ?>
+                                        - <?= date('H:i', strtotime($comment['time'])) ?> <?= ($comment['carryOn'] == 1) ? date('/  d.m.Y ', strtotime($comment['time'])) : "" ?>
+                                        ] :</strong>
+                                    <?= $comment['message'] ?>
+                                    <hr>
+                                </div>
+
+                            <?php endforeach; ?>
+
+
+                            <button type="submit" class="btn btn-secondary btn-block m-1 toggleShiftModal d-print-none"
+                                    data-content="Ajouter un commentaire  à <?= $action['text'] ?>"
+                                    data-action_id="<?= $action['id'] ?>" data-action="?action=commentShift"
+                                    data-comment="text" style="width:200px;">
+                                Nouveau commentaire
+                            </button>
+
+
+                        </td>
+                    <?php else: ?>
+                        <td>
+                            <?php foreach ($action["checksDay"] as $check): ?>
+                                <?= $check["initials"] ?>
+                            <?php endforeach; ?>
+                        </td>
+                        <td>
+                            <?php foreach ($action["checksNight"] as $check): ?>
+                                <?= $check["initials"] ?>
+                            <?php endforeach; ?>
+                        </td>
+                        <td>
+                            <?php foreach ($action["comments"] as $comment): ?>
+                                [ <?= $comment['initials'] ?>, <?= $comment['time'] ?> ] : <?= $comment['message'] ?>
+                                <br>
+                            <?php endforeach; ?>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+            <?php endforeach; ?>
+            <?php if ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true): ?>
+                <tr>
+                    <td colspan="4" style="padding: 0px;">
+                        <div>
+                            <div class="float-left">
+                                <form action="?action=addActionForShift&id=<?= $shiftsheet['id'] ?>" method="post">
+                                    <input type="hidden" name="model" value="<?= $shiftsheet['model'] ?>">
+                                    <button type="submit" class='btn btn-success m-1'
+                                    ">Ajouter</button>
+                                    <select name="actionID">
+                                        <?php foreach ($section["unusedActions"] as $action): ?>
+                                            <option value="<?= $action["id"] ?>"><?= $action["text"] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </form>
                             </div>
-                        <?php endif; ?>
-                        </button>
-                    </td>
-                    <td>
-                        <?php foreach ($action["comments"] as $comment): ?>
-                            <div class="<?= ($comment['carryOn'] == 1 and $comment['endOfCarryOn'] == null) ? 'carry' : 'notCarry' ?>"
-                                 id="comment-<?= $comment['id'] ?>">
-
-                                <button class="removeCarryOnBtn carried" value=<?= $comment['id'] ?>>
-                                    <i class="fas fa-thumbtack fa-lg" style="color:#000000"></i>
-                                </button>
-
-                                <button class="addCarryOnBtn addCarry" value=<?= $comment['id'] ?>>
-                                    <i class="fas fa-thumbtack fa-rotate-90 fa-lg" style="color:#777777"></i>
-                                </button>
-
-                                <strong>[ <?= $comment['initials'] ?>
-                                    - <?= date('H:i', strtotime($comment['time'])) ?> <?= ($comment['carryOn'] == 1) ? date('/  d.m.Y ', strtotime($comment['time'])) : "" ?>
-                                    ] :</strong>
-                                <?= $comment['message'] ?>
-                                <hr>
-                            </div>
-
-                        <?php endforeach; ?>
-
-
-                        <button type="submit" class="btn bg-white btn-block m-1 toggleShiftModal d-print-none"
-                                data-content="Ajouter un commentaire  à <?= $action['text'] ?>"
-                                data-action_id="<?= $action['id'] ?>" data-action="?action=commentShift"
-                                data-comment="text" style="width:200px;">
-                            Nouveau commentaire
-                        </button>
-
-
-                    </td>
-                <?php else: ?>
-                    <td>
-                        <?php foreach ($action["checksDay"] as $check): ?>
-                            <?= $check["initials"] ?>
-                        <?php endforeach; ?>
-                    </td>
-                    <td>
-                        <?php foreach ($action["checksNight"] as $check): ?>
-                            <?= $check["initials"] ?>
-                        <?php endforeach; ?>
-                    </td>
-                    <td>
-                        <?php foreach ($action["comments"] as $comment): ?>
-                            [ <?= $comment['initials'] ?>, <?= $comment['time'] ?> ] : <?= $comment['message'] ?>
-                            <br>
-                        <?php endforeach; ?>
-                    </td>
-                <?php endif; ?>
-            </tr>
-        <?php endforeach; ?>
-        <?php if ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true): ?>
-            <tr>
-                <td colspan="4" style="padding: 0px;">
-                    <div>
-                        <div class="float-left">
-                            <form action="?action=addActionForShift&id=<?= $shiftsheet['id'] ?>" method="post">
-                                <input type="hidden" name="model" value="<?= $shiftsheet['model'] ?>">
-                                <button type="submit" class='btn btn-success m-1'
-                                ">Ajouter</button>
-                                <select name="actionID">
-                                    <?php foreach ($section["unusedActions"] as $action): ?>
-                                        <option value="<?= $action["id"] ?>"><?= $action["text"] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </form>
+                            <div class="float-left" style="margin-left: 50px">
+                                <form action="?action=creatActionForShift&id=<?= $shiftsheet['id'] ?>" method="post">
+                                    <input type="hidden" name="model" value="<?= $shiftsheet['model'] ?>">
+                                    <input type="hidden" name="section" value="<?= $section['id'] ?>">
+                                    <button type="submit" class='btn btn-success m-1'
+                                    ">Créer</button>
+                                    <input type="text" name="actionToAdd" value="" style="margin : 6px;">
+                                </form>
+                            </div class="float-left">
                         </div>
-                        <div class="float-left" style="margin-left: 50px">
-                            <form action="?action=creatActionForShift&id=<?= $shiftsheet['id'] ?>" method="post">
-                                <input type="hidden" name="model" value="<?= $shiftsheet['model'] ?>">
-                                <input type="hidden" name="section" value="<?= $section['id'] ?>">
-                                <button type="submit" class='btn btn-success m-1'
-                                ">Créer</button>
-                                <input type="text" name="actionToAdd" value="" style="margin : 6px;">
-                            </form>
-                        </div class="float-left">
-                    </div>
-                </td>
-            </tr>
-        <?php endif; ?>
-        </tbody>
-    </table>
-<?php endforeach; ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    <?php endforeach; ?>
 </div>
 <div style='clear: both;  font-size: 14px; font-family: Helvetica; color: #8d8d8d; background: transparent;'>
     Modèle utilisé :

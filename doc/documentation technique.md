@@ -107,4 +107,29 @@ Un slug est un identifiant sous contrôle du code de l’application. Il se situ
 
 Voir [cette référence](https://medium.com/dailyjs/web-developer-playbook-slug-a6dcbe06c284) (parmi tant d'autres)
 
+### Qu'est-ce que c'est que le 'flashmessage' ?
 
+Le flash message est un message en haut de la page utilisé pour indiquer à l'utlisateur si une action s'est effectuée correctement ou si il y a une erreur.
+
+![flashMessage image](images/flashMessage.PNG)
+
+Celui-ci peut être affiché de deux manières différentes :
+ - En php, avec la fonction : setFlashMessage("mon message") lors du chargemement d'une nouvelle page
+ - En javascript, avec la fonction : flashMessage("mon message") si la page n'est pas rechargée
+
+### Comment marchent les commentaires épinglés ?
+
+Le système d'épinglage permet un commentaire d'un rapport de garde, d'être affiché sur les prochains rapport.
+Par exemple : "Les piles de la radio sont plates" pour l'indiquer au prochains groupes jusqu'à ce que le problème soit réglé.
+
+![flashMessage image](images/commentaireEpigle.PNG)
+
+Au survol d'un commentaire, un bouton pour épinglé gris est visible, lors que le commentaire est épinglé il sera visible sur les prochains rapports et aura champs champ carryOn à 1 dans la base de donnée.
+Pour désactiver l'épinglage cliquer à nouveau sur l'icone "épinglé" cela aura pour conséquence de remplir le champs "endOfCarryOn" avec la date du rapport sur lequel la personne se trouve, à partir de ce moment, le message ne sera plus affiché sur les prochains rapports.
+
+La selection des commentaire de la base de donnée à affiché sur le rapport se fait deux manière :
+- Si le commentaire est lié au rapport, il est affiché ainsi que l'heure et la personne qui l'a écris
+- Si le commentaire n'est pas lié au rapport mais qu'il est sur la même base et que :
+   
+   ( date du commentaire < date du rapport sélectionné ) et que ( date du rapport sélectionné < endOfCarryOn du commentaire ou endOfCarryOn est null )
+   Alors celui-ci est affiché en tant que commentaire épinglé et la date de celui-ci est aussi affichée
