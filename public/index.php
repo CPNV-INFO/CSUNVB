@@ -60,7 +60,7 @@ require MODEL . "Drugs.php";
 require MODEL . "Nova.php";
 require MODEL . "Shift.php";
 require MODEL . "Todo.php";
-
+require MODEL . "Log.php";
 
 /**
  * Check if user logged in and perform requested action when true
