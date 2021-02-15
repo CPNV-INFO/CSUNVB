@@ -17,13 +17,13 @@ function listDrugSheets($selectedBaseID = null) {
 }
 
 // Affichage de la page finale
-function showDrugSheet($drugSheetID) {
+function showDrugSheet($drugSheetID, $edition = false) {
     $drugsheet = getDrugSheetById($drugSheetID);
     $dates = getDaysForWeekNumber($drugsheet["week"]);
     $novas = getNovasForSheet($drugSheetID);
     $BatchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
     foreach ($BatchesForSheet as $p) {
-        $batchesByDrugId[$p["drug_id"]][] = $p;
+        $batchesForSheetByDrugId[$p["drug_id"]][] = $p;
     }
     $drugs = getDrugsInDrugSheet($drugSheetID);
     $site = getbasebyid($drugsheet['base_id']);
@@ -31,6 +31,12 @@ function showDrugSheet($drugSheetID) {
     //ici pour faire un check dès la generation de la page, systeme absolument affreux, a ameliorer
     $cellType = ($drugsheet['slug'] == "close") ? "p" : "input";
     $UIDs = array();
+
+    if(ican ("modifySheet") && $edition){
+
+        $DrugsWithUsableBatches = getDrugsWithUsableBatches($drugsheet['base_id']);
+        $UsableBatches = getUsableBatches($drugsheet['base_id']);
+    }
 
     require_once VIEW . 'drugs/show.php';
 }
@@ -59,4 +65,25 @@ function drugSheetSwitchState() {
 }
 
 function updateDrugSheet() {
+}
+
+/**
+ *Function used to activate amd deactivate editing mode
+ */
+function drugSheetEditionMode()
+{
+    $edition = $_POST['edition'];
+    $drugSheetID = $_POST['drugsheetID'];
+
+    if (!$edition) {
+        $edition = true;
+        showDrugSheet($drugSheetID, $edition); // todo : faire une redirection
+    } else {
+        $edition = false;
+        header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+    }
+}
+
+function addBatchesToDrugSheet(){
+
 }

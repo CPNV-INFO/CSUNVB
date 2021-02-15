@@ -143,3 +143,11 @@ function removeDrugSheet($sheetID) {
 function getStatusID($slug) {
 	return(selectOne("SELECT id FROM status WHERE slug =:slug", ['slug' => $slug])['id']);
 }
+
+function getDrugsWithUsableBatches($baseID){
+    return(selectMany("SELECT drugs.name AS name FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used' GROUP BY name;",['base_id' => $baseID]));
+}
+
+function getUsableBatches($baseID){
+    return(selectMany("SELECT drugs.name, batches.number, batches.state AS name FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
+}

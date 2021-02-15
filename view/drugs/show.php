@@ -25,11 +25,12 @@ ob_start();
         </form>
     </div>
 </div>
-<button class='btn btn-primary m-1 float-right' id="save" hidden onclick="sendData()">Enregistrer les données</button>
-<div class="float-right d-print-none">
-    <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
-</div>
+
 <?php if($drugsheet['slug'] != "blank"): // We check if the drugsheet slug is "blank" or not to change the page to a preparation's page if it is?>
+    <button class='btn btn-primary m-1 float-right' id="save" hidden onclick="sendData()">Enregistrer les données</button>
+    <div class="float-right d-print-none">
+        <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
+    </div>
     <?php foreach ($dates as $date): ?>
     <table border="1" class="table table-bordered">
         <thead class="thead-dark">
@@ -81,7 +82,7 @@ ob_start();
                 <?php endforeach; ?>
                 <td></td>
             </tr>
-            <?php foreach ($batchesByDrugId[$drug["id"]] as $batch): ?>
+            <?php foreach ($batchesForSheetByDrugId[$drug["id"]] as $batch): ?>
                 <?php $UID = "pharma_" . 'b' . $batch['id'] . 'D' . $date ?>
                 <?php $pcheck = getPharmaCheckByDateAndBatch($date, $batch['id'], $drugsheet['id']);
                 if($pcheck == false) $pcheck = array("start" => 0,"end"=>0);
@@ -141,6 +142,54 @@ ob_start();
     </table>
 <?php endforeach; ?>
 <?php else: ?>
+
+    <div class="d-flex flex-row float-right d-print-none"> <!-- If user is admin and sheet is "blank" then show modification button -->
+        <?php if(ican ("modifySheet") && $drugsheet['slug'] == "blank") : ?>
+            <?php if($edition) :
+                $text = "Quitter édition";
+            else:
+                $text = "Mode édition";
+            endif; ?>
+            <form action="?action=drugSheetEditionMode" method="POST">
+                <input type="hidden" name="drugsheetID" value="<?= $drugSheetID ?>">
+                <input type="hidden" name="edition" value="<?= $edition ?>">
+                <button type="submit" class='btn btn-warning m-1 float-right'><?= $text ?></button>
+            </form>
+        <?php endif; ?>
+        <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
+    </div>
+
+
+    <?php if(ican ("modifySheet") && $edition) : ?> <!-- Zone d'ajout de nouvelle tâche -->
+        <div class="d-print-none" style="border: solid; padding: 5px; margin: 2px; margin-top: 15px; margin-bottom: 15px">
+            <form method="POST" action="?action=addBatchesToDrugSheet" class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div>
+                        <label for="drugToAddList" style="padding: 0 15px">stupéfiant </label>
+                        <select name="day" id="drugToAddList" class='missingTasksChoice' style="width: 100px;">
+                            <option value="default"></option>
+                            <?php foreach ($DrugsWithUsableBatch as $index => $DrugWithUsableBatch) : ?>
+                                <option name="Drug" value="<?= $index + 1 ?>" ><?= $DrugWithUsableBatch['name'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <br>
+                        <label for="missingTaskTime" style="padding: 0 15px">lot </label>
+                        <select name="dayTime" id="missingTaskTime" style="width: 100px;" class="missingTasksChoice float-right">
+                            <option value="default"></option>
+                            <option name="dayTime" value="1" >Jour</option>
+                            <option name="dayTime" value="0" >Nuit</option>
+                        </select>
+                    </div>
+
+
+                </div>
+                <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
+                <button type="submit" id="addBatchBtn" class='btn btn-primary m-1' disabled>Ajouter le lot</button>
+            </form>
+        </div>
+    <?php endif; ?>
+
+
     <table border="1" class="table table-bordered">
         <thead class="thead-dark">
         <tr>
@@ -164,7 +213,7 @@ ob_start();
                 <?php endforeach; ?>
                 <td></td>
             </tr>
-            <?php foreach ($batchesByDrugId[$drug["id"]] as $batch): ?>
+            <?php foreach ($batchesForSheetByDrugId[$drug["id"]] as $batch): ?>
                 <tr>
                     <td class="text-right"><?= $batch['number'] ?></td>
                     <td class="text-center">
@@ -177,6 +226,7 @@ ob_start();
                 </tr>
 
             <?php endforeach; ?>
+
         <?php endforeach; ?>
         </tbody>
     </table>
