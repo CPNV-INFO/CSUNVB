@@ -7,7 +7,8 @@
 ob_start();
 $title = "CSU-NVB - Log Remise de garde";
 ?>
-<h2>Rapport de garde du : <?=$shiftSheet["date"]?></h2>
+
+<h2><a href="javascript:history.back()"><i class="fas fa-angle-left backIcon"></i></a>Rapport de garde du : <?=$shiftSheet["date"]?></h2>
 <table class="table table-sm table-bordered">
     <thead class="thead-dark">
     <tr>

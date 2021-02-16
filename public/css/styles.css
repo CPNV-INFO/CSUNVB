@@ -160,3 +160,11 @@ tr:hover .modify {
     display: inline;
     float: right;
 }
+
+.backIcon{
+    color: black;
+    margin-right: 10px;
+}
+.backIcon:hover{
+    color: #6c757d;
+}
