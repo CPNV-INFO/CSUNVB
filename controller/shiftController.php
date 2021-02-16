@@ -18,10 +18,11 @@ function newShiftSheet($baseID)
     }
 
     $result = addNewShiftSheet($baseID, $modelID, $_POST["date"]);
-    if ($result == false) {
+    if ($result == 0) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le rapport de garde.");
     } else {
         setFlashMessage("le rapport de garde a bien été créé !");
+        writeLog("SHIFT",$result,"Rapport créé");
     }
     redirect("shiftList", $baseID);
 }
@@ -128,6 +129,7 @@ function updateShift()
         setFlashMessage("Une erreur est survenue. Impossible d'enregistrer les données.");
     } else {
         setFlashMessage("Les données ont été correctement enregistrées.");
+        writeLog("SHIFT",$_GET["id"],"Données de la feuille modifiées");
     }
     redirect("shiftShow", $_GET["id"]);
 }
@@ -215,6 +217,7 @@ function shiftSheetSwitchState()
         setFlashMessage("Une erreur est survenue. Impossible de changer l'état du rapport de garde.");
     } else {
         setFlashMessage("L'état du rapport de garde a été correctement modifié.");
+        writeLog("SHIFT",$_POST["id"],"Changement d'état : ".$_POST["newSlug"]);
     }
     redirect("shiftList", getBaseIDForShift($_POST["id"]));
 }
