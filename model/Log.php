@@ -10,5 +10,5 @@ function writeLog($type,$sheetID,$info) {
 }
 
 function getLogs($type,$sheetID){
-    return selectMany("SELECT timestamp  as date, info, (select initials from users where id = logs.user_id) as initials FROM logs where report_type=:type and report_id=:sheetID", ["type" => $type, "sheetID" => $sheetID]);
+    return selectMany("SELECT timestamp  as date, info, (select initials from users where id = logs.user_id) as initials FROM logs where report_type=:type and report_id=:sheetID order by date DESC", ["type" => $type, "sheetID" => $sheetID]);
 }
