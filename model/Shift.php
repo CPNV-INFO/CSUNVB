@@ -99,17 +99,7 @@ WHERE shiftsheets.id =:id;', ["id" => $id]);
 
 function addNewShiftSheet($baseID, $modelID, $date)
 {
-    try {
-        $insertshiftsheet = execute("INSERT INTO shiftsheets (date,shiftmodel_id,status_id,base_id) VALUES (:date,:modelID,1,:base)", ['date' => $date, 'base' => $baseID, 'modelID' => $modelID]);
-        if ($insertshiftsheet == false) {
-            throw new Exception("L'enregistrement ne s'est pas effectué correctement");
-        }
-        $dbh = null;
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        return false;
-    }
-    return true;
+    return intval (insert("INSERT INTO shiftsheets (date,shiftmodel_id,status_id,base_id) VALUES (:date,:modelID,1,:base)", ['date' => $date, 'base' => $baseID, 'modelID' => $modelID]));
 }
 
 function getDateOfLastSheet($baseID)
