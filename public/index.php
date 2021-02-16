@@ -7,9 +7,14 @@
  * Update : 11-NOV-2020 - michael.gogniat
  * Simplify index. Remove all pages references.
  */
-header("Expires: Thu, 19 Nov 1981 08:52:00 GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate");
 session_start();
+
+
+header("Cache-Control: private, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // A date in the past
+
+
 /**
  * Call definition file pour paths
  */
