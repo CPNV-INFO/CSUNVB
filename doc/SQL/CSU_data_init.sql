@@ -160,8 +160,7 @@ INSERT INTO `shiftactions` VALUES
 -- table shiftmodels
 INSERT INTO `shiftmodels` VALUES
 (1,'Vide',1),
-(2,'Classic',1),
-(3,'',0);
+(2,'Classic',1);
 
 -- table shiftmodel_has_shiftaction
 insert into shiftmodel_has_shiftaction VALUES
@@ -183,7 +182,4 @@ insert into shiftmodel_has_shiftaction VALUES
 (16,16,2),
 (17,17,2),
 (18,18,2),
-(19,19,2),
-(20,1,3),
-(21,2,3),
-(22,3,3);
+(19,19,2);
