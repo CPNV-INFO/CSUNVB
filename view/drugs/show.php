@@ -168,16 +168,16 @@ ob_start();
                         <label for="drugToAddList" style="padding: 0 15px">stupéfiant </label>
                         <select name="drugToAddList" id="drugToAddList" class='missingDrugChoice' required style="width: 100px;" onchange="drugListUpdate()">
                             <option value="default"></option>
-                            <?php foreach ($DrugsWithUsableBatches as $DrugWithUsableBatches) : ?>
-                                <option name="Drug" value="<?= $DrugWithUsableBatches['name'] ?>" ><?= $DrugWithUsableBatches['name'] ?></option>
+                            <?php foreach ($drugsWithUsableBatches as $drugWithUsableBatches) : ?>
+                                <option name="Drug" value="<?= $drugWithUsableBatches['name'] ?>" ><?= $drugWithUsableBatches['name'] ?></option>
                             <?php endforeach; ?>
                         </select>
                         <br>
                         <label for="batchToAddList" style="padding: 0 15px">lot </label>
                         <select name="batchToAddList" id="batchToAddList" style="width: 100px;" required class="missingDrugChoice float-right">
                             <option value="default"></option>
-                            <?php foreach ($UsableBatches as $UsableBatch): ?>
-                            <option name="Batch" value="<?= $UsableBatch['number'] ?>" hidden class="drug_<?= $UsableBatch['name'] ?>"><?= $UsableBatch['number'] . " - ". $UsableBatch['state'] ?></option>
+                            <?php foreach ($usableBatches as $usableBatch): ?>
+                            <option name="Batch" value="<?= $usableBatch['number'] ?>" hidden class="drug_<?= $usableBatch['name'] ?>"><?= $usableBatch['number'] . " - ". $usableBatch['state'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

@@ -21,8 +21,8 @@ function showDrugSheet($drugSheetID, $edition = false) {
     $drugsheet = getDrugSheetById($drugSheetID);
     $dates = getDaysForWeekNumber($drugsheet["week"]);
     $novas = getNovasForSheet($drugSheetID);
-    $BatchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
-    foreach ($BatchesForSheet as $p) {
+    $batchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
+    foreach ($batchesForSheet as $p) {
         $batchesForSheetByDrugId[$p["drug_id"]][] = $p;
     }
     $drugs = getDrugsInDrugSheet($drugSheetID);
@@ -34,9 +34,18 @@ function showDrugSheet($drugSheetID, $edition = false) {
 
     if(ican ("modifySheet") && $edition){
 
-        $DrugsWithUsableBatches = getDrugsWithUsableBatches($drugsheet['base_id']);
-        $UsableBatches = getUsableBatches($drugsheet['base_id']);
+        $drugsWithUsableBatches = getDrugsWithUsableBatches($drugsheet['base_id']);
+        $allUsableBatches = getUsableBatches($drugsheet['base_id']); // All usable batches even thoses who are already in the sheet
+        $usableBatches = array(); // usable batch without thoses who are already used in the sheet
+       foreach ($allUsableBatches as $usableBatch){
+           $foundInBatch = false;
+            foreach ($batchesForSheetByDrugId[$usableBatch['drug_id']] as $batchForSheetByDrugId){
+               if( $usableBatch['number'] == $batchForSheetByDrugId['number'] ) $foundInBatch = true ;
+            }
 
+            if(!$foundInBatch) $usableBatches[] = $usableBatch ;
+
+        }
     }
 
     require_once VIEW . 'drugs/show.php';
@@ -86,5 +95,17 @@ function drugSheetEditionMode()
 }
 
 function addBatchesToDrugSheet(){
-
+    $batchToAdd = $_POST['batchToAddList'];
+    $drugSheetID = $_POST['drugSheetID'];
+    if(ican ("modifySheet")){
+        $res = insertBatchInSheet($drugSheetID,$batchToAdd);
+        if ($res == false) {
+            setFlashMessage("Une erreur est survenue. Impossible d'ajouter le lot au rapport.");
+        } else {
+            setFlashMessage("Le lot " . $batchToAdd . " a été correctement ajouté.");
+        }
+    }else{
+        setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }

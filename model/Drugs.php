@@ -70,6 +70,12 @@ function getBatchesForSheet($drugSheetID) {
     return selectMany("SELECT batches.id AS id, number, drug_id FROM batches INNER JOIN drugsheet_use_batch ON batches.id = batch_id WHERE drugsheet_id=:drugsheet", ['drugsheet' => $drugSheetID ]);
 }
 
+function insertBatchInSheet($drugSheetID,$batchToAdd){
+return insert("INSERT INTO drugsheet_use_batch (drugsheet_id,batch_id) VALUES (:drugSheetID,(SELECT batches.id from batches WHERE batches.number = :batchToAdd));",['drugSheetID' =>$drugSheetID,'batchToAdd' => $batchToAdd]);
+}
+
+
+
 /**
  * Retourne le pharmacheck du jour donné pour un batch précis lors de son utilisation dans une drugsheet
  */
@@ -149,5 +155,5 @@ function getDrugsWithUsableBatches($baseID){
 }
 
 function getUsableBatches($baseID){
-    return(selectMany("SELECT drugs.name as name, batches.number as number, batches.state AS state FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
+    return(selectMany("SELECT drugs.name as name,batches.drug_id as drug_id, batches.number as number, batches.state AS state FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
 }

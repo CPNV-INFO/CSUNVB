@@ -54,20 +54,26 @@ function drugCheck(UID) {
 }
 
 function drugListUpdate() {
-    var drugList = document.getElementById('drugToAddList')
-    var batchListOptions = document.getElementById('batchToAddList')
+    let drugList = document.getElementById('drugToAddList')
+    let batchList = document.getElementById('batchToAddList')
 
-    batchListOptions.selectedIndex = 0
+    batchList.selectedIndex = 0
 
-    for(var i = 1; i <= batchListOptions.length -1; i++){
-        console.log("drug_"+ drugList.value)
-        if(batchListOptions[i].classList.contains("drug_"+ drugList.value)){
+    for(let i = 1; i <= batchList.length -1; i++){
 
-            batchListOptions[i].hidden = false
-        }else{
-            batchListOptions[i].hidden = true
-        }
+        batchList[i].classList.contains("drug_"+ drugList.value) ? batchList[i].hidden = false : batchList[i].hidden = true
+
 
     }
+
+    batchSelectionMissing()
+}
+
+function batchSelectionMissing(){
+    let batchList = document.getElementById('batchToAddList')
+    let addBatchBtn = document.getElementById('addBatchBtn')
+
+    batchList.selectedIndex !== 0 ? addBatchBtn.disabled = false : addBatchBtn.disabled = true
+
 }
 
