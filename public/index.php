@@ -7,7 +7,7 @@
  * Update : 11-NOV-2020 - michael.gogniat
  * Simplify index. Remove all pages references.
  */
-
+session_cache_limiter('private_no_expire');
 session_start();
 /**
  * Call definition file pour paths
