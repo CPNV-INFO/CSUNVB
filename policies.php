@@ -25,6 +25,7 @@ return [
         "createsheet" => true,
         "createTemplate" => true,
         "deleteTemplate" => true,
-        "modifySheet" => true
+        "modifySheet" => true,
+        "consultLog" => true
     ]
 ];

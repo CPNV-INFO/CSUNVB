@@ -153,3 +153,10 @@ tr:hover .modify {
     color: #a71d2a;
     margin-left: 5px;
 }
+
+/* -------------------------------------*/
+
+.logIcon{
+    display: inline;
+    float: right;
+}

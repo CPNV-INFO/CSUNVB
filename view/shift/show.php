@@ -3,7 +3,8 @@ ob_start();
 $title = "CSU-NVB - Remise de garde";
 ?>
 <div>
-    <h1>Remise de Garde</h1>
+    <?= (ican("consultLog")) ? "<a href='?action=shiftLog&id=". $shiftsheet['id'] ."'><i class='fas fa-history fa-2x logIcon'></i></a>" : "" ?>
+    <h1>Remise de Garde </h1>
     <h2>Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?> - Base de <?= $shiftsheet['baseName'] ?>
         [<?= $shiftsheet['displayname'] ?>]</h2>
     <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
