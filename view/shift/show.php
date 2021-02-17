@@ -351,6 +351,8 @@ $title = "CSU-NVB - Remise de garde";
         </div>
     </div>
 </div>
+<?= addModal() ?>
+<div onclick="testModal()()">aaa</aaa></div>
 <script src="js/shift.js"></script>
 <?php
 $content = ob_get_clean();

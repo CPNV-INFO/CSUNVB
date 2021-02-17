@@ -15,14 +15,15 @@ function getVersion()
  * @param $action : the action to specify to know what to show on screen
  * @param int $id : the id of the page/element to show, not mandatory
  */
-function redirect ($action, $id=0)
+function redirect($action, $id = 0)
 {
     if ($id > 0) {
-        header('Location: ?action='.$action.'&id='.$id);
+        header('Location: ?action=' . $action . '&id=' . $id);
     } else {
-        header('Location: ?action='.$action);
+        header('Location: ?action=' . $action);
     }
 }
+
 /**
  * inspired by source https://stackoverflow.com/questions/7447472/how-could-i-display-the-current-git-branch-name-at-the-top-of-the-page-of-my-de
  * gitBranchTag : get the tag from the corresponding GitHub branch
@@ -45,15 +46,16 @@ function gitBranchTag()
  * @param $weekNumber : format AASS
  * @return array : contain the 7 days
  */
-function getDaysForWeekNumber($weekNumber){
-    $year = 2000 + intdiv($weekNumber,100);
-    $week = $weekNumber%100;
+function getDaysForWeekNumber($weekNumber)
+{
+    $year = 2000 + intdiv($weekNumber, 100);
+    $week = $weekNumber % 100;
 
     $dates = [];
     $time = strtotime(sprintf("%4dW%02d", $year, $week));
 
-    for($i = 0; $i < 7; $i++){
-        $dates[] = date("Y-m-d",strtotime("+".$i." day", $time));
+    for ($i = 0; $i < 7; $i++) {
+        $dates[] = date("Y-m-d", strtotime("+" . $i . " day", $time));
     }
 
     return $dates;
@@ -65,22 +67,20 @@ function getDaysForWeekNumber($weekNumber){
  * @param $zone name of the zone used (shift, drugs, todo)
  * @return $state : displayname of the sheet status
  */
-function showSheetState($id, $zone){
-    if($zone == "shift"){
+function showSheetState($id, $zone)
+{
+    if ($zone == "shift") {
         $slug = getStateFromSheet($id);
-    }
-    else if($zone == "todo"){
+    } else if ($zone == "todo") {
         $slug = getStateFromTodo($id);
-    }
-    else if ($zone == "drugs"){
+    } else if ($zone == "drugs") {
         /** $slug = getStateFromDrugs($id); */
         $slug = "tsers";
     }
 
-    if(isset($slug['displayname'])){
-        $state = "[". $slug['displayname']."]";
-    }
-    else {
+    if (isset($slug['displayname'])) {
+        $state = "[" . $slug['displayname'] . "]";
+    } else {
         $state = "[Non défini]";
     }
     return $state;
@@ -91,8 +91,36 @@ function showSheetState($id, $zone){
  * @param $action : the action to check if it is doable
  * @return bool
  */
-function ican ($action)
+function ican($action)
 {
     $policies = require('policies.php');
     return isset($policies[$_SESSION['user']['admin']][$action]);
+}
+
+function addModal()
+{
+    return '
+<div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="post" id="modalForm" action="">
+                <div class="modal-header">
+                    <h5 id="mainModalTitle">
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="mainModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <input type="submit" class="btn btn-primary" value="Valider">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+     <script src="js/modal.js"></script>
+    ';
 }
