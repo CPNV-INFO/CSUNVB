@@ -291,7 +291,8 @@ function reAddShiftModel(){
 }
 
 function shiftLog($sheetID){
-    $shiftSheet = getshiftsheetByID($sheetID);
-    $logs = getLogs("SHIFT",$sheetID);
-    require_once VIEW . 'shift/log.php';
+    $type = "SHIFT";
+    $sheet = getshiftsheetByID($sheetID);
+    $logs = getLogs($type,$sheetID);
+    require_once VIEW . 'main/log.php';
 }
