@@ -116,7 +116,6 @@ function addModal()
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     <div id="mainModalSubmit">
-                        <input type="submit" class="btn btn-primary" value="Valider">
                     </div>
                 </div>
             </form>
