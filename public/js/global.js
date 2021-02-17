@@ -26,3 +26,14 @@ function flashMessage(message){
 $(function(){
     $('[data-toggle="tooltip"]').tooltip();
 })
+
+
+
+function savePosY(){
+    sessionStorage.setItem('posY', window.pageYOffset);
+}
+$(document).ready(function() {
+    window.scrollBy(0, sessionStorage.getItem('posY'));
+    sessionStorage.removeItem('posY');
+});
+
