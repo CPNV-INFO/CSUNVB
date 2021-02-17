@@ -82,6 +82,9 @@ function checkShift()
         setFlashMessage("Une erreur est survenue. Impossible de valider la tâche.");
     } else {
         setFlashMessage("La tâche a bien été validée !");
+        $time = "nuit";
+        if($_POST["day"]==1)$time = "jour";
+        writeLog("SHIFT",$_POST["shiftSheet_id"],getShiftActionName($_POST["action_id"]). " ".$time. " validé");
     }
     redirect("shiftShow", $_POST["shiftSheet_id"]);
 }
@@ -97,6 +100,9 @@ function uncheckShift(){
         setFlashMessage("Une erreur est survenue. Impossible d'annuler la tâche");
     } else {
         setFlashMessage("La tâche a bien été annulée !");
+        $time = "nuit";
+        if($_POST["day"]==1)$time = "jour";
+        writeLog("SHIFT",$_POST["shiftSheet_id"],getShiftActionName($_POST["action_id"]). " ".$time. " annulé");
     }
     redirect("shiftShow", $_POST["shiftSheet_id"]);
 }
@@ -113,6 +119,7 @@ function commentShift()
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le commentaire.");
     } else {
         setFlashMessage("Le commentaire a bien été ajouté au rapport !");
+        writeLog("SHIFT",$_POST["shiftSheet_id"],"Commentaire pour ".getShiftActionName($_POST["action_id"])." : ".$_POST["comment"]);
     }
     redirect("shiftShow", $_POST["shiftSheet_id"]);
 }
