@@ -8,7 +8,7 @@ ob_start();
 switch ($type) {
     case "SHIFT":
         $title = "CSU-NVB - Log Remise de garde";
-        $shiftName = "Rapport de garde du : ".$sheet["date"];
+        $shiftName = "Log : Rapport de garde du : ".$sheet["date"];
         break;
     default:
         $title = "CSU-NVB - Logs inderterminés";
@@ -18,25 +18,16 @@ switch ($type) {
 ?>
 
 <h2><a href="javascript:history.back()"><i class="fas fa-angle-left backIcon"></i></a><?= $shiftName ?></h2>
-<table class="table table-sm table-bordered">
-    <thead class="thead-dark">
-    <tr>
-        <th class="text-center">Date</th>
-        <th class="text-center">Initiales</th>
-        <th class="text-center">Action</th>
-    </tr>
-    </thead>
+<table class="table table-sm">
     <tbody>
     <?php foreach ($logs as $log) : ?>
         <tr>
-            <td style="width: 170px;" class="text-center"><?= $log["date"] ?></td>
-            <td style="width: 90px;" class="text-center"><?= $log["initials"] ?></td>
-            <td><?= $log["info"] ?></td>
+            <td>[ <?= $log["initials"] ?> - <?= date('H:i / d.m.Y', strtotime($log["date"])) ?> ] : <?= $log["info"] ?></td>
+
         </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
-
 <?php
 $content = ob_get_clean();
 require GABARIT;
