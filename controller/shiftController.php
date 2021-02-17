@@ -77,16 +77,16 @@ function shiftShow($shiftid)
  */
 function checkShift()
 {
-    $res = checkActionForShift($_POST["action_id"], $_POST["shiftSheet_id"], $_POST["day"]);
+    $res = checkActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["D/N"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de valider la tâche.");
     } else {
         setFlashMessage("La tâche a bien été validée !");
         $time = "nuit";
-        if($_POST["day"]==1)$time = "jour";
-        writeLog("SHIFT",$_POST["shiftSheet_id"],getShiftActionName($_POST["action_id"]). " ".$time. " validé");
+        if($_POST["D/N"]==1)$time = "jour";
+        writeLog("SHIFT",$_POST["sheetID"],getShiftActionName($_POST["actionID"]). " ".$time. " validé");
     }
-    redirect("shiftShow", $_POST["shiftSheet_id"]);
+    redirect("shiftShow", $_POST["sheetID"]);
 }
 
 /**
@@ -94,17 +94,17 @@ function checkShift()
  * @param none
  * shows a message to confirm action or an error message
  */
-function uncheckShift(){
-    $res = unCheckActionForShift($_POST["action_id"], $_POST["shiftSheet_id"], $_POST["day"]);
+function unCheckShift(){
+    $res = unCheckActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["D/N"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'annuler la tâche");
     } else {
         setFlashMessage("La tâche a bien été annulée !");
         $time = "nuit";
-        if($_POST["day"]==1)$time = "jour";
-        writeLog("SHIFT",$_POST["shiftSheet_id"],getShiftActionName($_POST["action_id"]). " ".$time. " annulé");
+        if($_POST["D/N"]==1)$time = "jour";
+        writeLog("SHIFT",$_POST["sheetID"],getShiftActionName($_POST["actionID"]). " ".$time. " annulé");
     }
-    redirect("shiftShow", $_POST["shiftSheet_id"]);
+    redirect("shiftShow", $_POST["sheetID"]);
 }
 
 /**
@@ -114,14 +114,14 @@ function uncheckShift(){
  */
 function commentShift()
 {
-    $res = commentActionForShift($_POST["action_id"], $_POST["shiftSheet_id"], $_POST["comment"]);
+    $res = commentActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["comment"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le commentaire.");
     } else {
         setFlashMessage("Le commentaire a bien été ajouté au rapport !");
-        writeLog("SHIFT",$_POST["shiftSheet_id"],"Commentaire pour ".getShiftActionName($_POST["action_id"])." : ".$_POST["comment"]);
+        writeLog("SHIFT",$_POST["sheetID"],"Commentaire pour ".getShiftActionName($_POST["actionID"])." : ".$_POST["comment"]);
     }
-    redirect("shiftShow", $_POST["shiftSheet_id"]);
+    redirect("shiftShow", $_POST["sheetID"]);
 }
 
 /**

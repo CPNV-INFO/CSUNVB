@@ -3,7 +3,7 @@ ob_start();
 $title = "CSU-NVB - Remise de garde";
 ?>
 <div>
-    <?= (ican("consultLog")) ? "<a href='?action=shiftLog&id=". $shiftsheet['id'] ."'><i class='fas fa-history fa-2x logIcon'></i></a>" : "" ?>
+    <?= (ican("consultLog")) ? "<a href='?action=shiftLog&id=" . $shiftsheet['id'] . "'><i class='fas fa-history fa-2x logIcon'></i></a>" : "" ?>
     <h1>Remise de Garde </h1>
     <h2>Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?> - Base de <?= $shiftsheet['baseName'] ?>
         [<?= $shiftsheet['displayname'] ?>]</h2>
@@ -137,7 +137,8 @@ $title = "CSU-NVB - Remise de garde";
             <tbody>
             <?php
             foreach ($section["actions"] as $action): ?>
-                <tr>
+                <tr value='<?= $action['id'] ?>'>
+                    <!-- actionName Cell-->
                     <td class="SH_actionCase">
                         <form action="?action=removeActionForShift&id=<?= $shiftsheet['id'] ?>" method="post">
                             <?php if ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true): ?>
@@ -152,81 +153,62 @@ $title = "CSU-NVB - Remise de garde";
                         </form>
                     </td>
                     <?php if ($enableshiftsheetFilling): ?>
+                        <!-- Check for the day -->
                         <td class="SH_checkCase">
-                            <button type="submit"
-                                <?php if (count($action["checksDay"]) == 0): ?>
-                                    class="btn btn-warning toggleShiftModal"
-                                    data-content="Valider <?= $action['text'] ?> : Jour"
-                                    data-action_id="<?= $action['id'] ?>" data-day="1" data-action="?action=checkShift"
-                                    data-comment="hidden">
-                                    A Valider
-                                <?php else: ?>
-                                    class="btn btn-success toggleShiftModal"
-                                    data-content="Annuler <?= $action['text'] ?> : Jour"
-                                    data-action_id="<?= $action['id'] ?>" data-day="1" data-action="?action=uncheckShift"
-                                    data-comment="hidden">
+                            <?php if (count($action["checksDay"]) == 0): ?>
+                                <button onclick="shiftCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,1)" class="btn btn-warning toggleShiftModal">A Valider</button>
+                            <?php else: ?>
+                                <button onclick="shiftUnCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,1)" class="btn btn-success toggleShiftModal">
                                     Validé Par
                                     <div class="text-success bg-white rounded mt-1">
                                         <?php foreach ($action["checksDay"] as $check): ?>
                                             <?= $check["initials"] ?>
                                         <?php endforeach; ?>
                                     </div>
-                                <?php endif; ?>
-                            </button>
+                                </button>
+                            <?php endif; ?>
                         </td>
+                        <!-- Check for the night -->
                         <td class="SH_checkCase">
-                            <button type="submit"
                                 <?php if (count($action["checksNight"]) == 0): ?>
-                                    class="btn btn-warning toggleShiftModal"
-                                    data-content="Valider <?= $action['text'] ?> : Nuit"
-                                    data-action_id="<?= $action['id'] ?>" data-day="0" data-action="?action=checkShift"
-                                    data-comment="hidden">
-                                A Valider
+                                    <button onclick="shiftCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,0)" class="btn btn-warning toggleShiftModal">A Valider</button>
                                 <?php else: ?>
-                                    class="btn btn-success toggleShiftModal"
-                                    data-content="Annuler <?= $action['text'] ?> : Nuit"
-                                    data-action_id="<?= $action['id'] ?>" data-day="0" data-action="?action=uncheckShift"
-                                    data-comment="hidden">
+                                    <button onclick="shiftUnCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,0)" class="btn btn-success toggleShiftModal">
                                     Validé Par
                                     <div class="text-success bg-white rounded mt-1">
                                         <?php foreach ($action["checksNight"] as $check): ?>
                                             <?= $check["initials"] ?>
                                         <?php endforeach; ?>
                                     </div>
+                                    </button>
                                 <?php endif; ?>
-                            </button>
                         </td>
+                        <!-- Comments for the action -->
                         <td>
+                            <div id="commentList<?= $action['id'] ?>">
                             <?php foreach ($action["comments"] as $comment): ?>
                                 <div class="<?= ($comment['carryOn'] == 1 and $comment['endOfCarryOn'] == null) ? 'carry' : 'notCarry' ?>"
                                      id="comment-<?= $comment['id'] ?>">
-
+                                    <!-- CarryOn button -->
                                     <button class="removeCarryOnBtn carried" value=<?= $comment['id'] ?>>
                                         <i class="fas fa-thumbtack fa-lg" style="color:#000000"></i>
                                     </button>
-
                                     <button class="addCarryOnBtn addCarry" value=<?= $comment['id'] ?>>
                                         <i class="fas fa-thumbtack fa-rotate-90 fa-lg" style="color:#777777"></i>
                                     </button>
-
+                                    <!-- Comment -->
                                     <strong>[ <?= $comment['initials'] ?>
                                         - <?= date('H:i', strtotime($comment['time'])) ?> <?= ($comment['carryOn'] == 1) ? date('/  d.m.Y ', strtotime($comment['time'])) : "" ?>
                                         ] :</strong>
                                     <?= $comment['message'] ?>
                                     <hr>
                                 </div>
-
                             <?php endforeach; ?>
-
-
-                            <button type="submit" class="btn btn-secondary btn-block m-1 toggleShiftModal d-print-none"
-                                    data-content="Ajouter un commentaire  à <?= $action['text'] ?>"
-                                    data-action_id="<?= $action['id'] ?>" data-action="?action=commentShift"
-                                    data-comment="text" style="width:200px;">
-                                Nouveau commentaire
+                            </div>
+                            <button onclick="shiftCommentModal('<?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>)"
+                                    class="btn btn-secondary btn-block m-1 d-print-none addShiftComment"
+                                    style="width:200px;"> Nouveau commentaire
                             </button>
-
-
                         </td>
                     <?php else: ?>
                         <td>
@@ -300,12 +282,7 @@ $title = "CSU-NVB - Remise de garde";
                         Ré-activer le modèle
                     </button>
                 <?php else : ?>
-                    <button type="submit"
-                            class="btn btn-primary toggleShiftModal m-1"
-                            data-content="Enregistrer comme nouveau modèle :<br><br><strong>Nom :</strong>"
-                            data-action_id="<?= $shiftsheet["model"] ?>" data-day="1"
-                            data-action="?action=addShiftModel"
-                            data-comment="text" style="size:60%">
+                    <button class="btn btn-primary toggleShiftModal m-1" onclick="saveShiftModel()">
                         Enregistrer comme modèle
                     </button>
                 <?php endif; ?>
@@ -323,36 +300,7 @@ $title = "CSU-NVB - Remise de garde";
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="shiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <form method="post" id="shiftSheetinfo" action="">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-title">
-                        Garde du <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="modal-content">
-                </div>
-                <input type="hidden" name="action_id" id="action_id" value="0">
-                <input type="hidden" name="shiftSheet_id" value="<?= $shiftsheet['id'] ?>">
-                <input type="hidden" name="day" id="day" value="0">
-                <input type="hidden" name='comment' id="comment" style='margin:0px 0px 10px 10px; width:400px;'>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <input type="submit" class="btn btn-primary" value="Valider">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <?= addModal() ?>
-<div onclick="testModal()()">aaa</aaa></div>
 <script src="js/shift.js"></script>
 <?php
 $content = ob_get_clean();
