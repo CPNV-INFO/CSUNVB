@@ -136,7 +136,7 @@ function updateShift()
         setFlashMessage("Une erreur est survenue. Impossible d'enregistrer les données.");
     } else {
         setFlashMessage("Les données ont été correctement enregistrées.");
-        writeLog("SHIFT",$_GET["id"],"Données de la feuille modifiées");
+        writeLog("SHIFT",$_GET["id"],"Données de la feuille modifiées");//todo à mofifier quand elle seront modifiée automatiquement en précisant le champ modifié
     }
     redirect("shiftShow", $_GET["id"]);
 }
@@ -152,7 +152,9 @@ function addActionForShift($sheetID)
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'enregistrer les données.");
     } else {
-        setFlashMessage("L'action <strong>" . getShiftActionName($_POST["actionID"]) . "</strong> à été ajoutée au rapport");
+        $actionName = getShiftActionName($_POST["actionID"]);
+        setFlashMessage("L'action <strong>" . $actionName . "</strong> à été ajoutée au rapport");
+        writeLog("SHIFT",$sheetID, "Tâche ajoutée : ". $actionName);
     }
     redirect("shiftShow", $sheetID);
 }
@@ -167,9 +169,12 @@ function creatActionForShift($sheetID)
     $actionID = getShiftActionID($_POST["actionToAdd"], $_POST["section"]);
     if ($actionID == null) {
         $actionID = creatShiftAction($_POST["actionToAdd"], $_POST["section"]);
+        writeLog("SHIFT",$sheetID, "Tâche crée et ajoutée au rapport : " . $_POST["actionToAdd"]);
         setFlashMessage("Nouvelle action <strong>" . $_POST["actionToAdd"] . "</strong> créée et ajoutée au rapport");
+
     } else {
         setFlashMessage("L'action <strong>" . $_POST["actionToAdd"] . "</strong> à été ajoutée au rapport");
+        writeLog("SHIFT",$sheetID, "Tâche ajoutée : ". $_POST["actionToAdd"]);
     }
     $modelID = configureModel($sheetID, $_POST["model"]);
     $res = addShiftAction($modelID, $actionID);
@@ -191,7 +196,9 @@ function removeActionForShift($sheetID)
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de supprimer l'action.");
     } else {
-        setFlashMessage("l'action <strong>" . getShiftActionName($_POST["action"]) . "</strong> a été suprimée");
+        $actionName = getShiftActionName($_POST["action"]);
+        setFlashMessage("l'action <strong>" . $actionName . "</strong> a été suprimée");
+        writeLog("SHIFT",$sheetID, "Tâche supprimmée : ". $actionName);
     }
     redirect("shiftShow", $sheetID);
 }
