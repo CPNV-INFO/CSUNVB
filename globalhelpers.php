@@ -103,7 +103,7 @@ function addModal()
 <div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form method="post" id="modalForm" action="">
+            <form method="post" id="mainModalForm" action="">
                 <div class="modal-header">
                     <h5 id="mainModalTitle">
                     </h5>
@@ -115,7 +115,9 @@ function addModal()
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <input type="submit" class="btn btn-primary" value="Valider">
+                    <div id="mainModalSubmit">
+                        <input type="submit" class="btn btn-primary" value="Valider">
+                    </div>
                 </div>
             </form>
         </div>
