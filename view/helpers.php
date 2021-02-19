@@ -185,6 +185,7 @@ function listShiftSheet($slug, $shiftList, $zone)
         foreach ($shiftList as $shift) {
             $body .= "<tr>
                 <td>" . date('d.m.Y', strtotime($shift['date']));
+            $body .= "  ".count(getUncheckActionForShift($shift['id']))."vide(s)";
             if (isset($shift["modelImage"])) {
                 $body .= "<i class='fas fa-file-alt template' title='Modèle : " . $shift["modelImage"] . "'></i>";
             }

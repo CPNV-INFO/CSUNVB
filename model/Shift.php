@@ -323,3 +323,24 @@ function updateDataShift($id, $novaDay, $novaNight, $bossDay, $bossNight, $teamm
     if ($teammateNight == "NULL") $teammateNight = null;
     return execute("update shiftsheets set daynova_id =:novaDay, nightnova_id =:novaNight, dayboss_id =:bossDay, nightboss_id =:bossNight, dayteammate_id =:teammateDay, nightteammate_id =:teammateNight WHERE id=:id", ["id" => $id, "novaDay" => $novaDay, "novaNight" => $novaNight, "bossDay" => $bossDay, "bossNight" => $bossNight, "teammateDay" => $teammateDay, "teammateNight" => $teammateNight]);
 }
+
+function getUncheckActionForShift($sheetID){
+    return selectMany("SELECT day, action_id FROM (
+SELECT 0 as DAY, shiftmodel_has_shiftaction.shiftaction_id AS action_id, CONCAT(shiftmodel_has_shiftaction.shiftaction_id,'/',0) AS 'code' FROM shiftmodels
+INNER JOIN shiftmodel_has_shiftaction
+ON shiftmodels.id = shiftmodel_has_shiftaction.shiftmodel_id
+INNER JOIN shiftsheets
+ON shiftsheets.shiftmodel_id = shiftmodels.id
+WHERE shiftsheets.id = :sheetID
+union SELECT 1 as DAY, shiftmodel_has_shiftaction.shiftaction_id AS action_id,CONCAT(shiftmodel_has_shiftaction.shiftaction_id,'/',1) AS 'code'  FROM shiftmodels
+INNER JOIN shiftmodel_has_shiftaction
+ON shiftmodels.id = shiftmodel_has_shiftaction.shiftmodel_id
+INNER JOIN shiftsheets
+ON shiftsheets.shiftmodel_id = shiftmodels.id
+WHERE shiftsheets.id = :sheetID ) AS test 
+WHERE code not IN(
+SELECT unique CONCAT(shiftactions.id,'/',shiftchecks.day) AS 'code' FROM shiftchecks
+inner JOIN shiftactions
+ON shiftactions.id = shiftchecks.shiftaction_id
+WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]);
+}
