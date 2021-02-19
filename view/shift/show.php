@@ -274,26 +274,18 @@ $title = "CSU-NVB - Remise de garde";
         <div class="d-flex flex-row">
             <?php if ($model["suggested"] == 0) : ?>
                 <?php if ($model["name"] != "") : ?>
-                    <button type="submit"
-                            class="btn btn-primary toggleShiftModal m-1"
-                            data-content="Voulez-vous ré-activer le modèle ?<br><strong><?= $model["name"] ?></strong><br>Il sera proposé à la création de nouveaux rapports"
-                            data-action_id="<?= $shiftsheet["model"] ?>" data-action="?action=reAddShiftModel"
-                            data-comment="hidden">
+                    <button class="btn btn-primary m-1" onclick="reAddShiftModel(<?= $shiftsheet["model"] ?>, '<?= $model["name"] ?>',<?= $shiftsheet['id'] ?>)">
                         Ré-activer le modèle
                     </button>
                 <?php else : ?>
-                    <button class="btn btn-primary toggleShiftModal m-1" onclick="saveShiftModel()">
+                    <button class="btn btn-primary m-1" onclick="saveShiftModel(<?= $shiftsheet['id'] ?>,<?= $shiftsheet["model"] ?>)">
                         Enregistrer comme modèle
                     </button>
                 <?php endif; ?>
             <?php else : ?>
                 <?php if ($model["name"] != "Vide") : ?>
-                    <button type="submit"
-                            class="btn btn-primary toggleShiftModal m-1"
-                            data-content="Voulez-vous vraiment retirer le modèle ?<br><strong><?= $model["name"] ?></strong><br>Il ne sera plus proposé à la création de nouveaux rapports"
-                            data-action_id="<?= $shiftsheet["model"] ?>" data-action="?action=removeShiftModel"
-                            data-comment="hidden">
-                        Retirer le modèle
+                    <button class="btn btn-primary m-1" onclick="disableShiftModel(<?= $shiftsheet["model"] ?>, <?= $model["name"] ?>,<?= $shiftsheet['id'] ?>)">
+                        Oublier le modèle
                     </button>
                 <?php endif; ?>
             <?php endif; ?>

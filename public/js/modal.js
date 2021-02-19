@@ -59,7 +59,33 @@ function shiftUnCheckModal(date,action,actionID,sheetID,day){
     showModal();
 }
 
-function saveShiftModel(modelID){
+function saveShiftModel(sheetID,modelID){
     $("#mainModalForm").attr('action', '?action=addShiftModel');
+    setTitleModal("Enregistrer en tant que modèle");
+    setBodyModal("Nom :<br>");
+    addBodyModal('<input type="text" name="name" id="name" style="margin:10px 0px 0px 0px; width:400px;">');
+    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value='+ sheetID +'>');
+    addBodyModal('<input type="hidden" name="modelID" id="modelID" value='+ modelID +'>');
+    setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Enregistrer">');
+    showModal();
+}
+
+function disableShiftModel(modelID, modelName, sheetID){
+    $("#mainModalForm").attr('action', '?action=removeShiftModel');
+    setTitleModal("Oublier le modèle");
+    setBodyModal(modelName);
+    addBodyModal('<input type="hidden" name="modelID" id="modelID" value='+ modelID +'>');
+    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value='+ sheetID +'>');
+    setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Oublier">');
+    showModal();
+}
+
+function reAddShiftModel(modelID, modelName, sheetID){
+    $("#mainModalForm").attr('action', '?action=reAddShiftModel');
+    setTitleModal("Réactiver le modèle");
+    setBodyModal(modelName);
+    addBodyModal('<input type="hidden" name="modelID" id="modelID" value='+ modelID +'>');
+    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value='+ sheetID +'>');
+    setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Réactiver">');
     showModal();
 }

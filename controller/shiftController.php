@@ -256,13 +256,13 @@ function shiftDeleteSheet()
  * shows a message to confirm action or an error message
  */
 function removeShiftModel(){
-    $res = disableShiftModel($_POST["action_id"]);
+    $res = disableShiftModel($_POST["modelID"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de retirer le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement retiré de la liste des modèles disponibles.");
     }
-    redirect("shiftShow",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["sheetID"]);
 }
 
 /**
@@ -270,24 +270,24 @@ function removeShiftModel(){
  * shows a message to confirm action or an error message
  */
 function addShiftModel(){
-    $res = enableShiftModel($_POST["action_id"],$_POST["comment"]);
+    $res = enableShiftModel($_POST["modelID"],$_POST["name"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement ajouté.");
     }
-    redirect("shiftShow",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["sheetID"]);
 }
 
 
 function reAddShiftModel(){
-    $res = reEnableShiftModel($_POST["action_id"],$_POST["comment"]);
+    $res = reEnableShiftModel($_POST["modelID"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de réactiver le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement réactivé.");
     }
-    redirect("shiftShow",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["sheetID"]);
 }
 
 function shiftLog($sheetID){
