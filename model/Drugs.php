@@ -65,6 +65,9 @@ function insertNovaInSheet($drugSheetID,$novaToAdd){
     return insert("INSERT INTO drugsheet_use_nova (drugsheet_id,nova_id) VALUES (:drugSheetID,(SELECT novas.id from novas WHERE novas.number =:novaNumber));",['drugSheetID' =>$drugSheetID,'novaNumber' => $novaToAdd]);
 }
 
+function removeNovaFromSheet($drugSheetID,$novaToRemove){
+    return execute("DELETE FROM drugsheet_use_nova WHERE drugsheet_use_nova.drugsheet_id = :drugSheetID AND drugsheet_use_nova.nova_id = (SELECT novas.id from novas WHERE novas.number =:novaNumber)",['drugSheetID' =>$drugSheetID,'novaNumber' => $novaToRemove]);
+}
 /**
  * Retourne les batches de médicaments utilisés sur un rapport précis
  * @param $drugSheetID

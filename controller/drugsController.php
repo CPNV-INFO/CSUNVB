@@ -129,7 +129,7 @@ function addNovasToDrugSheet(){
     if(ican ("modifySheet")){
     $res = insertNovaInSheet($drugSheetID,$novaToAdd);
         if ($res == false) {
-            setFlashMessage("Une erreur est survenue. Impossible d'ajouter le lot au rapport.");
+            setFlashMessage("Une erreur est survenue. Impossible d'ajouter l'ambulance au rapport.");
         } else {
             setFlashMessage("L'ambulance " . $novaToAdd . "  a été correctement ajoutée.");
         }
@@ -139,4 +139,21 @@ function addNovasToDrugSheet(){
     }
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 
+}
+function removeNovaFromDrugSheet(){
+    $drugSheetID = $_POST['drugSheetID'];
+    $novaToRemove = $_POST['nova'];
+
+    if(ican ("modifySheet")){
+        $res = removeNovaFromSheet($drugSheetID,$novaToRemove);
+        if ($res == false) {
+            setFlashMessage("Une erreur est survenue. Impossible de retirer l'ambulance du rapport.");
+        } else {
+            setFlashMessage("L'ambulance " . $novaToRemove . "  a été correctement retirée.");
+        }
+
+    }else{
+        setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }

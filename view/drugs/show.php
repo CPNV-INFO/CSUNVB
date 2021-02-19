@@ -217,7 +217,14 @@ ob_start();
             <th>Pharmacie (matin)</th>
             <?php foreach ($novas as $nova): ?>
                 <th>
-                    <?= $nova["number"] ?>
+                    <span class="d-inline"><?= $nova["number"] ?></span>
+                    <?php if(ican ("modifySheet") && $edition) : ?>
+                        <form method="POST" action="?action=removeNovaFromDrugSheet" onsubmit="return confirm('Est ce que vous voulez vraiment retirer cette ambulance du rapoort?');" class="d-inline">
+                            <input type="hidden" name="nova" value="<?= $nova["number"] ?>">
+                            <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
+                            <button type="submit" id="removeNovaBtn" class='btn trashButtons'><i class="fas fa-trash"></i></button>
+                        </form>
+                    <?php endif; ?>
                 </th>
             <?php endforeach; ?>
             <th>Pharmacie (soir)</th>
