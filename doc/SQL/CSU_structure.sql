@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `csunvb_csu`.`logs` (
   `user_id` INT(11) NOT NULL,
   `report_type` ENUM('SHIFT','TODO','DRUG') NOT NULL,
   `report_id` INT(11) NOT NULL COMMENT 'A foreign key without constraint, because it will point to different tables according to the report type',
-  `info` VARCHAR(200) NULL 'decribe what is done',
+  `info` VARCHAR(200) NULL COMMENT 'decribe what is done',
   PRIMARY KEY (`id`),
   INDEX `fkmadeby_idx` (`user_id` ASC),
   CONSTRAINT `fkmadeby`
