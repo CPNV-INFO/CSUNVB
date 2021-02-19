@@ -41,7 +41,7 @@ function getSlugs() {
 }
 
 function getDrugsInDrugSheet($sheetID) {
-    return selectMany("SELECT drugs.name,drugs.id FROM drugsheet_use_batch
+    return selectMany("SELECT distinct drugs.name,drugs.id FROM drugsheet_use_batch
                              JOIN batches ON drugsheet_use_batch.batch_id=batches.id
                              JOIN drugs ON batches.drug_id=drugs.id
                              WHERE drugsheet_use_batch.drugsheet_id =:sheet", ['sheet' => $sheetID]);
