@@ -122,6 +122,23 @@ function addBatchesToDrugSheet(){
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
 
+function removeBatchFromDrugSheet(){
+    $batchToRemove = $_POST['batch'];
+    $drugSheetID = $_POST['drugSheetID'];
+
+    if(ican ("modifySheet")){
+        $res = removeBatchFromSheet($drugSheetID,$batchToRemove);
+        if ($res == false) {
+            setFlashMessage("Une erreur est survenue. Impossible de retirer le lot du rapport.");
+        } else {
+            setFlashMessage("Le lot " . $batchToRemove . " a été correctement retiré.");
+        }
+    }else{
+        setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+}
+
 function addNovasToDrugSheet(){
     $drugSheetID = $_POST['drugSheetID'];
     $novaToAdd = $_POST['novaToAddList'];

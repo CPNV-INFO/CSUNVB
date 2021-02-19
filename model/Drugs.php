@@ -81,6 +81,10 @@ function insertBatchInSheet($drugSheetID,$batchToAdd){
 return insert("INSERT INTO drugsheet_use_batch (drugsheet_id,batch_id) VALUES (:drugSheetID,(SELECT batches.id from batches WHERE batches.number = :batchToAdd));",['drugSheetID' =>$drugSheetID,'batchToAdd' => $batchToAdd]);
 }
 
+function removeBatchFromSheet($drugSheetID,$batchToRemove){
+    return execute("DELETE FROM drugsheet_use_batch WHERE drugsheet_use_batch.drugsheet_id = :drugSheetID AND drugsheet_use_batch.batch_id = (SELECT batches.id from batches WHERE batches.number =:batchToRemove)",['drugSheetID' =>$drugSheetID,'batchToRemove' => $batchToRemove]);
+}
+
 
 
 /**
