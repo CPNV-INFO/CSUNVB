@@ -77,3 +77,11 @@ function batchSelectionMissing(){
 
 }
 
+function NovaListUpdate(){
+    let novaList = document.getElementById('novaToAddList')
+    let addNovaBtn = document.getElementById('addNovaBtn')
+
+    novaList.selectedIndex !== 0 ? addNovaBtn.disabled = false : addNovaBtn.disabled = true
+
+}
+

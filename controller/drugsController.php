@@ -37,15 +37,27 @@ function showDrugSheet($drugSheetID, $edition = false) {
         $drugsWithUsableBatches = getDrugsWithUsableBatches($drugsheet['base_id']);
         $allUsableBatches = getUsableBatches($drugsheet['base_id']); // All usable batches even thoses who are already in the sheet
         $usableBatches = array(); // usable batch without thoses who are already used in the sheet
+        $allNovas = getNovas();
+        $unusedNovas = array();
+
        foreach ($allUsableBatches as $usableBatch){
            $foundInBatch = false;
-            foreach ($batchesForSheetByDrugId[$usableBatch['drug_id']] as $batchForSheetByDrugId){
-               if( $usableBatch['number'] == $batchForSheetByDrugId['number'] ) $foundInBatch = true ;
-            }
-
+           if(isset($batchesForSheetByDrugId[$usableBatch['drug_id']])) {
+               foreach ($batchesForSheetByDrugId[$usableBatch['drug_id']] as $batchForSheetByDrugId) {
+                   if ($usableBatch['number'] == $batchForSheetByDrugId['number']) $foundInBatch = true;
+               }
+           }
             if(!$foundInBatch) $usableBatches[] = $usableBatch ;
 
         }
+
+       foreach ($allNovas as $nova){
+           $insheet = in_array($nova,$novas,true );
+
+           if (!$insheet){
+               $unusedNovas[] = $nova;
+           }
+       }
     }
 
     require_once VIEW . 'drugs/show.php';
@@ -108,4 +120,23 @@ function addBatchesToDrugSheet(){
         setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
     }
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+}
+
+function addNovasToDrugSheet(){
+    $drugSheetID = $_POST['drugSheetID'];
+    $novaToAdd = $_POST['novaToAddList'];
+
+    if(ican ("modifySheet")){
+    $res = insertNovaInSheet($drugSheetID,$novaToAdd);
+        if ($res == false) {
+            setFlashMessage("Une erreur est survenue. Impossible d'ajouter le lot au rapport.");
+        } else {
+            setFlashMessage("L'ambulance " . $novaToAdd . "  a été correctement ajoutée.");
+        }
+
+    }else{
+        setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+
 }

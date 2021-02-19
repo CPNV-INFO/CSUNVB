@@ -71,6 +71,13 @@ table.table-bordered > tbody > tr > td{
     font-size: 1.75rem;
 }
 
+.edit-form{
+    border: 1px black solid;
+    padding: 5px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
 /* ------------------------------------------------------------
 * Fonds de couleur correspondant aux différents slugs
  -------------------------------------------------------------- */

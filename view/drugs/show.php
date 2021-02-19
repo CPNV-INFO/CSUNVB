@@ -161,8 +161,8 @@ ob_start();
 
 
     <?php if(ican ("modifySheet") && $edition) : ?> <!-- Zone d'ajout de nouvelle tâche -->
-        <div class="d-print-none" style="border: solid; padding: 5px; margin: 2px; margin-top: 15px; margin-bottom: 15px">
-            <form method="POST" action="?action=addBatchesToDrugSheet" class="d-flex justify-content-between">
+        <div class="d-print-none" style="border: solid; padding: 5px; margin: 2px; margin-top: 45px; margin-bottom: 15px">
+            <form method="POST" action="?action=addBatchesToDrugSheet" class="d-flex justify-content-between edit-form">
                 <div class="d-flex">
                     <div>
                         <label for="drugToAddList" style="padding: 0 15px">stupéfiant </label>
@@ -174,7 +174,7 @@ ob_start();
                         </select>
                         <br>
                         <label for="batchToAddList" style="padding: 0 15px">lot </label>
-                        <select name="batchToAddList" id="batchToAddList" style="width: 100px;" required class="missingDrugChoice float-right">
+                        <select name="batchToAddList" id="batchToAddList" style="width: 100px;" required class="missingDrugChoice float-right" onchange="batchSelectionMissing()">
                             <option value="default"></option>
                             <?php foreach ($usableBatches as $usableBatch): ?>
                             <option name="Batch" value="<?= $usableBatch['number'] ?>" hidden class="drug_<?= $usableBatch['name'] ?>"><?= $usableBatch['number'] . " - ". $usableBatch['state'] ?></option>
@@ -186,6 +186,23 @@ ob_start();
                 </div>
                 <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
                 <button type="submit" id="addBatchBtn" class='btn btn-primary m-1' disabled>Ajouter le lot</button>
+            </form>
+            <form method="POST" action="?action=addNovasToDrugSheet" class="d-flex justify-content-between edit-form">
+                <div class="d-flex">
+                    <div>
+                        <label for="novaToAddList" style="padding: 0 15px">Ambulance </label>
+                        <select name="novaToAddList" id="novaToAddList" class='missingNovaChoice' required style="width: 100px;" onchange="NovaListUpdate()">
+                            <option value="default"></option>
+                            <?php foreach ($unusedNovas as $unusedNova) : ?>
+                                <option name="Nova" value="<?= $unusedNova['number'] ?>" ><?= $unusedNova['number'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+
+                </div>
+                <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
+                <button type="submit" id="addNovaBtn" class='btn btn-primary m-1' disabled>Ajouter l'ambulance</button>
             </form>
         </div>
     <?php endif; ?>
@@ -199,7 +216,9 @@ ob_start();
             </th>
             <th>Pharmacie (matin)</th>
             <?php foreach ($novas as $nova): ?>
-                <th><?= $nova["number"] ?></th>
+                <th>
+                    <?= $nova["number"] ?>
+                </th>
             <?php endforeach; ?>
             <th>Pharmacie (soir)</th>
         </tr>

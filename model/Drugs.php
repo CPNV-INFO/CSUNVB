@@ -61,6 +61,10 @@ function getNovasForSheet($drugSheetID) {
     return selectMany("SELECT novas.id as id, number FROM novas INNER JOIN drugsheet_use_nova ON nova_id = novas.id WHERE drugsheet_id =:drugsheet", ['drugsheet' => $drugSheetID]);
 }
 
+function insertNovaInSheet($drugSheetID,$novaToAdd){
+    return insert("INSERT INTO drugsheet_use_nova (drugsheet_id,nova_id) VALUES (:drugSheetID,(SELECT novas.id from novas WHERE novas.number =:novaNumber));",['drugSheetID' =>$drugSheetID,'novaNumber' => $novaToAdd]);
+}
+
 /**
  * Retourne les batches de médicaments utilisés sur un rapport précis
  * @param $drugSheetID
