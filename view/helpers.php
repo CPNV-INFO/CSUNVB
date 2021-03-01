@@ -245,7 +245,7 @@ function buttonForSheet($page, $id, $action, $actionName, $disableReason = "", $
     $btn .= "<input type='hidden' name='id' value='$id'>";
     if (!$newSlug == "") $btn .= "<input type='hidden' name='newSlug' value='$newSlug'>";
     if ($disableReason == "") {
-        $btn .= "<button type='submit' class='btn btn-primary m-1'>$actionName</button></form>";
+        $btn .= "<button type='submit' id='btn_submit_$action' class='btn btn-primary m-1'>$actionName</button></form>";
     } else {
         $btn .= "<form><span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='$disableReason'><button type='submit' class='btn btn-primary m-1' disabled>$actionName</button></span></form>";
     }

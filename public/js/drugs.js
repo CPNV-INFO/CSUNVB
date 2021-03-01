@@ -85,3 +85,10 @@ function NovaListUpdate(){
 
 }
 
+function checkForEnable(){
+    let novas = document.querySelectorAll(".novacount");
+    let batches = document.querySelectorAll(".batchcount");
+    let btnSwitchState = document.getElementById('btn_submit_SheetSwitchState')
+
+    novas.length >= 1 && batches.length >= 1 ? btnSwitchState.disabled = false : btnSwitchState.disabled = true
+}

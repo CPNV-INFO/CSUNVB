@@ -217,7 +217,7 @@ ob_start();
             <th>Pharmacie (matin)</th>
             <?php foreach ($novas as $nova): ?>
                 <th>
-                    <span class="d-inline"><?= $nova["number"] ?></span>
+                    <span class="d-inline novacount"><?= $nova["number"] ?></span>
                     <?php if(ican ("modifySheet") && $edition) : ?>
                         <form method="POST" action="?action=removeNovaFromDrugSheet" onsubmit="return confirm('Est ce que vous voulez vraiment retirer l\'ambulance <?= $nova["number"] ?> du rapoort?');" class="d-inline">
                             <input type="hidden" name="nova" value="<?= $nova["number"] ?>">
@@ -243,7 +243,7 @@ ob_start();
             <?php foreach ($batchesForSheetByDrugId[$drug["id"]] as $batch): ?>
                 <tr>
                     <td class="text-right">
-                        <span class="d-inline"><?= $batch['number'] ?> </span>
+                        <span class="d-inline batchcount"><?= $batch['number'] ?> </span>
                         <?php if(ican ("modifySheet") && $edition) : ?>
                             <form method="POST" action="?action=removeBatchFromDrugSheet" onsubmit="return confirm('Est ce que vous voulez vraiment retirer le lot <?= $batch['number'] ?> du rapoort?');" class="d-inline">
                                 <input type="hidden" name="batch" value="<?= $batch['number'] ?>">
@@ -273,6 +273,7 @@ ob_start();
             echo "drugCheck('" . $UID . "');\n";
         }
 ?>
+checkForEnable();
 </script>
 <?php
 $content = ob_get_clean();
