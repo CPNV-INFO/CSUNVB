@@ -168,3 +168,7 @@ tr:hover .modify {
 .backIcon:hover{
     color: #6c757d;
 }
+
+.warning{
+    color: red;
+}

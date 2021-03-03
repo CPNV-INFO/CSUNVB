@@ -109,7 +109,6 @@ function listSheet($page, $sheets)
         default:
             break;
     }
-
     $html = "<div> <!-- Sections d'affichage des différents rapport -->";
     $html .= "<div> <!-- rapports ouvertes -->
         <div class='slugBlank'>" . $function("open", $sheets["open"], $page) . "</div><br>";
@@ -130,8 +129,6 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
     } else {
         $detailAction = "showtodo";
     }
-
-
     $html = "<h3>Rapport(s) " . showState($slug, 1) . "</h3>
                         <button class='btn dropdownButton'><i class='fas fa-caret-square-down' data-list='" . $slug . "' ></i></button>
                     </div>";
@@ -185,10 +182,11 @@ function listShiftSheet($slug, $shiftList, $zone)
         foreach ($shiftList as $shift) {
             $body .= "<tr>
                 <td>" . date('d.m.Y', strtotime($shift['date']));
-            $body .= "  ".count(getUncheckActionForShift($shift['id']))."vide(s)";
             if (isset($shift["modelImage"])) {
                 $body .= "<i class='fas fa-file-alt template' title='Modèle : " . $shift["modelImage"] . "'></i>";
             }
+            $nbEmpty = count(getUncheckActionForShift($shift['id']));
+            if($nbEmpty != 0 and $slug == 'close')$body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='".$nbEmpty." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
             $body .= "</td>
                 <td>Jour : " . $shift['novaDay'] . "<br>Nuit : " . $shift['novaNight'] . "</td>
                 <td>Jour : " . $shift['bossDay'] . "<br>Nuit : " . $shift['bossNight'] . "</td>
