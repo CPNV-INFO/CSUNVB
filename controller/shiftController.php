@@ -227,6 +227,7 @@ function configureModel($sheetID, $modelID)
 function shiftSheetSwitchState()
 {
     $res = setSlugForShift($_POST["id"], $_POST["newSlug"]);
+    if($_POST["newSlug"] == 'close')closeBy($_POST["id"],$_SESSION['user']['id']);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de changer l'état du rapport de garde.");
     } else {

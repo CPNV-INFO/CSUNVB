@@ -6,7 +6,9 @@ $title = "CSU-NVB - Remise de garde";
     <?= (ican("consultLog")) ? "<a href='?action=shiftLog&id=" . $shiftsheet['id'] . "'><i class='fas fa-history fa-2x logIcon'></i></a>" : "" ?>
     <h1>Remise de Garde </h1>
     <h2>Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?> - Base de <?= $shiftsheet['baseName'] ?>
-        [<?= $shiftsheet['displayname'] ?>]</h2>
+        [<?= $shiftsheet['displayname'] ?>]
+        <?= ($shiftsheet['status'] == 'close') ? ' par '.$shiftsheet['closeBy'] : '' ?>
+    </h2>
     <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
     <div class='d-flex justify-content-end d-print-none'>
         <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>

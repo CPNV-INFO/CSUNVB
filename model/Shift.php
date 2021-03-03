@@ -83,7 +83,7 @@ WHERE shiftsheets.base_id =:base_id and status.id =:slugID order by date DESC;',
 
 function getshiftsheetByID($id)
 {
-    return selectOne('SELECT bases.name as baseName,bases.id as baseID, shiftsheets.id, shiftsheets.date, shiftsheets.base_id,shiftsheets.shiftmodel_id as model, status.slug AS status, status.displayname AS displayname, novaDay.number AS novaDay, novaNight.number AS novaNight, bossDay.initials AS bossDay, bossNight.initials AS bossNight,teammateDay.initials AS teammateDay, teammateNight.initials AS teammateNight
+    return selectOne('SELECT bases.name as baseName,bases.id as baseID, shiftsheets.id, shiftsheets.date, shiftsheets.base_id,shiftsheets.shiftmodel_id as model, status.slug AS status, status.displayname AS displayname, novaDay.number AS novaDay, novaNight.number AS novaNight, bossDay.initials AS bossDay, bossNight.initials AS bossNight,teammateDay.initials AS teammateDay, teammateNight.initials AS teammateNight , closeBy.initials AS closeBy
 FROM shiftsheets
 INNER JOIN bases ON bases.id = shiftsheets.base_id
 INNER JOIN status ON status.id = shiftsheets.status_id
@@ -93,6 +93,7 @@ LEFT JOIN users bossDay ON bossDay.id = shiftsheets.dayboss_id
 LEFT JOIN users bossNight ON bossNight.id = shiftsheets.nightboss_id
 LEFT JOIN users teammateDay ON teammateDay.id = shiftsheets.dayteammate_id
 LEFT JOIN users teammateNight ON teammateNight.id = shiftsheets.nightteammate_id
+LEFT JOIN users closeBy ON closeBy.id = shiftsheets.closeBy
 WHERE shiftsheets.id =:id;', ["id" => $id]);
 }
 
@@ -207,6 +208,16 @@ function getShiftActionName($actionID)
 function setSlugForShift($id, $slug)
 {
     return execute("update shiftsheets set status_id= (select id from status where slug =:slug) WHERE id=:id", ["slug" => $slug, "id" => $id]);
+}
+
+/**
+ * setSlugForShift : set the user who close de sheet
+ * @param int $id : id of the shiftsheet
+ * @param int $userID : id of the user
+ * @return bool : true = ok / false = fail
+ */
+function closeBy($id,$userID){
+    return execute("update shiftsheets set closeBy = :userID WHERE id=:id", ["userID" => $userID, "id" => $id]);
 }
 
 
