@@ -402,6 +402,7 @@ CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftsheets` (
   `nightboss_id` INT NULL,
   `dayteammate_id` INT NULL,
   `nightteammate_id` INT NULL,
+  `closeBy` INT NULL,
   `daynova_id` INT NULL,
   `nightnova_id` INT NULL,
   PRIMARY KEY (`id`),
@@ -413,6 +414,7 @@ CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftsheets` (
   INDEX `fk_shiftSheets_users2_idx` (`nightboss_id` ASC),
   INDEX `fk_shiftSheets_users3_idx` (`dayteammate_id` ASC),
   INDEX `fk_shiftSheets_users4_idx` (`nightteammate_id` ASC),
+  INDEX `fk_shiftSheets_users5_idx` (`closeBy` ASC),
   INDEX `fk_shiftSheets_novas1_idx` (`daynova_id` ASC),
   INDEX `fk_shiftSheets_novas2_idx` (`nightnova_id` ASC),
   INDEX `fk_shiftsheets_shiftmodels1_idx` (`shiftmodel_id` ASC),
@@ -448,6 +450,11 @@ CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftsheets` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_shiftSheets_users4`
     FOREIGN KEY (`nightteammate_id`)
+    REFERENCES `csunvb_csu`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+	CONSTRAINT `fk_shiftSheets_users5`
+    FOREIGN KEY (`closeBy`)
     REFERENCES `csunvb_csu`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
