@@ -225,10 +225,18 @@ function slugBtns($page, $sheet, $slug)
             break;
         case "open":
             if (ican('closesheet')){
-                if($page = "SHIFT"){
-                    $buttonList .= shiftCloseBtn($sheet['date'],$sheet['id'],$sheet["nbEmpty"]);
-                }else{
-                    $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+                switch ($page) {
+                    case "drug":
+                        $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+                        break;
+                    case "todo":
+                        $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+                        break;
+                    case "shift":
+                        $buttonList .= shiftCloseBtn($sheet['date'],$sheet['id'],$sheet["nbEmpty"]);
+                        break;
+                    default:
+                        break;
                 }
             }
             break;

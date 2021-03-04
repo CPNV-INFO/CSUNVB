@@ -113,3 +113,24 @@ function shiftClose(date, sheetID) {
     showModal();
 }
 
+function todoClose(sheetID) {
+    $("#mainModalForm").attr('action', '?action=todoSheetSwitchState');
+    setTitleModal("Tâches Hedomadaires");
+    setBodyModal("Etes-vous sur de vouloir clôturer ce rapport ?");
+    $.ajax({
+        type: "POST",
+        url: '?action=&id=' + sheetID,
+        cache: false,
+        success: function (data) {
+            if(data) addBodyModal("<br><br><strong>" + data + " tâche(s) n'ont pas été validée(s)</strong>");
+        },
+        error: function (jqXHR, exception) {
+            alertError(jqXHR, exception);
+        }
+    });
+    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value=' + sheetID + '>');
+    addBodyModal('<input type="hidden" name="newSlug" id="newSlug" value="close">');
+    setSubmitModal('<input type="submit" class="btn btn-primary" value="Clôturer">');
+    showModal();
+}
+

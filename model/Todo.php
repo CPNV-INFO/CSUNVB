@@ -305,5 +305,5 @@ function getTaskDescription($taskID){
 }
 
 function getUncheckActionForTodo($sheetID){
-    return selectMany("SELECT todothing_id, day_of_week FROM todos WHERE todosheet_id = :id AND user_id IS null",['id' => $sheetID]);
+    return count(selectMany("SELECT todothing_id, day_of_week FROM todos WHERE todosheet_id = :id AND user_id IS null",['id' => $sheetID]));
 }
