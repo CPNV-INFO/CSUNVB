@@ -172,3 +172,7 @@ tr:hover .modify {
 .warning{
     color: red;
 }
+
+.incompleteTask{
+    background-color: salmon;
+}
