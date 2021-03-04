@@ -303,3 +303,7 @@ function getTaskDescription($taskID){
                           FROM todothings
                           WHERE id =:task_id",['task_id' => $taskID])['description'];
 }
+
+function getUncheckActionForTodo($sheetID){
+    return selectMany("SELECT todothing_id, day_of_week FROM todos WHERE todosheet_id = :id AND user_id IS null",['id' => $sheetID]);
+}
