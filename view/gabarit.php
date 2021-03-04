@@ -43,6 +43,7 @@
         <?= getFlashMessage() ?>
     </div>
     <?= (isset($content)) ? $content : "page vide" ?>
+    <?= addModal() ?>
 </div>
 </body>
 </html>
