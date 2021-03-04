@@ -141,18 +141,13 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
         foreach ($sheets as $sheet) {
 
             $html = $html . "<tr> <td>Semaine " . $sheet['week'];
-
+            if(true){
+                $html .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='"."aa"." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
+            }
             if (ican('createsheet') && (isset($sheet['template_name']))) {
                 $html = $html . "<i class='fas fa-file-alt template' title='" . $sheet['template_name'] . "'></i>";
             }
-
-            $html = $html . "<td><div class='d-flex justify-content-around'>
-                                        <form>
-                                            <input type='hidden' name='action' value='" . $detailAction . "'>
-                                            <input type='hidden' name='id' value='" . $sheet['id'] . "'>
-                                            <button type='submit' class='btn btn-primary m-1'>Détails</button>
-                                        </form>
-                                        " .slugBtns($zone, $sheet, $slug) . "</div></td>";
+            $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn btn-primary m-1' href='?action=showtodo&id=".$sheet['id']."'>Détails</a>".slugBtns($zone, $sheet, $slug) . "</div></td>";
         }
 
         $html = $html . "</tr> </tbody> </table></div>";
@@ -185,7 +180,7 @@ function listShiftSheet($slug, $shiftList, $zone)
             if (isset($shift["modelImage"])) {
                 $body .= "<i class='fas fa-file-alt template' title='Modèle : " . $shift["modelImage"] . "'></i>";
             }
-            $nbEmpty = count(getUncheckActionForShift($shift['id']));
+            $nbEmpty = getUncheckActionForShift($shift['id']);
             if($nbEmpty != 0 and $slug == 'close')$body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='".$nbEmpty." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
             $body .= "</td>
                 <td>Jour : " . $shift['novaDay'] . "<br>Nuit : " . $shift['novaNight'] . "</td>
@@ -276,7 +271,7 @@ function buttonForSheet($page, $id, $action, $actionName, $disableReason = "", $
 
 function shiftCloseBtn($date, $sheetID, $nbMissingTasks)
 {
-    return "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick='shiftClose(".'"'.$date.'"'.",$sheetID,$nbMissingTasks)'>";
+    return "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick='shiftClose(".'"'.$date.'"'.",$sheetID)'>";
 }
 
 function checkOpen($page, $baseID)

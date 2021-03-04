@@ -336,7 +336,7 @@ function updateDataShift($id, $novaDay, $novaNight, $bossDay, $bossNight, $teamm
 }
 
 function getUncheckActionForShift($sheetID){
-    return selectMany("SELECT day, action_id FROM (
+    return count(selectMany("SELECT day, action_id FROM (
 SELECT 0 as DAY, shiftmodel_has_shiftaction.shiftaction_id AS action_id, CONCAT(shiftmodel_has_shiftaction.shiftaction_id,'/',0) AS 'code' FROM shiftmodels
 INNER JOIN shiftmodel_has_shiftaction
 ON shiftmodels.id = shiftmodel_has_shiftaction.shiftmodel_id
@@ -353,5 +353,5 @@ WHERE code not IN(
 SELECT unique CONCAT(shiftactions.id,'/',shiftchecks.day) AS 'code' FROM shiftchecks
 inner JOIN shiftactions
 ON shiftactions.id = shiftchecks.shiftaction_id
-WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]);
+WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]));
 }

@@ -61,7 +61,7 @@ function shiftList($selectedBaseID = null)
 function shiftShow($shiftid)
 {
     $shiftsheet = getshiftsheetByID($shiftid);
-    $shiftsheet["nbEmpty"] = count(getUncheckActionForShift($shiftsheet['id']));
+    $shiftsheet["nbEmpty"] = getUncheckActionForShift($shiftsheet['id']);
     $sections = getshiftsections($shiftid, $shiftsheet["baseID"]);
     $enableshiftsheetUpdate = ($shiftsheet['status'] == "open" || ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true));
     $enableshiftsheetFilling = ($shiftsheet['status'] == "open" || $shiftsheet['status'] == "reopen" && $_SESSION['user']['admin'] == true);
@@ -297,4 +297,8 @@ function shiftLog($sheetID){
     $sheet = getshiftsheetByID($sheetID);
     $logs = getLogs($type,$sheetID);
     require_once VIEW . 'main/log.php';
+}
+
+function uncheckActionForShift_AJAX($sheetID){
+    echo getUncheckActionForShift($sheetID);
 }
