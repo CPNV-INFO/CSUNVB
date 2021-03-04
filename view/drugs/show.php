@@ -27,10 +27,12 @@ ob_start();
 </div>
 
 <?php if($drugsheet['slug'] != "blank"): // We check if the drugsheet slug is "blank" or not to change the page to a preparation's page if it is?>
-    <button class='btn btn-primary m-1 float-right' id="save" hidden onclick="sendData()">Enregistrer les données</button>
+
     <div class="float-right d-print-none">
         <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
     </div>
+    <form action="?action=updateDrugSheet" method="POST">
+        <button type="submit" class='btn btn-primary m-1 float-right' id="save" hidden>Enregistrer les données</button>
     <?php foreach ($dates as $date): ?>
     <table border="1" class="table table-bordered">
         <thead class="thead-dark">
@@ -61,13 +63,15 @@ ob_start();
                     ?>
                     <?php $UID = 'n' . $nova["number"] . 'd' . $drug["id"] . 'D' . $date ?>
                     <?php if($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div ?>
-                    <td id="<?= $UID ?>">
-                        <input  type="number" min="0" class="text-center"
+                    <td id="<?= $UID ?>" class="text-center">
+                        <input  type="number" min="0" class="text-center d-inline w-25 border-0"
+                                name="novaChecks['<?= $date ?>'][<?= $nova['id'] ?>][<?= $drug['id'] ?>]['start']"
                                 value="<?= (is_numeric($ncheck["start"]) ? $ncheck["start"] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'start');"
                                 id="<?= $UID ?>start"
-                        >
-                        <input  type="number" min="0" class="text-center"
+                        >  /
+                        <input  type="number" min="0" class="text-center d-inline w-25 border-0"
+                                name="novaChecks['<?= $date ?>'][<?= $nova['id'] ?>][<?= $drug['id'] ?>]['end']"
                                 value="<?= (is_numeric($ncheck["end"]) ? $ncheck["end"] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'end');"
                                 id="<?= $UID ?>end"
@@ -92,10 +96,10 @@ ob_start();
                     <td class="text-center">
                         <?php if($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div?>
                         <input  type="number" min="0" class="text-center"
+                                name="pharmachecks['<?= $date ?>'][<?= $batch['id'] ?>]['start']"
                                 value="<?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'start');"
                                 id="<?= $UID ?>start"
-
                         >
                     </td>
                     <?php else: ?>
@@ -105,7 +109,8 @@ ob_start();
                     <?php foreach ($novas as $nova): ?>
                         <td class="text-center">
                             <?php if ($drugsheet['slug'] != "close"): ?>
-                                <input type="number" min="0" class="<?= $UID ?> nova text-center"
+                                <input type="number" min="0" class="<?= $UID ?> nova text-center border-0"
+                                        name="restock['<?= $date ?>'][<?= $batch['id'] ?>][<?= $nova['id'] ?>]"
                                         value="<?= (getRestockByDateAndDrug($date, $batch['id'], $nova['id']) + 0) //+0 auto converts to a number, even if null ?>"
                                         onchange="cellUpdate('<?= $UID ?>')"
 
@@ -119,6 +124,7 @@ ob_start();
                         <?php if ($drugsheet['slug'] != "close"): ?>
 
                             <input type="number" min="0" class="text-center"
+                                   name="pharmachecks['<?= $date ?>'][<?= $batch['id'] ?>]['end']"
                                    value="<?= is_numeric($pcheck['end']) ? $pcheck['end'] : '0' ?>" class="text-center"
                                    onchange="cellUpdate('<?= $UID ?>', 'end');"
                                    id="<?= $UID ?>end"
@@ -141,6 +147,7 @@ ob_start();
         </tbody>
     </table>
 <?php endforeach; ?>
+    </form>
 <?php else: ?>
 
     <div class="d-flex flex-row float-right d-print-none"> <!-- If user is admin and sheet is "blank" then show modification button -->
@@ -161,12 +168,12 @@ ob_start();
 
 
     <?php if(ican ("modifySheet") && $edition) : ?> <!-- Zone d'ajout de nouvelle tâche -->
-        <div class="d-print-none" style="border: solid; padding: 5px; margin: 2px; margin-top: 45px; margin-bottom: 15px">
+        <div class="d-print-none" style="border: solid; padding: 5px; margin: 2px; margin-top: 45px; margin-bottom: 15px;">
             <form method="POST" action="?action=addBatchesToDrugSheet" class="d-flex justify-content-between edit-form">
                 <div class="d-flex">
                     <div>
                         <label for="drugToAddList" style="padding: 0 15px">stupéfiant </label>
-                        <select name="drugToAddList" id="drugToAddList" class='missingDrugChoice' required style="width: 100px;" onchange="drugListUpdate()">
+                        <select name="drugToAddList" id="drugToAddList" class='missingDrugChoice' required style="width: 100px; font-size: " onchange="drugListUpdate()">
                             <option value="default"></option>
                             <?php foreach ($drugsWithUsableBatches as $drugWithUsableBatches) : ?>
                                 <option name="Drug" value="<?= $drugWithUsableBatches['name'] ?>" ><?= $drugWithUsableBatches['name'] ?></option>

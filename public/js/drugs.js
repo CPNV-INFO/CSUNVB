@@ -10,10 +10,6 @@ function cellUpdate(UID, time = '') {
     drugCheck(UID);
 }
 
-function sendData() {
-    window.open("?action=updateDrugSheet", "_self");
-}
-
 function drugCheck(UID) {
     if(drugsheetmode !== "close") {
         let expectedAmount = Number(document.getElementById(UID + "start").value);
