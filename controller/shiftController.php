@@ -227,15 +227,15 @@ function configureModel($sheetID, $modelID)
  */
 function shiftSheetSwitchState()
 {
-    $res = setSlugForShift($_POST["id"], $_POST["newSlug"]);
+    $res = setSlugForShift($_POST["sheetID"], $_POST["newSlug"]);
     if($_POST["newSlug"] == 'close')closeBy($_POST["id"],$_SESSION['user']['id']);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de changer l'état du rapport de garde.");
     } else {
         setFlashMessage("L'état du rapport de garde a été correctement modifié.");
-        writeLog("SHIFT",$_POST["id"],"Changement d'état : ".$_POST["newSlug"]);
+        writeLog("SHIFT",$_POST["sheetID"],"Changement d'état : ".$_POST["newSlug"]);
     }
-    redirect("shiftList", getBaseIDForShift($_POST["id"]));
+    redirect("shiftList", getBaseIDForShift($_POST["sheetID"]));
 }
 
 /**
