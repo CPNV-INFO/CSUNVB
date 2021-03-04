@@ -12,9 +12,6 @@ $title = "CSU-NVB - Remise de garde";
     <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
     <div class='d-flex justify-content-end d-print-none'>
         <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
-        <div onclick="shiftClose('aaa',11,22)">
-            aaaa
-        </div>
         <form method='POST'>
             <input type='hidden' name='id' value='" . $sheet["id"] . "'>
             <input type='hidden' name='newSlug' value='open'>

@@ -89,3 +89,14 @@ function reAddShiftModel(modelID, modelName, sheetID){
     setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Réactiver">');
     showModal();
 }
+
+function shiftClose(date,sheetID,nbMissingTasks){
+    $("#mainModalForm").attr('action', '?action=shiftSheetSwitchState');
+    setTitleModal("Remise de Garde du : " + date);
+    setBodyModal("Etes-vous sur de vouloir clôturer ce rapport ?");
+    if(nbMissingTasks>0)addBodyModal("<br><br><strong>"+nbMissingTasks + " tâche(s) n'ont pas été validée(s)</strong>");
+    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value='+ sheetID +'>');
+    addBodyModal('<input type="hidden" name="newSlug" id="newSlug" value="close">');
+    setSubmitModal('<input type="submit" class="btn btn-primary" value="Clôturer">');
+    showModal();
+}
