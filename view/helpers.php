@@ -20,26 +20,34 @@ function setFlashMessage($message)
     $_SESSION['flashmessage'] = $message;
 }
 
-function buttonTask($initials, $desription, $taskID, $type, $slug, $edition, $day)
+function buttonTask($initials, $taskID, $taskName, $state, $day)
 {
-    if ($slug == 'open' || $slug == 'reopen') {
-        if (empty($initials)) {
-            $messageQuittance = 'Vous êtes sur le point de quittancer la tâche suivante : <br> "' . $desription . '".';
-            return "<button type='button' class='btn btn-secondary toggleTodoModal btn-block m-1 tasks' data-title='Quittancer une tâche' data-id='" . $taskID . "' data-status='validate' data-type='" . $type . "' data-content='" . $messageQuittance . "'>" . $desription . "<div class='bg-white rounded mt-1'><br></div></button>";
-        } else {
-            $messageQuittance = 'Vous êtes sur le point de retirer la quittance de la tâche suivante : <br> "' . $desription . '".';
-            return "<button type='button' class='btn btn-success toggleTodoModal btn-block m-1 tasks' data-title='Retirer une quittance' data-id='" . $taskID . "' data-status='invalidate' data-type='" . $type . "' data-content='" . $messageQuittance . "'>" . $desription . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
-        }
-    } elseif ($slug == 'blank' && $edition) {
-        $date = displayDate($day, 0);
-        $messageSuppression = 'Êtes-vous sûr(e) de vouloir supprimer la tâche  <br> "' . $desription . '" du ' . $date . '?';
-        return "<button type='button' class='btn btn-secondary btn-block m-1 tasks' disabled >" . $desription . "<div class='rounded mt-1 trashButtons' data-title='Suppression de une tâche' data-id='" . $taskID . "' data-content='" . $messageSuppression . "'><i class='fas fa-trash'></i><br></div></button>";
-    } else {
-        if (empty($initials)) {
-            return "<button type='button' class='btn btn-secondary btn-block m-1 tasks' disabled >" . $desription . "<div class='bg-white rounded mt-1'><br></div></button>";
-        } else {
-            return "<button type='button' class='btn btn-success btn-block m-1 tasks' disabled >" . $desription . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
-        }
+    switch ($state) {
+        case 'blank':
+            if (empty($initials)) {
+                return "<button type='button' class='btn btn-secondary btn-block tasks' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            }else{
+                return "<button type='button' class='btn btn-success btn-block tasks' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+            }
+        case 'edition':
+            if (empty($initials)) {
+                return "<button type='button' class='btn btn-secondary btn-block tasks' disabled><i class='fas fa-times fa-lg delTodoTask'></i>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            }else{
+                return "<button type='button' class='btn btn-success btn-block tasks' disabled><i class='fas fa-times fa-lg delTodoTask'></i>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+            }
+        case 'close':
+            if (empty($initials)) {
+                return "<button type='button' class='btn btn-danger btn-block tasks' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            }else{
+                return "<button type='button' class='btn btn-success btn-block tasks' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+            }
+        case 'open':
+        case 'reopen':
+            if (empty($initials)) {
+                return "<button type='button' class='btn btn-secondary btn-block tasks'>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            }else{
+                return "<button type='button' class='btn btn-success btn-block tasks'>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+            }
     }
 }
 
@@ -137,9 +145,14 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
                             <thead class='thead-dark'><th>Semaine n°</th><th class='actions'>Actions</th></thead>
                             <tbody>";
         foreach ($sheets as $sheet) {
+            if ($zone == 'drug') {
+                $nbEmpty = 0; //todo need to define ( number of missing value in the sheet )
+            } else {
+                $nbEmpty = getUncheckActionForTodo($sheet['id']);
+            }
             $html = $html . "<tr> <td>Semaine " . $sheet['week'];
-            if(true){
-                $html .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='"."aa"." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
+            if($nbEmpty > 0 and $slug == 'close'){
+                $html .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='".$nbEmpty." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
             }
             if (ican('createsheet') && (isset($sheet['template_name']))) {
                 $html = $html . "<i class='fas fa-file-alt template' title='" . $sheet['template_name'] . "'></i>";

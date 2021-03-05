@@ -38,9 +38,12 @@ function showtodo($sheetID, $edition = false)
 
     $allTodoTasks[0] = getTasksByTime(0);
     $allTodoTasks[1] = getTasksByTime(1);
-
     $missingTasks = array();
-
+    if($edition){
+        $state = 'edition';
+    }else{
+        $state = $week['slug'];
+    }
     for ($daynight = 0; $daynight <= 1; $daynight++) {
         for ($dayofweek = 1; $dayofweek <= 7; $dayofweek++) {
 

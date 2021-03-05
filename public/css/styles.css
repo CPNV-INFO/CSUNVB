@@ -93,39 +93,16 @@ table.table-bordered > tbody > tr > td{
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour l'affichage de la vue des tâches hebdomadaires
  -------------------------------------------------------------- */
-.trashButtons{
-    cursor: pointer;
-    background-color: red;
-}
-/* -- -- -- */
+
 .week {
-    background-color: white;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 2px;
-    margin: 2px;
 }
-
-.day {
-    /*background-color: pink;
-    background-color: #ffffff;*/
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    padding: 2px;
-    margin: 2px;
-    font-size: 80px;
-}
-
-.hour {
-    text-align: center;
-    /*background-color: chartreuse;
-    background-color: #ffffff;*/
-    padding: 4px;
-    margin: 2px;
+.todoTable{
     border-style: solid;
 }
+
 
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour l'affichage de la vue admin secouriste
@@ -175,4 +152,10 @@ tr:hover .modify {
 
 .incompleteTask{
     background-color: salmon;
+}
+
+.delTodoTask{
+    color: red;
+    float: left;
+    margin: 5px 5px 0px 0px;
 }
