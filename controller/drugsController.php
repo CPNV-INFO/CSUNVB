@@ -87,6 +87,49 @@ function drugSheetSwitchState() {
 }
 
 function updateDrugSheet() {
+    $novaChecks = $_POST['novaChecks'];
+    $pharmaChecks = $_POST['pharmachecks'];
+    $restock = $_POST['restock'];
+    $drugSheetID = $_POST['drugsheetID'];
+
+    if(ican("editsheet")){
+        $errors = null;
+
+        foreach ($novaChecks as $date => $novas){
+            foreach ($novas as $novaID => $drugs){
+                foreach ($drugs as $drugID => $drug){
+                    $res = inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID);
+                }
+            }
+        }
+
+        foreach ($pharmaChecks as $date => $bateches){
+            foreach ($bateches as $batchID => $batch){
+                $test = "";
+                $res = insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID);
+            }
+        }
+
+        foreach ($restock as $date => $batches) {
+            foreach ($batches as $batchID => $novas){
+                foreach ($novas as $novaID => $restockamount){
+                    if($restockamount != ""){
+                        $res = inertOrUpdateRestock($date,$batchID,$novaID,$restockamount);
+                    }
+
+                }
+            }
+        }
+
+
+
+    }else{
+    setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+
+
+
 }
 
 /**

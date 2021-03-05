@@ -33,6 +33,7 @@ ob_start();
     </div>
     <form action="?action=updateDrugSheet" method="POST">
         <button type="submit" class='btn btn-primary m-1 float-right' id="save" hidden>Enregistrer les données</button>
+        <input type="hidden" name="drugsheetID" value="<?= $drugSheetID ?>">
     <?php foreach ($dates as $date): ?>
     <table border="1" class="table table-bordered">
         <thead class="thead-dark">
@@ -65,13 +66,13 @@ ob_start();
                     <?php if($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div ?>
                     <td id="<?= $UID ?>" class="text-center">
                         <input  type="number" min="0" class="text-center d-inline w-25 border-0"
-                                name="novaChecks['<?= $date ?>'][<?= $nova['id'] ?>][<?= $drug['id'] ?>]['start']"
+                                name="novaChecks[<?= $date ?>][<?= $nova['id'] ?>][<?= $drug['id'] ?>][start]"
                                 value="<?= (is_numeric($ncheck["start"]) ? $ncheck["start"] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'start');"
                                 id="<?= $UID ?>start"
                         >  /
                         <input  type="number" min="0" class="text-center d-inline w-25 border-0"
-                                name="novaChecks['<?= $date ?>'][<?= $nova['id'] ?>][<?= $drug['id'] ?>]['end']"
+                                name="novaChecks[<?= $date ?>][<?= $nova['id'] ?>][<?= $drug['id'] ?>][end]"
                                 value="<?= (is_numeric($ncheck["end"]) ? $ncheck["end"] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'end');"
                                 id="<?= $UID ?>end"
@@ -95,8 +96,8 @@ ob_start();
                     <td class="text-right"><?= $batch['number'] ?></td>
                     <td class="text-center">
                         <?php if($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div?>
-                        <input  type="number" min="0" class="text-center"
-                                name="pharmachecks['<?= $date ?>'][<?= $batch['id'] ?>]['start']"
+                        <input  type="number" min="0" class="text-center border-0"
+                                name="pharmachecks[<?= $date ?>][<?= $batch['id'] ?>][start]"
                                 value="<?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'start');"
                                 id="<?= $UID ?>start"
@@ -110,7 +111,7 @@ ob_start();
                         <td class="text-center">
                             <?php if ($drugsheet['slug'] != "close"): ?>
                                 <input type="number" min="0" class="<?= $UID ?> nova text-center border-0"
-                                        name="restock['<?= $date ?>'][<?= $batch['id'] ?>][<?= $nova['id'] ?>]"
+                                        name="restock[<?= $date ?>][<?= $batch['id'] ?>][<?= $nova['id'] ?>]"
                                         value="<?= (getRestockByDateAndDrug($date, $batch['id'], $nova['id']) + 0) //+0 auto converts to a number, even if null ?>"
                                         onchange="cellUpdate('<?= $UID ?>')"
 
@@ -123,9 +124,9 @@ ob_start();
                     <td id="<?= $UID ?>" class="text-center">
                         <?php if ($drugsheet['slug'] != "close"): ?>
 
-                            <input type="number" min="0" class="text-center"
-                                   name="pharmachecks['<?= $date ?>'][<?= $batch['id'] ?>]['end']"
-                                   value="<?= is_numeric($pcheck['end']) ? $pcheck['end'] : '0' ?>" class="text-center"
+                            <input type="number" min="0" class="text-center border-0"
+                                   name="pharmachecks[<?= $date ?>][<?= $batch['id'] ?>][end]"
+                                   value="<?= is_numeric($pcheck['end']) ? $pcheck['end'] : '0' ?>"
                                    onchange="cellUpdate('<?= $UID ?>', 'end');"
                                    id="<?= $UID ?>end"
 
