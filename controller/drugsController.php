@@ -93,20 +93,23 @@ function updateDrugSheet() {
     $drugSheetID = $_POST['drugsheetID'];
 
     if(ican("editsheet")){
-        $errors = null;
+        $errors = false;
 
         foreach ($novaChecks as $date => $novas){
             foreach ($novas as $novaID => $drugs){
                 foreach ($drugs as $drugID => $drug){
                     $res = inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID);
+                    if($res == null || $res === false ) {
+                        $errors = true;
+                    }
                 }
             }
         }
 
         foreach ($pharmaChecks as $date => $bateches){
             foreach ($bateches as $batchID => $batch){
-                $test = "";
                 $res = insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID);
+                if($res == null || $res === false) $errors = true;
             }
         }
 
@@ -115,12 +118,14 @@ function updateDrugSheet() {
                 foreach ($novas as $novaID => $restockamount){
                     if($restockamount != ""){
                         $res = inertOrUpdateRestock($date,$batchID,$novaID,$restockamount);
+                        if($res == null || $res === false) $errors = true;
                     }
 
                 }
             }
         }
 
+        $errors == true ? setFlashMessage("L'enregistrement des données à rencontré une erreur. Veuillez vérifier les données du rapport.") : setFlashMessage("L'enregistrement des données à été effectué.");
 
 
     }else{
