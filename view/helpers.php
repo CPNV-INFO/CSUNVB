@@ -132,14 +132,11 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
     $html = "<h3>Rapport(s) " . showState($slug, 1) . "</h3>
                         <button class='btn dropdownButton'><i class='fas fa-caret-square-down' data-list='" . $slug . "' ></i></button>
                     </div>";
-
     if (!empty($sheets)) {
         $html = $html . "<div class='" . $slug . "Sheets' style='margin-top: 0px;'><table class='table table-bordered' style='margin-top: 0px;'>
                             <thead class='thead-dark'><th>Semaine n°</th><th class='actions'>Actions</th></thead>
                             <tbody>";
-
         foreach ($sheets as $sheet) {
-
             $html = $html . "<tr> <td>Semaine " . $sheet['week'];
             if(true){
                 $html .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='"."aa"." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
@@ -147,15 +144,12 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
             if (ican('createsheet') && (isset($sheet['template_name']))) {
                 $html = $html . "<i class='fas fa-file-alt template' title='" . $sheet['template_name'] . "'></i>";
             }
-            $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn btn-primary m-1' href='?action=showtodo&id=".$sheet['id']."'>Détails</a>".slugBtns($zone, $sheet, $slug) . "</div></td>";
+            $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn btn-primary m-1' href='?action=".$detailAction."&id=".$sheet['id']."'>Détails</a>".slugBtns($zone, $sheet, $slug) . "</div></td>";
         }
-
         $html = $html . "</tr> </tbody> </table></div>";
-
     } else {
         $html = $html . "<div class='" . $slug . "Sheets'><p>Aucun rapport de tâche n'est actuellement " . showState($slug) . ".</p></div>";
     }
-
     return $html;
 }
 
