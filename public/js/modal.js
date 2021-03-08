@@ -101,7 +101,7 @@ function shiftClose(date, sheetID) {
         url: '?action=uncheckActionForShift_AJAX&id=' + sheetID,
         cache: false,
         success: function (data) {
-            if(data) addBodyModal("<br><br><strong>" + data + " tâche(s) n'ont pas été validée(s)</strong>");
+            if(data > 0) addBodyModal("<br><br><strong>" + data + " tâche(s) n'ont pas été validée(s)</strong>");
         },
         error: function (jqXHR, exception) {
             alertError(jqXHR, exception);
