@@ -107,7 +107,7 @@ function shiftClose(date, sheetID) {
             alertError(jqXHR, exception);
         }
     });
-    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value=' + sheetID + '>');
+    addBodyModal('<input type="hidden" name="id" id="sheetID" value=' + sheetID + '>');
     addBodyModal('<input type="hidden" name="newSlug" id="newSlug" value="close">');
     setSubmitModal('<input type="submit" class="btn btn-primary" value="Clôturer">');
     showModal();
