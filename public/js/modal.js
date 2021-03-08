@@ -134,3 +134,26 @@ function todoClose(sheetID) {
     showModal();
 }
 
+// Code lié à la pop-up de vérification de validation de tâches
+// Permet l'affichage de la pop-up de vérification pour les quitances
+var addTaskBtns = document.querySelectorAll('.addTaskBtn');
+addTaskBtns.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        $("#mainModalForm").attr('action', '?action=checkTodo');
+        setTitleModal($("#day-"+$(this).parent().attr("value")).html().replace('<br>', '') + " : " + $(this).parent().parent().attr("value"));
+        setBodyModal("Valider : " + $(this).html().replace('<br>', ''));
+        switch ($(this).attr("data-type")){
+            case 'novas':
+                addBodyModal('<br>Numéro de Novas :<br><input type="text" name="novas" id="novas" value="" placeholder="45, 34">');
+                break;
+            default:
+        }
+        addBodyModal('<input type="hidden" name="todoID" id="todoID" value=' + $(this).attr("data-id") + '>');
+        addBodyModal('<input type="hidden" name="todoSheetID" id="todoSheetID" value=' + $("#sheetID").attr("value") + '>');
+        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Valider">');
+        showModal();
+    }, false);
+})
+
+var removeTaskBtns = document.querySelectorAll('.addTaskBtn');
+

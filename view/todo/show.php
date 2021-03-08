@@ -5,6 +5,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
 <div>
     <h1 id="test">Tâches hebdomadaires</h1>
     <h2>Semaine <?= $week['week'] ?> - Base de <?= $base['name'] ?> [<?= $week['displayname'] ?>]</h2>
+    <input type="hidden" id="sheetID" value="<?= $week['id'] ?>"><!-- used to get date in javascrpt -->
     <div class="d-flex justify-content-end d-print-none">
 
         <button type='submit' class='btn btn-primary m-1 float-right'
@@ -88,9 +89,8 @@ $title = "CSU-NVB - Tâches hebdomadaires";
         <tr>
             <?php foreach ($dates as $index => $date) : ?>
                 <th>
-                    <div class='bg-dark text-white col-md font-weight-bold'><?= $days[$index + 1] ?>
+                    <div class='bg-dark text-white col-md font-weight-bold' id="day-<?=$index+1?>"><?= $days[$index + 1] ?>
                         <br><?= displayDate($date, 0) ?>
-                        <div/>
                 </th>
             <?php endforeach; ?>
         </tr>
@@ -98,15 +98,31 @@ $title = "CSU-NVB - Tâches hebdomadaires";
         <tbody>
         <tr>
             <td colspan="7">
-                <div class="week text-center bg-secondary">
+                <div class="week text-center bg-dark" style="margin-top: 5px;">
                     <div class="col-md font-weight-bold text-white">Jour</div>
                 </div>
             </td>
         </tr>
-        <tr>
+        <tr value="Jour">
             <?php foreach ($dates as $index => $date) : ?>
-                <td style="vertical-align: top" class="p-1">
+                <td style="vertical-align: top;" class="taskCol" value=<?=$index+1?>>
                     <?php foreach ($todoThings[1][$index + 1] as $todothing): ?>
+                        <?= buttonTask($todothing['initials'], $todothing['id'], $todothing['description'], $state, 1) ?>
+                    <?php endforeach; ?>
+                </td>
+            <?php endforeach; ?>
+        </tr>
+        <tr>
+            <td colspan="7">
+                <div class="week text-center bg-dark" style="margin-top: 40px;">
+                    <div class="col-md font-weight-bold  text-white">Nuit</div>
+                </div>
+            </td>
+        </tr>
+        <tr value="Nuit">
+            <?php foreach ($dates as $index => $date) : ?>
+                <td style="vertical-align: top;" class="taskCol" value=<?=$index+1?>>
+                    <?php foreach ($todoThings[0][$index + 1] as $todothing): ?>
                         <?= buttonTask($todothing['initials'], $todothing['id'], $todothing['description'], $state, 1) ?>
                     <?php endforeach; ?>
                 </td>
@@ -115,20 +131,6 @@ $title = "CSU-NVB - Tâches hebdomadaires";
         </tbody>
     </table>
     </div>
-<br>
-<div class="week text-center bg-secondary">
-    <div class="col-md font-weight-bold  text-white">Nuit</div>
-</div>
-<div class="row week hour">
-    <?php foreach ($dates as $index => $date) : ?>
-        <div class="col p-1">
-            <?php foreach ($todoThings[0][$index + 1] as $todothing): ?>
-                <?= buttonTask($todothing['initials'], $todothing['id'], $todothing['description'], $state, 0) ?>
-            <?php endforeach; ?>
-        </div>
-    <?php endforeach; ?>
-</div>
-<br>
 </div>
 <script src="js/todo.js"></script>
 <?php

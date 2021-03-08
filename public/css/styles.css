@@ -159,3 +159,11 @@ tr:hover .modify {
     float: left;
     margin: 5px 5px 0px 0px;
 }
+
+.addTaskBtn , .removeTaskBtn{
+    width: 100%;
+    margin-bottom: 10px;
+}
+.taskCol{
+    padding: 4px;
+}

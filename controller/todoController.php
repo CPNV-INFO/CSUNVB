@@ -168,25 +168,7 @@ function destroyTaskTodo()
     showtodo($todosheetID,true); // todo : faire une redirection
 }
 
-/**
- *  Function to mark a task as done or not done
- */
-function switchTodoValidation()
-{
-    $status = $_POST['modal-todoStatus'];
-    $todoID = $_POST['modal-todoID'];
-    $todoType = $_POST['modal-todoType'];
-    $todoValue = $_POST['modal-todoValue'];
-    $todosheetID = $_POST['todosheetID'];
 
-    if ($status == 'invalidate') {
-        invalidateTodo($todoID, $todoType);
-    } else {
-        validateTodo($todoID, $todoValue);
-    }
-
-    header('Location: ?action=showtodo&id=' . $todosheetID);
-}
 
 /**
  * Function to change the active status of a sheet
@@ -286,3 +268,25 @@ function addTodoTask(){
     setFlashMessage($message);
     showtodo($todoSheetID,true); // todo : faire une redirection
 }
+
+/**
+ *  Function to mark a todoTask as done
+ */
+function checkTodo()
+{
+    $todoValue = "";
+    if(isset($_POST["novas"])){
+        $todoValue = $_POST["novas"];
+    }
+    validateTodo($_POST["todoID"], $todoValue);
+    redirect("showtodo",$_POST["todoSheetID"]);
+}
+
+function UnCheckTodo()
+{
+    //invalidateTodo($todoID, $todoType);todo
+}
+
+
+
+
