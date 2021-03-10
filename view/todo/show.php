@@ -107,7 +107,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
             <?php foreach ($dates as $index => $date) : ?>
                 <td style="vertical-align: top;" class="taskCol" value=<?=$index+1?>>
                     <?php foreach ($todoThings[1][$index + 1] as $todothing): ?>
-                        <?= buttonTask($todothing['initials'], $todothing['id'], $todothing['description'], $state, 1) ?>
+                        <?= buttonTask($todothing['initials'], $todothing['id'], $todothing['description'], $state, $todothing['type']) ?>
                     <?php endforeach; ?>
                 </td>
             <?php endforeach; ?>
@@ -123,7 +123,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
             <?php foreach ($dates as $index => $date) : ?>
                 <td style="vertical-align: top;" class="taskCol" value=<?=$index+1?>>
                     <?php foreach ($todoThings[0][$index + 1] as $todothing): ?>
-                        <?= buttonTask($todothing['initials'], $todothing['id'], $todothing['description'], $state, 1) ?>
+                        <?= buttonTask($todothing['initials'], $todothing['id'], $todothing['description'], $state,$todothing['type']) ?>
                     <?php endforeach; ?>
                 </td>
             <?php endforeach; ?>

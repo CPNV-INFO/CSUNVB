@@ -601,7 +601,7 @@ CREATE TABLE IF NOT EXISTS `csunvb_csu`.`todothings` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `description` VARCHAR(200) NOT NULL,
   `daything` TINYINT NOT NULL DEFAULT 1,
-  `type` INT NOT NULL DEFAULT 1 COMMENT '1: done/not done\\n2: has a value',
+  `type` ENUM('novas') NULL,
   `display_order` INT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `text_UNIQUE` (`description` ASC))

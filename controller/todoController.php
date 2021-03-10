@@ -33,11 +33,10 @@ function showtodo($sheetID, $edition = false)
 {
     $week = getTodosheetByID($sheetID);
     $base = getbasebyid($week['base_id']);
+    $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
     $dates = getDaysForWeekNumber($week['week']);
     $template = getTemplateName($sheetID);
 
-    $allTodoTasks[0] = getTasksByTime(0);
-    $allTodoTasks[1] = getTasksByTime(1);
     $missingTasks = array();
     if($edition){
         $state = 'edition';
@@ -45,22 +44,17 @@ function showtodo($sheetID, $edition = false)
         $state = $week['slug'];
     }
     for ($daynight = 0; $daynight <= 1; $daynight++) {
+        $allTodoTasks[1] = getTasksByTime($daynight);
         for ($dayofweek = 1; $dayofweek <= 7; $dayofweek++) {
-
             $todoThings[$daynight][$dayofweek] = readTodoThingsForDay($sheetID, $daynight, $dayofweek);
             $missingTasks[$daynight][$dayofweek] = findMissingTasks($allTodoTasks[$daynight], $todoThings[$daynight][$dayofweek]); // Find tasks that are not present so they can be added
-
             foreach ($todoThings[$daynight][$dayofweek] as $key => $todoThing) {
-                if ($todoThing['type'] == "2" && !is_null($todoThing['value'])) {
+                if (!is_null($todoThing['type']) && !is_null($todoThing['value'])) {
                     $todoThings[$daynight][$dayofweek][$key]['description'] = str_replace("....", "" . $todoThing['value'] . "", "" . $todoThing['description'] . "");
                 }
             }
-
         }
     }
-
-    $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-
     require_once VIEW . 'todo/show.php';
 }
 
@@ -275,18 +269,22 @@ function addTodoTask(){
 function checkTodo()
 {
     $todoValue = "";
-    if(isset($_POST["novas"])){
-        $todoValue = $_POST["novas"];
+    if(isset($_POST["todoValue"])){
+        $todoValue = $_POST["todoValue"];
     }
     validateTodo($_POST["todoID"], $todoValue);
     redirect("showtodo",$_POST["todoSheetID"]);
 }
 
-function UnCheckTodo()
+function unCheckTodo()
 {
-    //invalidateTodo($todoID, $todoType);todo
+    invalidateTodo($_POST["todoID"]);
+    redirect("showtodo",$_POST["todoSheetID"]);
 }
 
+function uncheckActionForTodo_AJAX($sheetID){
+    echo getUncheckActionForTodo($sheetID);
+}
 
 
 

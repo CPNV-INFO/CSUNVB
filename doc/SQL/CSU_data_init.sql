@@ -74,26 +74,26 @@ UNLOCK TABLES;
 LOCK TABLES `todothings` WRITE;
 /*!40000 ALTER TABLE `todothings` DISABLE KEYS */;
 INSERT INTO `todothings` VALUES
-(21,'Changer Bac chariot de nettoyage',1,1,5),
-(22,'Check Ambulance et Communication',1,1,2),
-(23,'Check bibliothèque',1,1,4),
-(24,'Check de nuit ',0,1,21),
-(25,'Commande mat et commande pharma.',1,1,6),
-(26,'Commande O2',0,1,25),
-(27,'Contrôle niveau véhicule',1,1,8),
-(28,'Contrôle stupéfiants + Date perf. Chaudes',1,1,3),
-(29,'Contrôle stupéfiants Nova .... (Morphine X4, Fentanyl X6)',0,2,22),
-(30,'Désinfection + Inventaire hebdo Nova ....',1,2,11),
-(31,'Tâches spécifiques de jour',1,1,13),
-(32,'Tâches spécifiques de nuit',0,1,23),
-(33,'Envoi rapport STUP hebdo à gt pharmacie',1,1,9),
-(34,'Fax 144 Transmission',1,1,1),
-(35,'Formation',1,1,14),
-(36,'Nettoyage centrale et garage',1,1,10),
-(37,'Rangement mat',1,1,7),
-(38,'Remise locaux ambulances ',1,1,15),
-(39,'Remise locaux Transmission',0,1,24),
-(40,'Tâches selon nécessité',1,1,12);
+(21,'Changer Bac chariot de nettoyage',1,null,5),
+(22,'Check Ambulance et Communication',1,null,2),
+(23,'Check bibliothèque',1,null,4),
+(24,'Check de nuit ',0,null,21),
+(25,'Commande mat et commande pharma.',1,null,6),
+(26,'Commande O2',0,null,25),
+(27,'Contrôle niveau véhicule',1,null,8),
+(28,'Contrôle stupéfiants + Date perf. Chaudes',1,null,3),
+(29,'Contrôle stupéfiants Nova .... (Morphine X4, Fentanyl X6)',0,'novas',22),
+(30,'Désinfection + Inventaire hebdo Nova ....',1,'novas',11),
+(31,'Tâches spécifiques de jour',1,null,13),
+(32,'Tâches spécifiques de nuit',0,null,23),
+(33,'Envoi rapport STUP hebdo à gt pharmacie',1,null,9),
+(34,'Fax 144 Transmission',1,null,1),
+(35,'Formation',1,null,14),
+(36,'Nettoyage centrale et garage',1,null,10),
+(37,'Rangement mat',1,null,7),
+(38,'Remise locaux ambulances ',1,null,15),
+(39,'Remise locaux Transmission',0,null,24),
+(40,'Tâches selon nécessité',1,null,12);
 /*!40000 ALTER TABLE `todothings` ENABLE KEYS */;
 UNLOCK TABLES;
 

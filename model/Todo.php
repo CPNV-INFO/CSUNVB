@@ -102,7 +102,7 @@ function createNewSheet($baseID, $weekNbr)
  */
 function readTodoThingsForDay($sheetID, $daynight, $dayOfWeek)
 {
-    $res = selectMany("SELECT description, type, value, u.initials AS 'initials', todos.id AS id, t.id AS todothingID
+    $res = selectMany("SELECT description, type, value, u.initials AS 'initials', todos.id AS id, t.id as todoThingID, t.type as type
                              FROM todos 
                              INNER JOIN todothings t ON todos.todothing_id = t.id
                              LEFT JOIN users u ON todos.user_id = u.id
@@ -169,14 +169,9 @@ function deleteTemplateName($sheetID)
  * @param int $type : if task has an addition "value" associated or not (1 or 2)
  * @return bool|null
  */
-function invalidateTodo($todoTaskID, $type)
+function invalidateTodo($todoTaskID)
 {
-    if ($type == 1) {
-        return execute("UPDATE todos SET user_id=NULL WHERE id=:id", ['id' => $todoTaskID]);
-    } else {
-        return execute("UPDATE todos SET user_id=NULL, value=NULL WHERE id=:id", ['id' => $todoTaskID]);
-    }
-
+    return execute("UPDATE todos SET user_id=NULL, value=NULL WHERE id=:id", ['id' => $todoTaskID]);
 }
 
 /**
@@ -185,15 +180,15 @@ function invalidateTodo($todoTaskID, $type)
  * @param int $value : value needed to be added for some tasks
  * @return bool|null
  */
-function validateTodo($todoTaskID, $value)
+function validateTodo($todoID, $value)
 {
     $initials = $_SESSION['user']['initials'];
     $user = getUserByInitials($initials);
 
     if (!empty($value)) {
-        return execute("UPDATE todos SET user_id=:userID, value=:value WHERE id=:id;", ['userID' => $user['id'], 'value' => $value, 'id' => $todoTaskID]);
+        return execute("UPDATE todos SET user_id=:userID, value=:value WHERE id=:id;", ['userID' => $user['id'], 'value' => $value, 'id' => $todoID]);
     } else {
-        return execute("UPDATE todos SET user_id=:userID WHERE id=:id;", ['userID' => $user['id'], 'id' => $todoTaskID]);
+        return execute("UPDATE todos SET user_id=:userID WHERE id=:id;", ['userID' => $user['id'], 'id' => $todoID]);
     }
 }
 

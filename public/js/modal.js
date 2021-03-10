@@ -113,16 +113,16 @@ function shiftClose(date, sheetID) {
     showModal();
 }
 
-function todoClose(sheetID) {
+function todoClose(sheetID,week) {
     $("#mainModalForm").attr('action', '?action=todoSheetSwitchState');
-    setTitleModal("Tâches Hedomadaires");
+    setTitleModal("Tâches Hedomadaires : " + week);
     setBodyModal("Etes-vous sur de vouloir clôturer ce rapport ?");
     $.ajax({
         type: "POST",
-        url: '?action=&id=' + sheetID,
+        url: '?action=uncheckActionForTodo_AJAX&id=' + sheetID,
         cache: false,
         success: function (data) {
-            if(data) addBodyModal("<br><br><strong>" + data + " tâche(s) n'ont pas été validée(s)</strong>");
+            if(data > 0) addBodyModal("<br><br><strong>" + data + " tâche(s) n'ont pas été validée(s)</strong>");
         },
         error: function (jqXHR, exception) {
             alertError(jqXHR, exception);
@@ -144,7 +144,7 @@ addTaskBtns.forEach((item) => {
         setBodyModal("Valider : " + $(this).html().replace('<br>', ''));
         switch ($(this).attr("data-type")){
             case 'novas':
-                addBodyModal('<br>Numéro de Novas :<br><input type="text" name="novas" id="novas" value="" placeholder="45, 34">');
+                addBodyModal('<br>Numéro de Novas :<br><input type="text" name="todoValue" id="todoValue" value="" placeholder="45, 34">');
                 break;
             default:
         }
@@ -155,5 +155,15 @@ addTaskBtns.forEach((item) => {
     }, false);
 })
 
-var removeTaskBtns = document.querySelectorAll('.addTaskBtn');
-
+var removeTaskBtns = document.querySelectorAll('.removeTaskBtn');
+removeTaskBtns.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        $("#mainModalForm").attr('action', '?action=unCheckTodo');
+        setTitleModal($("#day-"+$(this).parent().attr("value")).html().replace('<br>', '') + " : " + $(this).parent().parent().attr("value"));
+        setBodyModal("Annuler : " + $(this).html().replace('<br>', ''));
+        addBodyModal('<input type="hidden" name="todoID" id="todoID" value=' + $(this).attr("data-id") + '>');
+        addBodyModal('<input type="hidden" name="todoSheetID" id="todoSheetID" value=' + $("#sheetID").attr("value") + '>');
+        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Annuler">');
+        showModal();
+    }, false);
+})

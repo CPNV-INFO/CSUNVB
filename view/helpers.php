@@ -237,10 +237,10 @@ function slugBtns($page, $sheet, $slug)
                         $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
                         break;
                     case "todo":
-                        $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+                        $buttonList .= "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick=todoClose(".$sheet['id'].",".$sheet['week'].")>";
                         break;
                     case "shift":
-                        $buttonList .= shiftCloseBtn($sheet['date'],$sheet['id'],$sheet["nbEmpty"]);
+                        $buttonList .= "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick=shiftClose('".$sheet['date']."',".$sheet['id'].")>";
                         break;
                     default:
                         break;
@@ -284,10 +284,6 @@ function buttonForSheet($page, $id, $action, $actionName, $disableReason = "", $
     return $btn;
 }
 
-function shiftCloseBtn($date, $sheetID, $nbMissingTasks)
-{
-    return "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick='shiftClose(".'"'.$date.'"'.",$sheetID)'>";
-}
 
 function checkOpen($page, $baseID)
 {
