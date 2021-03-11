@@ -35,6 +35,29 @@
                 <?= gitBranchTag() ?>
             <?php endif; ?>
         </div>
+        <div class="container navZone">
+            <nav class="navbar navbar-expand-sm bg-dark navbar-dark rounded">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="?action=home">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?action=shiftList">Gardes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?action=listtodo">Tâches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?action=listDrugSheets">Stupéfiants</a>
+                    </li>
+                    <?php if($_SESSION["user"]["admin"] ==1 ):?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="?action=adminHome">Administration</a>
+                        </li>
+                    <?php endif;?>
+                </ul>
+            </nav>
+        </div>
     </header>
 </div>
 
