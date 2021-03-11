@@ -169,15 +169,18 @@ function destroyTaskTodo()
  */
 function todoSheetSwitchState()
 {
+
     $sheetID = $_POST['id'];
     $newSlug = $_POST['newSlug'];
-
     $sheet = getTodosheetByID($sheetID);
-
-    changeSheetState($sheetID, $newSlug);
+    if($newSlug== 'close'){
+        closeTodoSheet($sheetID,$_SESSION["user"]["id"]);
+    }else{
+        changeSheetState($sheetID, $newSlug);
+    }
     $message = "La semaine " . $sheet['week'] . " a été ";
 
-    switch ($newSlug) {  /* todo : utilisation des displayname (base de donnée) possible ? */
+    switch ($newSlug) {
         case "open":
             $message = $message . "ouvert.";
             break;
@@ -193,7 +196,6 @@ function todoSheetSwitchState()
         default:
             break;
     }
-
     setFlashMessage($message);
     header('Location: ?action=listtodoforbase&id=' . $sheet['base_id']);
 }

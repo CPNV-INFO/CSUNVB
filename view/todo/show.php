@@ -4,7 +4,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
 ?>
 <div>
     <h1 id="test">Tâches hebdomadaires</h1>
-    <h2>Semaine <?= $week['week'] ?> - Base de <?= $base['name'] ?> [<?= $week['displayname'] ?>]</h2>
+    <h2>Semaine <?= $week['week'] ?> - Base de <?= $base['name'] ?> [<?= $week['displayname'] ?>] <?= ($week['slug'] == 'close') ? ' par ' . $week['closeBy'] : $week['closeBy'] ?></h2>
     <input type="hidden" id="sheetID" value="<?= $week['id'] ?>"><!-- used to get date in javascrpt -->
     <div class="d-flex justify-content-end d-print-none">
 

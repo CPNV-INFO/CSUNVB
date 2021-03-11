@@ -575,11 +575,13 @@ CREATE TABLE IF NOT EXISTS `csunvb_csu`.`todosheets` (
   `week` INT NOT NULL,
   `status_id` INT(11) NOT NULL,
   `base_id` INT NOT NULL,
+  `closeBy` INT NULL,
   `template_name` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `model_name_UNIQUE` (`template_name` ASC),
   INDEX `fk_todosheets_bases1_idx` (`base_id` ASC),
   INDEX `fk_todosheets_status1` (`status_id` ASC),
+  INDEX `fk_todosheets_user1` (`closeBy` ASC),
   CONSTRAINT `fk_todosheets_bases1`
     FOREIGN KEY (`base_id`)
     REFERENCES `csunvb_csu`.`bases` (`id`)
@@ -588,6 +590,11 @@ CREATE TABLE IF NOT EXISTS `csunvb_csu`.`todosheets` (
   CONSTRAINT `fk_todosheets_status1`
     FOREIGN KEY (`status_id`)
     REFERENCES `csunvb_csu`.`status` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_todosheets_user1`
+    FOREIGN KEY (`closeBy`)
+    REFERENCES `csunvb_csu`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

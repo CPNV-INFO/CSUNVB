@@ -9,9 +9,10 @@
  */
 function getTodosheetByID($sheetID)
 {
-    return selectOne("SELECT todosheets.id AS id, week, base_id, template_name, slug, displayname
+    return selectOne("SELECT todosheets.id AS id, week, base_id, template_name, slug, displayname, users.initials as closeBy
                              FROM todosheets
                              LEFT JOIN status ON todosheets.status_id = status.id
+                             LEFT JOIN users ON todosheets.closeBy = users.id
                              WHERE todosheets.id =:sheetID", ['sheetID' => $sheetID]);
 }
 
@@ -232,13 +233,18 @@ function getTemplateSheet($templateName)
 /**
  *Function to change to state of a todosheets specified by id and slug
  * @param int $sheetID
- * @param string $slug : Name of specified slug. Values: blank, open, close, reopen, archived
+ * @param string $slug : Name of specified slug. Values: blank, open, reopen, archived
  * @return bool|null
  */
 function changeSheetState($sheetID, $slug)
 {
     return execute("UPDATE todosheets SET status_id= (SELECT id FROM status WHERE slug =:slug) WHERE id=:id", ['id' => $sheetID, 'slug' => $slug]);
 }
+
+function closeTodoSheet($sheetID,$userID){
+    return execute("UPDATE todosheets SET status_id= (SELECT id FROM status WHERE slug ='close'), closeBy=:userID WHERE id=:id", ['id' => $sheetID, 'userID' => $userID]);
+}
+
 
 /**
  * Function do delete a todosheets specified by id

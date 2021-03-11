@@ -93,7 +93,7 @@ INSERT INTO `todothings` VALUES
 (37,'Rangement mat',1,null,7),
 (38,'Remise locaux ambulances ',1,null,15),
 (39,'Remise locaux Transmission',0,null,24),
-(40,'Tâches selon nécessité',1,null,12);
+(40,'Tâches selon nécessité',1,NULL,12);
 /*!40000 ALTER TABLE `todothings` ENABLE KEYS */;
 UNLOCK TABLES;
 
