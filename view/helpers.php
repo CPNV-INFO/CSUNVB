@@ -322,7 +322,7 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
     switch ($page) {
         case "shift":
             $title = "Remise de Garde";
-            $switchBaseAction = "listshift";
+            $switchBaseAction = "shiftList";
             $newSheetAction = "?action=newShiftSheet&id=" . $selectedBaseID;
             $newSheetBtnName = "Nouveau Rapport de garde";
             $dateInput = "<input type='date' name='date' value='" . getNextDateForShift($selectedBaseID) . "'>";
