@@ -96,32 +96,3 @@ function ican($action)
     $policies = require('policies.php');
     return isset($policies[$_SESSION['user']['admin']][$action]);
 }
-
-function addModal()
-{
-    return '
-<div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <form method="post" id="mainModalForm" action="">
-                <div class="modal-header">
-                    <h5 id="mainModalTitle">
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="mainModalBody">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <div id="mainModalSubmit">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-     <script src="js/modal.js"></script>
-    ';
-}

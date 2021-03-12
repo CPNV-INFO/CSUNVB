@@ -19,6 +19,7 @@
     <script src="assets/jquery/dist/jquery.js"></script>
     <script src="assets/bootstrap/dist/js/bootstrap.js"></script>
     <script src="js/global.js" defer></script>
+    <script src="js/modal.js" defer></script>
 </head>
 <body>
 <div class="d-print-none banner">
@@ -67,7 +68,28 @@
         <?= getFlashMessage() ?>
     </div>
     <?= (isset($content)) ? $content : "page vide" ?>
-    <?= addModal() ?>
+    <div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method="post" id="mainModalForm" action="">
+                    <div class="modal-header">
+                        <h5 id="mainModalTitle">
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="mainModalBody">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <div id="mainModalSubmit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
