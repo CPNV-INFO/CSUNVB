@@ -19,7 +19,7 @@ $title = "CSU-NVB - Remise de garde";
         </form>
 
         <form>
-            <input type="hidden" name="action" value="listshift">
+            <input type="hidden" name="action" value="shiftList">
             <input type="hidden" name="id" value="<?= $shiftsheet["base_id"] ?>">
             <button type="submit" class='btn btn-primary m-1 float-right'>Retour à la liste</button>
         </form>
