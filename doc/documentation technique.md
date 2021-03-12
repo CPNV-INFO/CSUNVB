@@ -133,3 +133,25 @@ La selection des commentaire de la base de donnée à affiché sur le rapport se
    
    ( date du commentaire < date du rapport sélectionné ) et que ( date du rapport sélectionné < endOfCarryOn du commentaire ou endOfCarryOn est null )
    Alors celui-ci est affiché en tant que commentaire épinglé et la date de celui-ci est aussi affichée
+   
+### Comment marchent les pop-up de confirmation ?
+
+En bas du gabari est présent un squelette de pop-up de confirmation,
+ensuite il peut être affiché est adapté comme on le souhaite dans modal.js grâce aux functions :
+showModal, setTitleModal, setBodyModal, addBodyModal, setSubmitModal
+
+### Comment est clôturé un rapport ?
+
+Actuellement le principe n'est pas encore appliqué rapports de stupéfiants 
+
+Pour les parties tâches hebdomadaire et garde :
+
+Lors du clic sur le boutons fermer, une requête AJAX est envoyée au serveur qui retourne le nombre de tâches manquante
+- Confirmation simple si le rapport est complet
+- Confirmation avec avertissement si le rapport n'est pas complet
+
+Pour les rapports clôturés
+- Les tâches non-validées sont affichée en rouge
+- Une icône /!\ indique l'erreur dans la liste des rapport, au survol de l'icone est affiché le nombre de tâches non effectuées
+
+De plus les initiales de la personnes ayant clôturé un rapport seront affichées en haut de celui-ci
