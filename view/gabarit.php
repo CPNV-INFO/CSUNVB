@@ -38,20 +38,21 @@
         <div class="container navZone">
             <nav class="navbar navbar-expand-sm bg-dark navbar-dark rounded">
                 <ul class="navbar-nav">
-                    <li class="nav-item active">
+                    <?php require "../pageList.php"; ?>
+                    <li class="nav-item <?= (in_array($_GET["action"], $dashboardPages)) ? 'active' : '' ?>">
                         <a class="nav-link" href="?action=home">Dashboard</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item <?= (in_array($_GET["action"], $shiftPages)) ? 'active' : '' ?>">
                         <a class="nav-link" href="?action=shiftList">Gardes</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item <?= (in_array($_GET["action"], $todoPages)) ? 'active' : '' ?>">
                         <a class="nav-link" href="?action=listtodo">Tâches</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item <?= (in_array($_GET["action"], $stupPages)) ? 'active' : '' ?>">
                         <a class="nav-link" href="?action=listDrugSheets">Stupéfiants</a>
                     </li>
                     <?php if($_SESSION["user"]["admin"] ==1 ):?>
-                        <li class="nav-item">
+                        <li class="nav-item <?= (in_array($_GET["action"], $adminPages)) ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=adminHome">Administration</a>
                         </li>
                     <?php endif;?>
