@@ -25,11 +25,16 @@ ob_start();
         </form>
     </div>
 </div>
-<button class='btn btn-primary m-1 float-right' id="save" hidden onclick="sendData()">Enregistrer les données</button>
-<div class="float-right d-print-none">
-    <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
-</div>
-<?php foreach ($dates as $date): ?>
+
+<?php if($drugsheet['slug'] != "blank"): // We check if the drugsheet slug is "blank" or not to change the page to a preparation's page if it is?>
+
+    <div class="float-right d-print-none">
+        <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
+    </div>
+    <form action="?action=updateDrugSheet" method="POST">
+        <button type="submit" class='btn btn-primary m-1 float-right' id="save" hidden>Enregistrer les données</button>
+        <input type="hidden" name="drugsheetID" value="<?= $drugSheetID ?>">
+    <?php foreach ($dates as $date): ?>
     <table border="1" class="table table-bordered">
         <thead class="thead-dark">
         <tr>
@@ -59,13 +64,15 @@ ob_start();
                     ?>
                     <?php $UID = 'n' . $nova["number"] . 'd' . $drug["id"] . 'D' . $date ?>
                     <?php if($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div ?>
-                    <td id="<?= $UID ?>">
-                        <input  type="number" min="0" class="text-center"
+                    <td id="<?= $UID ?>" class="text-center">
+                        <input  type="number" min="0" class="text-center d-inline w-25 border-0"
+                                name="novaChecks[<?= $date ?>][<?= $nova['id'] ?>][<?= $drug['id'] ?>][start]"
                                 value="<?= (is_numeric($ncheck["start"]) ? $ncheck["start"] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'start');"
                                 id="<?= $UID ?>start"
-                        >
-                        <input  type="number" min="0" class="text-center"
+                        >  /
+                        <input  type="number" min="0" class="text-center d-inline w-25 border-0"
+                                name="novaChecks[<?= $date ?>][<?= $nova['id'] ?>][<?= $drug['id'] ?>][end]"
                                 value="<?= (is_numeric($ncheck["end"]) ? $ncheck["end"] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'end');"
                                 id="<?= $UID ?>end"
@@ -80,7 +87,7 @@ ob_start();
                 <?php endforeach; ?>
                 <td></td>
             </tr>
-            <?php foreach ($batchesByDrugId[$drug["id"]] as $batch): ?>
+            <?php foreach ($batchesForSheetByDrugId[$drug["id"]] as $batch): ?>
                 <?php $UID = "pharma_" . 'b' . $batch['id'] . 'D' . $date ?>
                 <?php $pcheck = getPharmaCheckByDateAndBatch($date, $batch['id'], $drugsheet['id']);
                 if($pcheck == false) $pcheck = array("start" => 0,"end"=>0);
@@ -89,11 +96,11 @@ ob_start();
                     <td class="text-right"><?= $batch['number'] ?></td>
                     <td class="text-center">
                         <?php if($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div?>
-                        <input  type="number" min="0" class="text-center"
+                        <input  type="number" min="0" class="text-center border-0"
+                                name="pharmachecks[<?= $date ?>][<?= $batch['id'] ?>][start]"
                                 value="<?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?>"
                                 onchange="cellUpdate('<?= $UID ?>', 'start');"
                                 id="<?= $UID ?>start"
-
                         >
                     </td>
                     <?php else: ?>
@@ -103,7 +110,8 @@ ob_start();
                     <?php foreach ($novas as $nova): ?>
                         <td class="text-center">
                             <?php if ($drugsheet['slug'] != "close"): ?>
-                                <input type="number" min="0" class="<?= $UID ?> nova text-center"
+                                <input type="number" min="0" class="<?= $UID ?> nova text-center border-0"
+                                        name="restock[<?= $date ?>][<?= $batch['id'] ?>][<?= $nova['id'] ?>]"
                                         value="<?= (getRestockByDateAndDrug($date, $batch['id'], $nova['id']) + 0) //+0 auto converts to a number, even if null ?>"
                                         onchange="cellUpdate('<?= $UID ?>')"
 
@@ -116,8 +124,9 @@ ob_start();
                     <td id="<?= $UID ?>" class="text-center">
                         <?php if ($drugsheet['slug'] != "close"): ?>
 
-                            <input type="number" min="0" class="text-center"
-                                   value="<?= is_numeric($pcheck['end']) ? $pcheck['end'] : '0' ?>" class="text-center"
+                            <input type="number" min="0" class="text-center border-0"
+                                   name="pharmachecks[<?= $date ?>][<?= $batch['id'] ?>][end]"
+                                   value="<?= is_numeric($pcheck['end']) ? $pcheck['end'] : '0' ?>"
                                    onchange="cellUpdate('<?= $UID ?>', 'end');"
                                    id="<?= $UID ?>end"
 
@@ -139,12 +148,140 @@ ob_start();
         </tbody>
     </table>
 <?php endforeach; ?>
+    </form>
+<?php else: ?>
+
+    <div class="d-flex flex-row float-right d-print-none"> <!-- If user is admin and sheet is "blank" then show modification button -->
+        <?php if(ican ("modifySheet") && $drugsheet['slug'] == "blank") : ?>
+            <?php if($edition) :
+                $text = "Quitter édition";
+            else:
+                $text = "Mode édition";
+            endif; ?>
+            <form action="?action=drugSheetEditionMode" method="POST">
+                <input type="hidden" name="drugsheetID" value="<?= $drugSheetID ?>">
+                <input type="hidden" name="edition" value="<?= $edition ?>">
+                <button type="submit" class='btn btn-warning m-1 float-right'><?= $text ?></button>
+            </form>
+        <?php endif; ?>
+        <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
+    </div>
+
+
+    <?php if(ican ("modifySheet") && $edition) : ?> <!-- Zone d'ajout de nouvelle tâche -->
+        <div class="d-print-none" style="border: solid; padding: 5px; margin: 2px; margin-top: 45px; margin-bottom: 15px;">
+            <form method="POST" action="?action=addBatchesToDrugSheet" class="d-flex justify-content-between edit-form">
+                <div class="d-flex">
+                    <div>
+                        <label for="drugToAddList" style="padding: 0 15px">stupéfiant </label>
+                        <select name="drugToAddList" id="drugToAddList" class='missingDrugChoice' required style="width: 100px; font-size: " onchange="drugListUpdate()">
+                            <option value="default"></option>
+                            <?php foreach ($drugsWithUsableBatches as $drugWithUsableBatches) : ?>
+                                <option name="Drug" value="<?= $drugWithUsableBatches['name'] ?>" ><?= $drugWithUsableBatches['name'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <br>
+                        <label for="batchToAddList" style="padding: 0 15px">lot </label>
+                        <select name="batchToAddList" id="batchToAddList" style="width: 100px;" required class="missingDrugChoice float-right" onchange="batchSelectionMissing()">
+                            <option value="default"></option>
+                            <?php foreach ($usableBatches as $usableBatch): ?>
+                            <option name="Batch" value="<?= $usableBatch['number'] ?>" hidden class="drug_<?= $usableBatch['name'] ?>"><?= $usableBatch['number'] . " - ". $usableBatch['state'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+
+                </div>
+                <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
+                <button type="submit" id="addBatchBtn" class='btn btn-primary m-1' disabled>Ajouter le lot</button>
+            </form>
+            <form method="POST" action="?action=addNovasToDrugSheet" class="d-flex justify-content-between edit-form">
+                <div class="d-flex">
+                    <div>
+                        <label for="novaToAddList" style="padding: 0 15px">Ambulance </label>
+                        <select name="novaToAddList" id="novaToAddList" class='missingNovaChoice' required style="width: 100px;" onchange="NovaListUpdate()">
+                            <option value="default"></option>
+                            <?php foreach ($unusedNovas as $unusedNova) : ?>
+                                <option name="Nova" value="<?= $unusedNova['number'] ?>" ><?= $unusedNova['number'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+
+                </div>
+                <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
+                <button type="submit" id="addNovaBtn" class='btn btn-primary m-1' disabled>Ajouter l'ambulance</button>
+            </form>
+        </div>
+    <?php endif; ?>
+
+
+    <table border="1" class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>
+                <?php //TODO: th a supprimer? ?>
+            </th>
+            <th>Pharmacie (matin)</th>
+            <?php foreach ($novas as $nova): ?>
+                <th>
+                    <span class="d-inline novacount"><?= $nova["number"] ?></span>
+                    <?php if(ican ("modifySheet") && $edition) : ?>
+                        <form method="POST" action="?action=removeNovaFromDrugSheet" onsubmit="return confirm('Est ce que vous voulez vraiment retirer l\'ambulance <?= $nova["number"] ?> du rapoort?');" class="d-inline">
+                            <input type="hidden" name="nova" value="<?= $nova["number"] ?>">
+                            <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
+                            <button type="submit" id="removeNovaBtn" class='btn trashButtons'><i class="fas fa-trash"></i></button>
+                        </form>
+                    <?php endif; ?>
+                </th>
+            <?php endforeach; ?>
+            <th>Pharmacie (soir)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($drugs as $drug): ?>
+            <tr>
+                <td class="font-weight-bold"><?= $drug["name"] ?></td>
+                <td></td>
+                <?php foreach ($novas as $nova): ?>
+                    <td></td>
+                <?php endforeach; ?>
+                <td></td>
+            </tr>
+            <?php foreach ($batchesForSheetByDrugId[$drug["id"]] as $batch): ?>
+                <tr>
+                    <td class="text-right">
+                        <span class="d-inline batchcount"><?= $batch['number'] ?> </span>
+                        <?php if(ican ("modifySheet") && $edition) : ?>
+                            <form method="POST" action="?action=removeBatchFromDrugSheet" onsubmit="return confirm('Est ce que vous voulez vraiment retirer le lot <?= $batch['number'] ?> du rapoort?');" class="d-inline">
+                                <input type="hidden" name="batch" value="<?= $batch['number'] ?>">
+                                <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
+                                <button type="submit" id="removeBatchBtn" class='btn trashButtons'><i class="fas fa-trash"></i></button>
+                            </form>
+                        <?php endif; ?>
+                    </td>
+                    <td class="text-center">
+                    </td>
+
+                    <?php foreach ($novas as $nova): ?>
+                        <td></td>
+                    <?php endforeach; ?>
+                    <td></td>
+                </tr>
+
+            <?php endforeach; ?>
+
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
 <script>
 <?php
         foreach ($UIDs as $UID) {
             echo "drugCheck('" . $UID . "');\n";
         }
 ?>
+checkForEnable();
 </script>
 <?php
 $content = ob_get_clean();
