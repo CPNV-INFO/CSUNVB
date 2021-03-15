@@ -1,655 +1,729 @@
--- --------------------------------------------------------
--- Hôte:                         localhost
--- Version du serveur:           8.0.23 - MySQL Community Server - GPL
--- SE du serveur:                Win64
--- HeidiSQL Version:             11.2.0.6213
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
--- Listage de la structure de la base pour csunvb_csu
 DROP DATABASE IF EXISTS `csunvb_csu`;
 CREATE DATABASE IF NOT EXISTS `csunvb_csu` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `csunvb_csu`;
 
--- Listage de la structure de la table csunvb_csu. bases
-DROP TABLE IF EXISTS `bases`;
-CREATE TABLE IF NOT EXISTS `bases` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- MySQL Workbench Forward Engineering
 
--- Listage de la structure de la table csunvb_csu. batches
-DROP TABLE IF EXISTS `batches`;
-CREATE TABLE IF NOT EXISTS `batches` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `number` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `state` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'new',
-  `drug_id` int NOT NULL,
-  `base_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `number_UNIQUE` (`number`),
-  KEY `fk_batches_drugs_idx` (`drug_id`),
-  KEY `fk_batches_bases1_idx` (`base_id`),
-  CONSTRAINT `fk_batches_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
-  CONSTRAINT `fk_batches_drugs` FOREIGN KEY (`drug_id`) REFERENCES `drugs` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0;
+SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0;
+SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'TRADITIONAL,ALLOW_INVALID_DATES';
 
--- Les données exportées n'étaient pas sélectionnées.
+-- -----------------------------------------------------
+-- Schema csunvb_csu
+-- -----------------------------------------------------
 
--- Listage de la structure de la table csunvb_csu. drugs
-DROP TABLE IF EXISTS `drugs`;
-CREATE TABLE IF NOT EXISTS `drugs` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- -----------------------------------------------------
+-- Schema csunvb_csu
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `csunvb_csu` DEFAULT CHARACTER SET utf8;
+USE `csunvb_csu`;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`bases`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`bases`
+(
+    `id`   INT         NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Listage de la structure de la table csunvb_csu. drugsheets
-DROP TABLE IF EXISTS `drugsheets`;
-CREATE TABLE IF NOT EXISTS `drugsheets` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `week` int NOT NULL,
-  `status_id` int NOT NULL,
-  `base_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `drugSHEETUNIQ` (`week`,`base_id`),
-  KEY `fk_drugsheets_bases1_idx` (`base_id`),
-  KEY `fk_drugsheets_status1` (`status_id`),
-  CONSTRAINT `fk_drugsheets_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
-  CONSTRAINT `fk_drugsheets_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`novas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`novas`
+(
+    `id`     INT NOT NULL AUTO_INCREMENT,
+    `number` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `number_UNIQUE` (`number` ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Listage de la structure de la table csunvb_csu. drugsheet_use_batch
-DROP TABLE IF EXISTS `drugsheet_use_batch`;
-CREATE TABLE IF NOT EXISTS `drugsheet_use_batch` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `drugsheet_id` int NOT NULL,
-  `batch_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_use` (`drugsheet_id`,`batch_id`),
-  KEY `fk_drugsheet_use_batch_drugsheets1_idx` (`drugsheet_id`),
-  KEY `fk_drugsheet_use_batch_batches1_idx` (`batch_id`),
-  CONSTRAINT `fk_drugsheet_use_batch_batches1` FOREIGN KEY (`batch_id`) REFERENCES `batches` (`id`),
-  CONSTRAINT `fk_drugsheet_use_batch_drugsheets1` FOREIGN KEY (`drugsheet_id`) REFERENCES `drugsheets` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=137 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`drugs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`drugs`
+(
+    `id`   INT         NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Listage de la structure de la table csunvb_csu. drugsheet_use_nova
-DROP TABLE IF EXISTS `drugsheet_use_nova`;
-CREATE TABLE IF NOT EXISTS `drugsheet_use_nova` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `drugsheet_id` int NOT NULL,
-  `nova_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_use` (`drugsheet_id`,`nova_id`),
-  KEY `fk_drugsheet_use_nova_drugsheets1_idx` (`drugsheet_id`),
-  KEY `fk_drugsheet_use_nova_novas1_idx` (`nova_id`),
-  CONSTRAINT `fk_drugsheet_use_nova_drugsheets1` FOREIGN KEY (`drugsheet_id`) REFERENCES `drugsheets` (`id`),
-  CONSTRAINT `fk_drugsheet_use_nova_novas1` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`batches`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`batches`
+(
+    `id`      INT         NOT NULL AUTO_INCREMENT,
+    `number`  VARCHAR(45) NOT NULL,
+    `state`   VARCHAR(45) NOT NULL DEFAULT 'new',
+    `drug_id` INT         NOT NULL,
+    `base_id` INT(11)     NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `number_UNIQUE` (`number` ASC),
+    INDEX `fk_batches_drugs_idx` (`drug_id` ASC),
+    INDEX `fk_batches_bases1_idx` (`base_id` ASC),
+    CONSTRAINT `fk_batches_bases1`
+        FOREIGN KEY (`base_id`)
+            REFERENCES `csunvb_csu`.`bases` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_batches_drugs`
+        FOREIGN KEY (`drug_id`)
+            REFERENCES `csunvb_csu`.`drugs` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Listage de la structure de la table csunvb_csu. drugsignatures
-DROP TABLE IF EXISTS `drugsignatures`;
-CREATE TABLE IF NOT EXISTS `drugsignatures` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL,
-  `day` int NOT NULL,
-  `drugsheet_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_drugsignatures_drugsheets1_idx` (`drugsheet_id`),
-  KEY `fk_drugsignatures_users1_idx` (`user_id`),
-  CONSTRAINT `fk_drugsignatures_drugsheets1` FOREIGN KEY (`drugsheet_id`) REFERENCES `drugsheets` (`id`),
-  CONSTRAINT `fk_drugsignatures_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`status`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`status`
+(
+    `id`          INT         NOT NULL AUTO_INCREMENT,
+    `slug`        VARCHAR(25) NOT NULL,
+    `displayname` VARCHAR(25) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `slug` (`slug` ASC),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Listage de la structure de la table csunvb_csu. logs
-DROP TABLE IF EXISTS `logs`;
-CREATE TABLE IF NOT EXISTS `logs` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_id` int NOT NULL,
-  `report_type` enum('SHIFT','TODO','DRUG') NOT NULL,
-  `report_id` int NOT NULL COMMENT 'A foreign key without constraint, because it will point to different tables according to the report type',
-  PRIMARY KEY (`id`),
-  KEY `fkmadeby_idx` (`user_id`),
-  CONSTRAINT `fkmadeby` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table contains all log entries for all reports';
 
--- Les données exportées n'étaient pas sélectionnées.
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`drugsheets`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`drugsheets`
+(
+    `id`        INT     NOT NULL AUTO_INCREMENT,
+    `week`      INT     NOT NULL,
+    `status_id` INT(11) NOT NULL,
+    `base_id`   INT     NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `drugSHEETUNIQ` (`week` ASC, `base_id` ASC),
+    INDEX `fk_drugsheets_bases1_idx` (`base_id` ASC),
+    INDEX `fk_drugsheets_status1` (`status_id` ASC),
+    CONSTRAINT `fk_drugsheets_bases1`
+        FOREIGN KEY (`base_id`)
+            REFERENCES `csunvb_csu`.`bases` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_drugsheets_status1`
+        FOREIGN KEY (`status_id`)
+            REFERENCES `csunvb_csu`.`status` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Listage de la structure de la table csunvb_csu. novachecks
-DROP TABLE IF EXISTS `novachecks`;
-CREATE TABLE IF NOT EXISTS `novachecks` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL,
-  `start` int NOT NULL,
-  `end` int DEFAULT NULL,
-  `drug_id` int NOT NULL,
-  `nova_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `drugsheet_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_novachecks` (`date`,`drug_id`,`nova_id`,`drugsheet_id`) USING BTREE,
-  KEY `fk_novachecks_drugs1_idx` (`drug_id`),
-  KEY `fk_novachecks_novas1_idx` (`nova_id`),
-  KEY `fk_novachecks_users1_idx` (`user_id`),
-  KEY `fk_novachecks_drugsheets1_idx` (`drugsheet_id`),
-  CONSTRAINT `fk_novachecks_drugs1` FOREIGN KEY (`drug_id`) REFERENCES `drugs` (`id`),
-  CONSTRAINT `fk_novachecks_drugsheets1` FOREIGN KEY (`drugsheet_id`) REFERENCES `drugsheets` (`id`),
-  CONSTRAINT `fk_novachecks_novas1` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`),
-  CONSTRAINT `fk_novachecks_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1579 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`users`
+(
+    `id`           INT          NOT NULL AUTO_INCREMENT,
+    `firstname`    VARCHAR(45)  NOT NULL,
+    `lastname`     VARCHAR(45)  NOT NULL,
+    `initials`     VARCHAR(45)  NOT NULL,
+    `password`     VARCHAR(100) NOT NULL,
+    `admin`        TINYINT      NOT NULL,
+    `firstconnect` TINYINT      NOT NULL,
+    `email`        VARCHAR(254) NULL DEFAULT NULL,
+    `mobileNumber` VARCHAR(20)  NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `initials_UNIQUE` (`initials` ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Listage de la structure de la table csunvb_csu. novas
-DROP TABLE IF EXISTS `novas`;
-CREATE TABLE IF NOT EXISTS `novas` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `number` int NOT NULL,
-  PRIMARY KEY (`id`),
-<<<<<<< HEAD
-  INDEX `fk_drugsignatures_drugsheets1_idx` (`drugsheet_id` ASC),
-  INDEX `fk_drugsignatures_users1_idx` (`user_id` ASC),
-  CONSTRAINT `fk_drugsignatures_drugsheets1`
-    FOREIGN KEY (`drugsheet_id`)
-    REFERENCES `csunvb_csu`.`drugsheets` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_drugsignatures_users1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `csunvb_csu`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`pharmachecks`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`pharmachecks`
+(
+    `id`           INT      NOT NULL AUTO_INCREMENT,
+    `date`         DATETIME NOT NULL,
+    `start`        INT      NOT NULL,
+    `end`          INT      NULL,
+    `batch_id`     INT      NOT NULL,
+    `user_id`      INT      NOT NULL,
+    `drugsheet_id` INT(11)  NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `fk_pharmachecks_batches1_idx` (`batch_id` ASC),
+    INDEX `fk_pharmachecks_users1_idx` (`user_id` ASC),
+    INDEX `fk_pharmachecks_drugsheets1_idx` (`drugsheet_id` ASC),
+    CONSTRAINT `fk_pharmachecks_batches1`
+        FOREIGN KEY (`batch_id`)
+            REFERENCES `csunvb_csu`.`batches` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_pharmachecks_drugsheets1`
+        FOREIGN KEY (`drugsheet_id`)
+            REFERENCES `csunvb_csu`.`drugsheets` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_pharmachecks_users1`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
 -- Table `csunvb_csu`.`logs`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `csunvb_csu`.`logs` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `timestamp` TIMESTAMP NOT NULL DEFAULT current_timestamp(),
-  `user_id` INT(11) NOT NULL,
-  `report_type` ENUM('SHIFT','TODO','DRUG') NOT NULL,
-  `report_id` INT(11) NOT NULL COMMENT 'A foreign key without constraint, because it will point to different tables according to the report type',
-  `info` VARCHAR(200) NULL COMMENT 'decribe what is done',
-=======
-  UNIQUE KEY `number_UNIQUE` (`number`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table csunvb_csu. pharmachecks
-DROP TABLE IF EXISTS `pharmachecks`;
-CREATE TABLE IF NOT EXISTS `pharmachecks` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL,
-  `start` int NOT NULL,
-  `end` int DEFAULT NULL,
-  `batch_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `drugsheet_id` int NOT NULL,
->>>>>>> TGR
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_pharmachecks` (`date`,`batch_id`,`drugsheet_id`) USING BTREE,
-  KEY `fk_pharmachecks_batches1_idx` (`batch_id`),
-  KEY `fk_pharmachecks_users1_idx` (`user_id`),
-  KEY `fk_pharmachecks_drugsheets1_idx` (`drugsheet_id`),
-  CONSTRAINT `fk_pharmachecks_batches1` FOREIGN KEY (`batch_id`) REFERENCES `batches` (`id`),
-  CONSTRAINT `fk_pharmachecks_drugsheets1` FOREIGN KEY (`drugsheet_id`) REFERENCES `drugsheets` (`id`),
-  CONSTRAINT `fk_pharmachecks_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5457 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table csunvb_csu. restocks
-DROP TABLE IF EXISTS `restocks`;
-CREATE TABLE IF NOT EXISTS `restocks` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL,
-  `quantity` int NOT NULL,
-  `batch_id` int NOT NULL,
-  `nova_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_restocks` (`date`,`batch_id`,`nova_id`) USING BTREE,
-  KEY `fk_restocks_batches1_idx` (`batch_id`),
-  KEY `fk_restocks_novas1_idx` (`nova_id`),
-  KEY `fk_restocks_users1_idx` (`user_id`),
-  CONSTRAINT `fk_restocks_batches1` FOREIGN KEY (`batch_id`) REFERENCES `batches` (`id`),
-  CONSTRAINT `fk_restocks_novas1` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`),
-  CONSTRAINT `fk_restocks_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table csunvb_csu. shiftactions
-DROP TABLE IF EXISTS `shiftactions`;
-CREATE TABLE IF NOT EXISTS `shiftactions` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `text` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `shiftsection_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_shift_lines_shift_sections1_idx` (`shiftsection_id`),
-  CONSTRAINT `fk_shift_lines_shift_sections1` FOREIGN KEY (`shiftsection_id`) REFERENCES `shiftsections` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table csunvb_csu. shiftchecks
-DROP TABLE IF EXISTS `shiftchecks`;
-CREATE TABLE IF NOT EXISTS `shiftchecks` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `day` tinyint(1) NOT NULL,
-  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `shiftsheet_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `shiftaction_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_shiftChecks_shiftSheets1_idx` (`shiftsheet_id`),
-  KEY `fk_shiftChecks_users1_idx` (`user_id`),
-  KEY `fk_shiftChecks_shiftActions1_idx` (`shiftaction_id`),
-  CONSTRAINT `fk_shiftChecks_shiftActions1` FOREIGN KEY (`shiftaction_id`) REFERENCES `shiftactions` (`id`),
-  CONSTRAINT `fk_shiftChecks_shiftSheets1` FOREIGN KEY (`shiftsheet_id`) REFERENCES `shiftsheets` (`id`),
-  CONSTRAINT `fk_shiftChecks_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table csunvb_csu. shiftcomments
-DROP TABLE IF EXISTS `shiftcomments`;
-CREATE TABLE IF NOT EXISTS `shiftcomments` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `message` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `carryOn` tinyint(1) NOT NULL DEFAULT '0',
-  `endOfCarryOn` date DEFAULT NULL,
-  `user_id` int NOT NULL,
-  `shiftsheet_id` int NOT NULL,
-  `shiftaction_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_comments_users1_idx` (`user_id`),
-  KEY `fk_comments_shiftSheets1_idx` (`shiftsheet_id`),
-  KEY `fk_comments_shiftActions1_idx` (`shiftaction_id`),
-  CONSTRAINT `fk_comments_shiftActions1` FOREIGN KEY (`shiftaction_id`) REFERENCES `shiftactions` (`id`),
-  CONSTRAINT `fk_comments_shiftSheets1` FOREIGN KEY (`shiftsheet_id`) REFERENCES `shiftsheets` (`id`),
-  CONSTRAINT `fk_comments_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table csunvb_csu. shiftmodels
-DROP TABLE IF EXISTS `shiftmodels`;
-CREATE TABLE IF NOT EXISTS `shiftmodels` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `suggested` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idshiftmodels_UNIQUE` (`id`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table csunvb_csu. shiftmodel_has_shiftaction
-DROP TABLE IF EXISTS `shiftmodel_has_shiftaction`;
-CREATE TABLE IF NOT EXISTS `shiftmodel_has_shiftaction` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `shiftaction_id` int NOT NULL,
-  `shiftmodel_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-<<<<<<< HEAD
-  UNIQUE INDEX `idshiftmodels_UNIQUE` (`id` ASC),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`logs`
+(
+    `id`          INT(11)                      NOT NULL AUTO_INCREMENT,
+    `timestamp`   TIMESTAMP                    NOT NULL DEFAULT current_timestamp(),
+    `user_id`     INT(11)                      NOT NULL,
+    `report_type` ENUM ('SHIFT','TODO','DRUG') NOT NULL,
+    `report_id`   INT(11)                      NOT NULL COMMENT 'A foreign key without constraint, because it will point to different tables according to the report type',
+    `info`        VARCHAR(200)                 NULL     DEFAULT NULL COMMENT 'decribe what is done',
+    PRIMARY KEY (`id`),
+    INDEX `fkmadeby_idx` (`user_id` ASC),
+    CONSTRAINT `fkmadeby`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE CASCADE
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COMMENT = 'This table contains all log entries for all reports';
 
 
 -- -----------------------------------------------------
--- Table `csunvb_csu`.`shiftsheets`
+-- Table `csunvb_csu`.`novachecks`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftsheets` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `date` DATE NOT NULL,
-  `shiftmodel_id` INT NOT NULL,
-  `base_id` INT NOT NULL,
-  `status_id` INT NOT NULL,
-  `dayboss_id` INT NULL,
-  `nightboss_id` INT NULL,
-  `dayteammate_id` INT NULL,
-  `nightteammate_id` INT NULL,
-  `closeBy` INT NULL,
-  `daynova_id` INT NULL,
-  `nightnova_id` INT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `uniq` (`base_id` ASC, `date` ASC),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_shiftsheets_bases1_idx` (`base_id` ASC),
-  INDEX `fk_shiftSheets_status1_idx` (`status_id` ASC),
-  INDEX `fk_shiftSheets_users1_idx` (`dayboss_id` ASC),
-  INDEX `fk_shiftSheets_users2_idx` (`nightboss_id` ASC),
-  INDEX `fk_shiftSheets_users3_idx` (`dayteammate_id` ASC),
-  INDEX `fk_shiftSheets_users4_idx` (`nightteammate_id` ASC),
-  INDEX `fk_shiftSheets_users5_idx` (`closeBy` ASC),
-  INDEX `fk_shiftSheets_novas1_idx` (`daynova_id` ASC),
-  INDEX `fk_shiftSheets_novas2_idx` (`nightnova_id` ASC),
-  INDEX `fk_shiftsheets_shiftmodels1_idx` (`shiftmodel_id` ASC),
-  CONSTRAINT `fk_shiftSheets_novas1`
-    FOREIGN KEY (`daynova_id`)
-    REFERENCES `csunvb_csu`.`novas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftSheets_novas2`
-    FOREIGN KEY (`nightnova_id`)
-    REFERENCES `csunvb_csu`.`novas` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftSheets_status1`
-    FOREIGN KEY (`status_id`)
-    REFERENCES `csunvb_csu`.`status` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftSheets_users1`
-    FOREIGN KEY (`dayboss_id`)
-    REFERENCES `csunvb_csu`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftSheets_users2`
-    FOREIGN KEY (`nightboss_id`)
-    REFERENCES `csunvb_csu`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftSheets_users3`
-    FOREIGN KEY (`dayteammate_id`)
-    REFERENCES `csunvb_csu`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftSheets_users4`
-    FOREIGN KEY (`nightteammate_id`)
-    REFERENCES `csunvb_csu`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-	CONSTRAINT `fk_shiftSheets_users5`
-    FOREIGN KEY (`closeBy`)
-    REFERENCES `csunvb_csu`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftsheets_bases1`
-    FOREIGN KEY (`base_id`)
-    REFERENCES `csunvb_csu`.`bases` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftsheets_shiftmodels1`
-    FOREIGN KEY (`shiftmodel_id`)
-    REFERENCES `csunvb_csu`.`shiftmodels` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`novachecks`
+(
+    `id`           INT      NOT NULL AUTO_INCREMENT,
+    `date`         DATETIME NOT NULL,
+    `start`        INT      NOT NULL,
+    `end`          INT      NULL,
+    `drug_id`      INT      NOT NULL,
+    `nova_id`      INT      NOT NULL,
+    `user_id`      INT      NOT NULL,
+    `drugsheet_id` INT(11)  NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `fk_novachecks_drugs1_idx` (`drug_id` ASC),
+    INDEX `fk_novachecks_novas1_idx` (`nova_id` ASC),
+    INDEX `fk_novachecks_users1_idx` (`user_id` ASC),
+    INDEX `fk_novachecks_drugsheets1_idx` (`drugsheet_id` ASC),
+    CONSTRAINT `fk_novachecks_drugs1`
+        FOREIGN KEY (`drug_id`)
+            REFERENCES `csunvb_csu`.`drugs` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_novachecks_drugsheets1`
+        FOREIGN KEY (`drugsheet_id`)
+            REFERENCES `csunvb_csu`.`drugsheets` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_novachecks_novas1`
+        FOREIGN KEY (`nova_id`)
+            REFERENCES `csunvb_csu`.`novas` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_novachecks_users1`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
--- Table `csunvb_csu`.`shiftchecks`
+-- Table `csunvb_csu`.`restocks`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftchecks` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `day` TINYINT(1) NOT NULL,
-  `time` DATETIME NOT NULL DEFAULT current_timestamp(),
-  `shiftsheet_id` INT NOT NULL,
-  `user_id` INT NOT NULL,
-  `shiftaction_id` INT NOT NULL,
-=======
-  UNIQUE KEY `shiftmodelscol_has_shiftactions_UNIQUE` (`id`),
-  UNIQUE KEY `uniqueactionpermodel` (`shiftaction_id`,`shiftmodel_id`),
-  KEY `fk_shiftactions_has_shiftmodels_shiftmodels1_idx` (`shiftmodel_id`),
-  KEY `fk_shiftactions_has_shiftmodels_shiftactions1_idx` (`shiftaction_id`),
-  CONSTRAINT `fk_shiftactions_has_shiftmodels_shiftactions1` FOREIGN KEY (`shiftaction_id`) REFERENCES `shiftactions` (`id`),
-  CONSTRAINT `fk_shiftactions_has_shiftmodels_shiftmodels1` FOREIGN KEY (`shiftmodel_id`) REFERENCES `shiftmodels` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`restocks`
+(
+    `id`       INT      NOT NULL AUTO_INCREMENT,
+    `date`     DATETIME NOT NULL,
+    `quantity` INT      NOT NULL,
+    `batch_id` INT      NOT NULL,
+    `nova_id`  INT      NOT NULL,
+    `user_id`  INT      NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `fk_restocks_batches1_idx` (`batch_id` ASC),
+    INDEX `fk_restocks_novas1_idx` (`nova_id` ASC),
+    INDEX `fk_restocks_users1_idx` (`user_id` ASC),
+    CONSTRAINT `fk_restocks_batches1`
+        FOREIGN KEY (`batch_id`)
+            REFERENCES `csunvb_csu`.`batches` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_restocks_novas1`
+        FOREIGN KEY (`nova_id`)
+            REFERENCES `csunvb_csu`.`novas` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_restocks_users1`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
 
--- Listage de la structure de la table csunvb_csu. shiftsections
-DROP TABLE IF EXISTS `shiftsections`;
-CREATE TABLE IF NOT EXISTS `shiftsections` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `title_UNIQUE` (`title`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`drugsignatures`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`drugsignatures`
+(
+    `id`           INT      NOT NULL AUTO_INCREMENT,
+    `date`         DATETIME NOT NULL,
+    `day`          INT      NOT NULL,
+    `drugsheet_id` INT      NOT NULL,
+    `user_id`      INT      NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `fk_drugsignatures_drugsheets1_idx` (`drugsheet_id` ASC),
+    INDEX `fk_drugsignatures_users1_idx` (`user_id` ASC),
+    CONSTRAINT `fk_drugsignatures_drugsheets1`
+        FOREIGN KEY (`drugsheet_id`)
+            REFERENCES `csunvb_csu`.`drugsheets` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_drugsignatures_users1`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
 
--- Listage de la structure de la table csunvb_csu. shiftsheets
-DROP TABLE IF EXISTS `shiftsheets`;
-CREATE TABLE IF NOT EXISTS `shiftsheets` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
-  `shiftmodel_id` int NOT NULL,
-  `base_id` int NOT NULL,
-  `status_id` int NOT NULL,
-  `dayboss_id` int DEFAULT NULL,
-  `nightboss_id` int DEFAULT NULL,
-  `dayteammate_id` int DEFAULT NULL,
-  `nightteammate_id` int DEFAULT NULL,
-  `daynova_id` int DEFAULT NULL,
-  `nightnova_id` int DEFAULT NULL,
->>>>>>> TGR
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq` (`base_id`,`date`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_shiftsheets_bases1_idx` (`base_id`),
-  KEY `fk_shiftSheets_status1_idx` (`status_id`),
-  KEY `fk_shiftSheets_users1_idx` (`dayboss_id`),
-  KEY `fk_shiftSheets_users2_idx` (`nightboss_id`),
-  KEY `fk_shiftSheets_users3_idx` (`dayteammate_id`),
-  KEY `fk_shiftSheets_users4_idx` (`nightteammate_id`),
-  KEY `fk_shiftSheets_novas1_idx` (`daynova_id`),
-  KEY `fk_shiftSheets_novas2_idx` (`nightnova_id`),
-  KEY `fk_shiftsheets_shiftmodels1_idx` (`shiftmodel_id`),
-  CONSTRAINT `fk_shiftsheets_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
-  CONSTRAINT `fk_shiftSheets_novas1` FOREIGN KEY (`daynova_id`) REFERENCES `novas` (`id`),
-  CONSTRAINT `fk_shiftSheets_novas2` FOREIGN KEY (`nightnova_id`) REFERENCES `novas` (`id`),
-  CONSTRAINT `fk_shiftsheets_shiftmodels1` FOREIGN KEY (`shiftmodel_id`) REFERENCES `shiftmodels` (`id`),
-  CONSTRAINT `fk_shiftSheets_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
-  CONSTRAINT `fk_shiftSheets_users1` FOREIGN KEY (`dayboss_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_shiftSheets_users2` FOREIGN KEY (`nightboss_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_shiftSheets_users3` FOREIGN KEY (`dayteammate_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_shiftSheets_users4` FOREIGN KEY (`nightteammate_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`drugsheet_use_nova`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`drugsheet_use_nova`
+(
+    `id`           INT NOT NULL AUTO_INCREMENT,
+    `drugsheet_id` INT NOT NULL,
+    `nova_id`      INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `unique_use` (`drugsheet_id` ASC, `nova_id` ASC),
+    INDEX `fk_drugsheet_use_nova_drugsheets1_idx` (`drugsheet_id` ASC),
+    INDEX `fk_drugsheet_use_nova_novas1_idx` (`nova_id` ASC),
+    CONSTRAINT `fk_drugsheet_use_nova_drugsheets1`
+        FOREIGN KEY (`drugsheet_id`)
+            REFERENCES `csunvb_csu`.`drugsheets` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_drugsheet_use_nova_novas1`
+        FOREIGN KEY (`nova_id`)
+            REFERENCES `csunvb_csu`.`novas` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
 
--- Listage de la structure de la table csunvb_csu. status
-DROP TABLE IF EXISTS `status`;
-CREATE TABLE IF NOT EXISTS `status` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `slug` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `displayname` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `slug` (`slug`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table csunvb_csu. todos
-DROP TABLE IF EXISTS `todos`;
-CREATE TABLE IF NOT EXISTS `todos` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `todothing_id` int NOT NULL,
-  `todosheet_id` int NOT NULL,
-  `user_id` int DEFAULT NULL,
-  `value` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `done_at` datetime DEFAULT NULL,
-  `day_of_week` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-<<<<<<< HEAD
-  UNIQUE INDEX `shiftmodelscol_has_shiftactions_UNIQUE` (`id` ASC),
-  UNIQUE INDEX `uniqueactionpermodel` (`shiftaction_id` ASC, `shiftmodel_id` ASC),
-  INDEX `fk_shiftactions_has_shiftmodels_shiftmodels1_idx` (`shiftmodel_id` ASC),
-  INDEX `fk_shiftactions_has_shiftmodels_shiftactions1_idx` (`shiftaction_id` ASC),
-  CONSTRAINT `fk_shiftactions_has_shiftmodels_shiftactions1`
-    FOREIGN KEY (`shiftaction_id`)
-    REFERENCES `csunvb_csu`.`shiftactions` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shiftactions_has_shiftmodels_shiftmodels1`
-    FOREIGN KEY (`shiftmodel_id`)
-    REFERENCES `csunvb_csu`.`shiftmodels` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`drugsheet_use_batch`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`drugsheet_use_batch`
+(
+    `id`           INT NOT NULL AUTO_INCREMENT,
+    `drugsheet_id` INT NOT NULL,
+    `batch_id`     INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `unique_use` (`drugsheet_id` ASC, `batch_id` ASC),
+    INDEX `fk_drugsheet_use_batch_drugsheets1_idx` (`drugsheet_id` ASC),
+    INDEX `fk_drugsheet_use_batch_batches1_idx` (`batch_id` ASC),
+    CONSTRAINT `fk_drugsheet_use_batch_batches1`
+        FOREIGN KEY (`batch_id`)
+            REFERENCES `csunvb_csu`.`batches` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_drugsheet_use_batch_drugsheets1`
+        FOREIGN KEY (`drugsheet_id`)
+            REFERENCES `csunvb_csu`.`drugsheets` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
 -- Table `csunvb_csu`.`todosheets`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `csunvb_csu`.`todosheets` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `week` INT NOT NULL,
-  `status_id` INT(11) NOT NULL,
-  `base_id` INT NOT NULL,
-  `closeBy` INT NULL,
-  `template_name` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `model_name_UNIQUE` (`template_name` ASC),
-  INDEX `fk_todosheets_bases1_idx` (`base_id` ASC),
-  INDEX `fk_todosheets_status1` (`status_id` ASC),
-  INDEX `fk_todosheets_user1` (`closeBy` ASC),
-  CONSTRAINT `fk_todosheets_bases1`
-    FOREIGN KEY (`base_id`)
-    REFERENCES `csunvb_csu`.`bases` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_todosheets_status1`
-    FOREIGN KEY (`status_id`)
-    REFERENCES `csunvb_csu`.`status` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_todosheets_user1`
-    FOREIGN KEY (`closeBy`)
-    REFERENCES `csunvb_csu`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`todosheets`
+(
+    `id`            INT         NOT NULL AUTO_INCREMENT,
+    `week`          INT         NOT NULL,
+    `status_id`     INT(11)     NOT NULL,
+    `base_id`       INT         NOT NULL,
+    `closeBy`       INT(11)     NULL DEFAULT NULL,
+    `template_name` VARCHAR(45) NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `model_name_UNIQUE` (`template_name` ASC),
+    INDEX `fk_todosheets_bases1_idx` (`base_id` ASC),
+    INDEX `fk_todosheets_status1` (`status_id` ASC),
+    INDEX `fk_todosheets_user1` (`closeBy` ASC),
+    CONSTRAINT `fk_todosheets_bases1`
+        FOREIGN KEY (`base_id`)
+            REFERENCES `csunvb_csu`.`bases` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_todosheets_status1`
+        FOREIGN KEY (`status_id`)
+            REFERENCES `csunvb_csu`.`status` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_todosheets_user1`
+        FOREIGN KEY (`closeBy`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
 -- Table `csunvb_csu`.`todothings`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `csunvb_csu`.`todothings` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `description` VARCHAR(200) NOT NULL,
-  `daything` TINYINT NOT NULL DEFAULT 1,
-  `type` ENUM('novas') NULL,
-  `display_order` INT NULL,
-=======
-  KEY `fk_todoitems_todotexts1_idx` (`todothing_id`),
-  KEY `fk_todoitems_todosheets1_idx` (`todosheet_id`),
-  KEY `fk_todoitems_users1_idx` (`user_id`),
-  CONSTRAINT `fk_todoitems_todosheets1` FOREIGN KEY (`todosheet_id`) REFERENCES `todosheets` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_todoitems_todotexts1` FOREIGN KEY (`todothing_id`) REFERENCES `todothings` (`id`),
-  CONSTRAINT `fk_todoitems_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`todothings`
+(
+    `id`            INT            NOT NULL AUTO_INCREMENT,
+    `description`   VARCHAR(200)   NOT NULL,
+    `daything`      TINYINT        NOT NULL DEFAULT 1,
+    `type`          ENUM ('novas') NULL     DEFAULT NULL,
+    `display_order` INT            NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `text_UNIQUE` (`description` ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
 
--- Listage de la structure de la table csunvb_csu. todosheets
-DROP TABLE IF EXISTS `todosheets`;
-CREATE TABLE IF NOT EXISTS `todosheets` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `week` int NOT NULL,
-  `status_id` int NOT NULL,
-  `base_id` int NOT NULL,
-  `template_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `model_name_UNIQUE` (`template_name`),
-  KEY `fk_todosheets_bases1_idx` (`base_id`),
-  KEY `fk_todosheets_status1` (`status_id`),
-  CONSTRAINT `fk_todosheets_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
-  CONSTRAINT `fk_todosheets_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`todos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`todos`
+(
+    `id`           INT         NOT NULL AUTO_INCREMENT,
+    `todothing_id` INT         NOT NULL,
+    `todosheet_id` INT         NOT NULL,
+    `user_id`      INT         NULL,
+    `value`        VARCHAR(45) NULL,
+    `done_at`      DATETIME    NULL,
+    `day_of_week`  INT         NULL,
+    PRIMARY KEY (`id`),
+    INDEX `fk_todoitems_todotexts1_idx` (`todothing_id` ASC),
+    INDEX `fk_todoitems_todosheets1_idx` (`todosheet_id` ASC),
+    INDEX `fk_todoitems_users1_idx` (`user_id` ASC),
+    CONSTRAINT `fk_todoitems_todosheets1`
+        FOREIGN KEY (`todosheet_id`)
+            REFERENCES `csunvb_csu`.`todosheets` (`id`)
+            ON DELETE CASCADE
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_todoitems_todotexts1`
+        FOREIGN KEY (`todothing_id`)
+            REFERENCES `csunvb_csu`.`todothings` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_todoitems_users1`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
 
--- Listage de la structure de la table csunvb_csu. todothings
-DROP TABLE IF EXISTS `todothings`;
-CREATE TABLE IF NOT EXISTS `todothings` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `daything` tinyint NOT NULL DEFAULT '1',
-  `type` int NOT NULL DEFAULT '1' COMMENT '1: done/not done\\n2: has a value',
-  `display_order` int DEFAULT NULL,
->>>>>>> TGR
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `text_UNIQUE` (`description`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`shiftmodels`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftmodels`
+(
+    `id`        INT         NOT NULL AUTO_INCREMENT,
+    `name`      VARCHAR(45) NULL     DEFAULT NULL,
+    `suggested` TINYINT(1)  NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `idshiftmodels_UNIQUE` (`id` ASC),
+    UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
 
--- Listage de la structure de la table csunvb_csu. tokens
-DROP TABLE IF EXISTS `tokens`;
-CREATE TABLE IF NOT EXISTS `tokens` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `value` varchar(50) NOT NULL,
-  `validity` datetime NOT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `token_UNIQUE` (`value`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_table1_users1_idx` (`user_id`),
-  CONSTRAINT `fk_table1_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`shiftsheets`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftsheets`
+(
+    `id`               INT     NOT NULL AUTO_INCREMENT,
+    `date`             DATE    NOT NULL,
+    `shiftmodel_id`    INT     NOT NULL,
+    `base_id`          INT     NOT NULL,
+    `status_id`        INT     NOT NULL,
+    `dayboss_id`       INT     NULL,
+    `nightboss_id`     INT     NULL,
+    `dayteammate_id`   INT     NULL,
+    `nightteammate_id` INT     NULL,
+    `closeBy`          INT(11) NULL DEFAULT NULL,
+    `daynova_id`       INT     NULL,
+    `nightnova_id`     INT     NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uniq` (`base_id` ASC, `date` ASC),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+    INDEX `fk_shiftsheets_bases1_idx` (`base_id` ASC),
+    INDEX `fk_shiftSheets_status1_idx` (`status_id` ASC),
+    INDEX `fk_shiftSheets_users1_idx` (`dayboss_id` ASC),
+    INDEX `fk_shiftSheets_users2_idx` (`nightboss_id` ASC),
+    INDEX `fk_shiftSheets_users3_idx` (`dayteammate_id` ASC),
+    INDEX `fk_shiftSheets_users4_idx` (`nightteammate_id` ASC),
+    INDEX `fk_shiftSheets_users5_idx` (`closeBy` ASC),
+    INDEX `fk_shiftSheets_novas1_idx` (`daynova_id` ASC),
+    INDEX `fk_shiftSheets_novas2_idx` (`nightnova_id` ASC),
+    INDEX `fk_shiftsheets_shiftmodels1_idx` (`shiftmodel_id` ASC),
+    CONSTRAINT `fk_shiftSheets_novas1`
+        FOREIGN KEY (`daynova_id`)
+            REFERENCES `csunvb_csu`.`novas` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftSheets_novas2`
+        FOREIGN KEY (`nightnova_id`)
+            REFERENCES `csunvb_csu`.`novas` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftSheets_status1`
+        FOREIGN KEY (`status_id`)
+            REFERENCES `csunvb_csu`.`status` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftSheets_users1`
+        FOREIGN KEY (`dayboss_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftSheets_users2`
+        FOREIGN KEY (`nightboss_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftSheets_users3`
+        FOREIGN KEY (`dayteammate_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftSheets_users4`
+        FOREIGN KEY (`nightteammate_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftSheets_users5`
+        FOREIGN KEY (`closeBy`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftsheets_bases1`
+        FOREIGN KEY (`base_id`)
+            REFERENCES `csunvb_csu`.`bases` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftsheets_shiftmodels1`
+        FOREIGN KEY (`shiftmodel_id`)
+            REFERENCES `csunvb_csu`.`shiftmodels` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB;
 
--- Les données exportées n'étaient pas sélectionnées.
 
--- Listage de la structure de la table csunvb_csu. users
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `lastname` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `initials` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `admin` tinyint NOT NULL,
-  `firstconnect` tinyint NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `initials_UNIQUE` (`initials`)
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`shiftsections`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftsections`
+(
+    `id`    INT         NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `title_UNIQUE` (`title` ASC),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
 
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`shiftactions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftactions`
+(
+    `id`              INT         NOT NULL AUTO_INCREMENT,
+    `text`            VARCHAR(45) NOT NULL,
+    `shiftsection_id` INT         NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+    INDEX `fk_shift_lines_shift_sections1_idx` (`shiftsection_id` ASC),
+    CONSTRAINT `fk_shift_lines_shift_sections1`
+        FOREIGN KEY (`shiftsection_id`)
+            REFERENCES `csunvb_csu`.`shiftsections` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`shiftcomments`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftcomments`
+(
+    `id`             INT          NOT NULL AUTO_INCREMENT,
+    `message`        VARCHAR(200) NOT NULL,
+    `time`           DATETIME     NOT NULL DEFAULT current_timestamp(),
+    `carryOn`        TINYINT(1)   NOT NULL DEFAULT 0,
+    `endOfCarryOn`   DATE         NULL,
+    `user_id`        INT          NOT NULL,
+    `shiftsheet_id`  INT          NOT NULL,
+    `shiftaction_id` INT          NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+    INDEX `fk_comments_users1_idx` (`user_id` ASC),
+    INDEX `fk_comments_shiftSheets1_idx` (`shiftsheet_id` ASC),
+    INDEX `fk_comments_shiftActions1_idx` (`shiftaction_id` ASC),
+    CONSTRAINT `fk_comments_shiftActions1`
+        FOREIGN KEY (`shiftaction_id`)
+            REFERENCES `csunvb_csu`.`shiftactions` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_comments_shiftSheets1`
+        FOREIGN KEY (`shiftsheet_id`)
+            REFERENCES `csunvb_csu`.`shiftsheets` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_comments_users1`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`shiftchecks`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftchecks`
+(
+    `id`             INT        NOT NULL AUTO_INCREMENT,
+    `day`            TINYINT(1) NOT NULL,
+    `time`           DATETIME   NOT NULL DEFAULT current_timestamp(),
+    `shiftsheet_id`  INT        NOT NULL,
+    `user_id`        INT        NOT NULL,
+    `shiftaction_id` INT        NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+    INDEX `fk_shiftChecks_shiftSheets1_idx` (`shiftsheet_id` ASC),
+    INDEX `fk_shiftChecks_users1_idx` (`user_id` ASC),
+    INDEX `fk_shiftChecks_shiftActions1_idx` (`shiftaction_id` ASC),
+    CONSTRAINT `fk_shiftChecks_shiftActions1`
+        FOREIGN KEY (`shiftaction_id`)
+            REFERENCES `csunvb_csu`.`shiftactions` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftChecks_shiftSheets1`
+        FOREIGN KEY (`shiftsheet_id`)
+            REFERENCES `csunvb_csu`.`shiftsheets` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftChecks_users1`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`shiftmodel_has_shiftaction`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`shiftmodel_has_shiftaction`
+(
+    `id`             INT NOT NULL AUTO_INCREMENT,
+    `shiftaction_id` INT NOT NULL,
+    `shiftmodel_id`  INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `shiftmodelscol_has_shiftactions_UNIQUE` (`id` ASC),
+    INDEX `fk_shiftactions_has_shiftmodels_shiftmodels1_idx` (`shiftmodel_id` ASC),
+    UNIQUE INDEX `uniqueactionpermodel` (`shiftaction_id` ASC, `shiftmodel_id` ASC),
+    INDEX `fk_shiftactions_has_shiftmodels_shiftactions1_idx` (`shiftaction_id` ASC),
+    CONSTRAINT `fk_shiftactions_has_shiftmodels_shiftactions1`
+        FOREIGN KEY (`shiftaction_id`)
+            REFERENCES `csunvb_csu`.`shiftactions` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_shiftactions_has_shiftmodels_shiftmodels1`
+        FOREIGN KEY (`shiftmodel_id`)
+            REFERENCES `csunvb_csu`.`shiftmodels` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `csunvb_csu`.`tokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `csunvb_csu`.`tokens`
+(
+    `id`       INT         NOT NULL AUTO_INCREMENT,
+    `value`    VARCHAR(50) NOT NULL,
+    `validity` DATETIME    NOT NULL,
+    `user_id`  INT(11)     NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `token_UNIQUE` (`value` ASC),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+    INDEX `fk_table1_users1_idx` (`user_id` ASC),
+    CONSTRAINT `fk_table1_users1`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `csunvb_csu`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB;
+
+
+SET SQL_MODE = @OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;
