@@ -52,6 +52,55 @@ $title = "CSU-NVB - Tâches hebdomadaires";
     </div>
 </div>
 
+<div class="d-print-none container" style=" margin: 15px 0 15px 0;padding:10px;background-color: lightblue;border-radius:5px;">
+    <table>
+        <tr>
+            <td>
+                Jour de la semaine
+            </td>
+            <td>
+                <select name="day" id="missingTaskDay" class='missingTasksChoice' style="width: 100px;margin-left: 20px;">
+                    <option value="" selected disabled hidden></option>
+                    <?php foreach ($dates as $index => $date) : ?>
+                        <option name="day" value="<?= $index + 1 ?>"><?= $days[$index + 1] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+            <td>
+                <div style="margin-left: 20px">
+                    Tâche :
+                </div>
+            </td>
+            <td>
+                <select name="day" id="missingTaskDay" class='missingTasksChoice' style="width: 100px;">
+                    <option value="default"></option>
+                </select>
+            </td>
+            <td>
+                <i class="fas fa-plus text-dark fa-lg" style="margin-left: 2px;"></i>
+            </td>
+        </tr>
+        <tr style="margin-top: 300px;">
+            <td>
+                Créneau
+            </td>
+            <td class="float-left">
+                <select name="dayTime" id="missingTaskTime" style="width: 100px;margin-left: 20px;"
+                        class="missingTasksChoice float-right">
+                    <option value="" selected disabled hidden></option>
+                    <option name="dayTime" value="1">Jour</option>
+                    <option name="dayTime" value="0">Nuit</option>
+                </select>
+            </td>
+            <td colspan="2">
+                <input type="text" name="day" id="missingTaskDay" class='missingTasksChoice float-right' style="width: 100px;height: 25px;">
+            </td>
+            <td>
+                <i class="fas fa-plus text-dark fa-lg" style="margin-left: 2px;"></i>
+            </td>
+        </tr>
+    </table>
+</div>
 <?php if (ican("modifySheet") && $edition) : ?> <!-- Zone d'ajout de nouvelle tâche -->
     <div class="d-print-none" style="border: solid; padding: 5px; margin: 2px; margin-top: 15px; margin-bottom: 15px">
         <form method="POST" action="?action=addTodoTask" class="d-flex justify-content-between">
@@ -77,6 +126,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
                 <div style="padding: 20px 20px 0;">
                     <?= dropdownTodoMissingTask($missingTasks) ?>
                 </div>
+                <i class="fas fa-plus-circle"></i>
             </div>
             <input type="hidden" name="todosheetID" value="<?= $week['id'] ?>">
             <button type="submit" id="addTodoTaskBtn" class='btn btn-primary m-1' disabled>Ajouter la tâche</button>
