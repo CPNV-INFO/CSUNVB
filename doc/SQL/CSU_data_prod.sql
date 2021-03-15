@@ -38,18 +38,18 @@ INSERT INTO `novachecks` VALUES
 (675,'2020-10-26 00:00:00',6,6,2,3,102,23),
 (676,'2020-10-26 00:00:00',6,6,2,5,103,23),
 (677,'2020-10-26 00:00:00',6,6,3,3,104,23),
-(678,'2020-10-26 00:00:00',5,5,3,5,105,23),
-(679,'2020-10-27 00:00:00',6,6,1,3,106,23),
-(680,'2020-10-27 00:00:00',6,6,1,5,107,23),
-(681,'2020-10-27 00:00:00',6,6,2,3,107,23),
-(682,'2020-10-27 00:00:00',6,5,2,5,106,23),
-(683,'2020-10-27 00:00:00',6,6,3,3,105,23),
-(684,'2020-10-27 00:00:00',6,6,3,5,104,23),
+(678,'2020-10-26 00:00:00',5,5,3,5,115,23),
+(679,'2020-10-27 00:00:00',6,6,1,3,116,23),
+(680,'2020-10-27 00:00:00',6,6,1,5,117,23),
+(681,'2020-10-27 00:00:00',6,6,2,3,117,23),
+(682,'2020-10-27 00:00:00',6,5,2,5,116,23),
+(683,'2020-10-27 00:00:00',6,6,3,3,115,23),
+(684,'2020-10-27 00:00:00',6,6,3,5,114,23),
 (685,'2020-10-28 00:00:00',4,NULL,1,3,113,23),
-(686,'2020-10-28 00:00:00',6,NULL,1,5,111,23),
+(686,'2020-10-28 00:00:00',6,NULL,1,5,114,23),
 (687,'2020-10-28 00:00:00',6,NULL,2,3,113,23),
 (688,'2020-10-28 00:00:00',6,NULL,2,5,112,23),
-(689,'2020-10-28 00:00:00',6,NULL,3,3,111,23),
+(689,'2020-10-28 00:00:00',6,NULL,3,3,114,23),
 (690,'2020-10-28 00:00:00',6,NULL,3,5,112,23);
 /*!40000 ALTER TABLE `novachecks` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -62,13 +62,13 @@ LOCK TABLES `pharmachecks` WRITE;
 /*!40000 ALTER TABLE `pharmachecks` DISABLE KEYS */;
 INSERT INTO `pharmachecks` VALUES
 (5150,'2020-10-26 00:00:00',12,11,4,114,23),
-(5151,'2020-10-26 00:00:00',8,8,8,118,23),
+(5151,'2020-10-26 00:00:00',8,8,8,116,23),
 (5152,'2020-10-26 00:00:00',6,4,13,113,23),
 (5153,'2020-10-27 00:00:00',11,11,4,117,23),
-(5154,'2020-10-27 00:00:00',8,7,8,118,23),
+(5154,'2020-10-27 00:00:00',8,7,8,116,23),
 (5155,'2020-10-27 00:00:00',4,4,13,112,23),
 (5156,'2020-10-28 00:00:00',11,NULL,4,117,23),
-(5157,'2020-10-28 00:00:00',7,NULL,8,106,23),
+(5157,'2020-10-28 00:00:00',7,NULL,8,102,23),
 (5158,'2020-10-28 00:00:00',4,NULL,13,104,23);
 /*!40000 ALTER TABLE `pharmachecks` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -111,7 +111,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `drugsheets` WRITE;
 /*!40000 ALTER TABLE `drugsheets` DISABLE KEYS */;
-INSERT INTO `drugsheets` VALUES (23,2044,2,2);
+INSERT INTO `drugsheets` VALUES (23,2101,2,2);
 /*!40000 ALTER TABLE `drugsheets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -140,7 +140,11 @@ UNLOCK TABLES;
 
 LOCK TABLES `todosheets` WRITE;
 /*!40000 ALTER TABLE `todosheets` DISABLE KEYS */;
+<<<<<<< HEAD
 INSERT INTO `todosheets` VALUES (23,2044,3,2,NULL,NULL);
+=======
+INSERT INTO `todosheets` VALUES (23,2101,'open',2,NULL);
+>>>>>>> master
 /*!40000 ALTER TABLE `todosheets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,13 +160,6 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `initials`, `password`, `adm
 (102, 'Xavier', 'Carrel', 'XCL', '$2y$10$QcssFUbiDCWC.1ggh3UYOukKcN2zqYF/LuraET75yLNMHU1kPNqfa', 1, 0),
 (103, 'Thierry', 'Billieux', 'TBX', '$2y$10$KOto6XQdNqRZjoK.yXNNZ.29ycB311mHI.QM3DNJlVyoZRPFgNPbS', 1, 0),
 (104, 'Michaël', 'Gogniat', 'MGT', '$2y$10$6JjX6WpKdgRZ44PQj.5C2.9mO2CeAekcKngNmvRh9ttX9mSyO8LGu', 1, 0),
-(105, 'Alexandre', 'Ricart', 'ART', '$2y$10$Q3dtk3OvhkJHjBiuLl2ukOnCAEs8r3WcjcQviojttd4v6VKY1AR4i', 1, 0),
-(106, 'Vicky', 'Butty', 'VBY', '$2y$10$CK5N2VR7ZP3RyBxjinMgOuykaOKX8ytkNs/LaKIctn9WxrT5yqBHm', 1, 0),
-(107, 'Daniel', 'Gamper', 'DGR', '$2y$10$AnCKGXEuBUYu1jWshFMDyu6PHn1SYDyOFKjOQAIjAy3bxa24g83UK', 1, 0),
-(108, 'Alexandre', 'Dubrulle', 'ADE', '$2y$10$Ui2vHE1RfzVi4felXpBy2eXe9L0D3/PvKo9U1H3HhoNaaWTGnPqJK', 1, 0),
-(109, 'Jeremy', 'Failloubaz', 'JFZ', '$2y$10$9hqBdAUpPVkmJMU3ocr9b.PUQBki4LddZ5tClAlfacu4DEwCV4lfq', 1, 0),
-(110, 'Loïc', 'Failloubaz', 'LFZ', '$2y$10$0JMmA/nY7hOAZYH83buGbuQyCEfg3jRZfK7H8daB8bO22gxbP8D6u', 1, 0),
-(111, 'Paola', 'Costa', 'PCA', '$2y$10$WOKAmjULG5nQbC/y88NQU.YOK6XHjMKFg.WPrkMs5qvc4DqMl5k4S', 1, 0),
 (112, 'Philippe', 'Michel', 'PML', '$2y$10$2VfVqMAibraMuJWzMLSiLeBDXOnM9Lig7uapBb2iToqiFhylytM2O', 0, 0),
 (113, 'Laurent', 'Pedroli', 'LPI', '$2y$10$ARMvzj7acmGDIzoBBNRghObQLpSf3FUKm7nN4n8MpranEVlHOq.eq', 0, 0),
 (114, 'Damaris', 'Bourgeois', 'DMS', '$2y$10$enagKYdNGrztWs1pHSLB/.QaupoFkHc9hOCa9LoyjwWZpGvlKtYZ6', 0, 1),
@@ -187,21 +184,29 @@ UNLOCK TABLES;
 
 -- table shiftsheets
 INSERT INTO `shiftsheets` VALUES
+<<<<<<< HEAD
 (1,'2020-10-26 00:00:00',2,2,3,100,112,111,116,NULL,1,2),
 (2,'2020-10-27 00:00:00',2,2,3,101,100,102,103,NULL,3,4),
 (3,'2020-10-28 00:00:00',2,2,2,100,101,102,103,NULL,5,6),
 (4,'2020-10-29 00:00:00',2,2,1,null,null,null,null,null,null,null),
 (5,'2020-10-30 00:00:00',2,2,1,null,null,null,null,null,null,NULL);
+=======
+(1,'2021-02-06 00:00:00',2,2,3,100,112,114,116,1,2),
+(2,'2021-02-07 00:00:00',2,2,3,101,100,102,103,3,4),
+(3,'2021-02-08 00:00:00',2,2,2,100,101,102,103,5,6),
+(4,'2021-02-09 00:00:00',2,2,1,null,null,null,null,null,null),
+(5,'2021-02-10 00:00:00',2,2,1,null,null,null,null,null,NULL);
+>>>>>>> master
 
 -- table shiftchecks
 INSERT INTO `shiftchecks` (id,DAY,shiftsheet_id,user_id,shiftaction_id) VALUES
 (1,1,1,104,6),
 (2,1,1,104,5),
 (3,0,1,103,5),
-(4,1,1,105,6),
+(4,1,1,102,6),
 (5,0,1,104,6),
-(6,1,1,105,7),
-(7,0,1,105,7),
+(6,1,1,102,7),
+(7,0,1,102,7),
 (8,1,2,104,9),
 (9,1,3,104,9),
 (10,0,3,114,9),
@@ -215,13 +220,3 @@ INSERT INTO `shiftchecks` (id,DAY,shiftsheet_id,user_id,shiftaction_id) VALUES
 (18,1,2,116,16),
 (19,0,2,104,16),
 (20,0,3,104,17);
-
--- table shiftcomments
-insert into `shiftcomments` (id,message,user_id,shiftsheet_id,shiftaction_id )VALUES
-(1,'Commentaire', 105,1,2),
-(2,'Commentaire', 105,1,2),
-(3,'Commentaire', 109,1,4),
-(4,'Commentaire', 105,2,1),
-(5,'Commentaire', 107,2,7);
-
-

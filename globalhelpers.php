@@ -7,7 +7,11 @@ setlocale(LC_ALL, 'fr_CH'); // pour les format de dates
  */
 function getVersion()
 {
+<<<<<<< HEAD
     return "3.0";
+=======
+    return "2.1";
+>>>>>>> master
 }
 
 /**
