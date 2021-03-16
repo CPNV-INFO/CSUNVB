@@ -20,26 +20,34 @@ function setFlashMessage($message)
     $_SESSION['flashmessage'] = $message;
 }
 
-function buttonTask($initials, $desription, $taskID, $type, $slug, $edition, $day)
+function buttonTask($initials, $todoID, $taskName, $state, $valueType = "null")
 {
-    if ($slug == 'open' || $slug == 'reopen') {
-        if (empty($initials)) {
-            $messageQuittance = 'Vous êtes sur le point de quittancer la tâche suivante : <br> "' . $desription . '".';
-            return "<button type='button' class='btn btn-secondary toggleTodoModal btn-block m-1 tasks' data-title='Quittancer une tâche' data-id='" . $taskID . "' data-status='validate' data-type='" . $type . "' data-content='" . $messageQuittance . "'>" . $desription . "<div class='bg-white rounded mt-1'><br></div></button>";
-        } else {
-            $messageQuittance = 'Vous êtes sur le point de retirer la quittance de la tâche suivante : <br> "' . $desription . '".';
-            return "<button type='button' class='btn btn-success toggleTodoModal btn-block m-1 tasks' data-title='Retirer une quittance' data-id='" . $taskID . "' data-status='invalidate' data-type='" . $type . "' data-content='" . $messageQuittance . "'>" . $desription . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
-        }
-    } elseif ($slug == 'blank' && $edition) {
-        $date = displayDate($day, 0);
-        $messageSuppression = 'Êtes-vous sûr(e) de vouloir supprimer la tâche  <br> "' . $desription . '" du ' . $date . '?';
-        return "<button type='button' class='btn btn-secondary btn-block m-1 tasks' disabled >" . $desription . "<div class='rounded mt-1 trashButtons' data-title='Suppression de une tâche' data-id='" . $taskID . "' data-content='" . $messageSuppression . "'><i class='fas fa-trash'></i><br></div></button>";
-    } else {
-        if (empty($initials)) {
-            return "<button type='button' class='btn btn-secondary btn-block m-1 tasks' disabled >" . $desription . "<div class='bg-white rounded mt-1'><br></div></button>";
-        } else {
-            return "<button type='button' class='btn btn-success btn-block m-1 tasks' disabled >" . $desription . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
-        }
+    switch ($state) {
+        case 'blank':
+            if (empty($initials)) {
+                return "<button type='button' class='btn btn-secondary btn-block' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            }else{
+                return "<button type='button' class='btn btn-success btn-block' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+            }
+        case 'edition':
+            if (empty($initials)) {
+                return "<button type='button' class='btn btn-secondary btn-block' disabled><i class='fas fa-times fa-lg delTodoTask'></i>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            }else{
+                return "<button type='button' class='btn btn-success btn-block' disabled><i class='fas fa-times fa-lg delTodoTask'></i>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+            }
+        case 'close':
+            if (empty($initials)) {
+                return "<button type='button' class='btn btn-danger btn-block' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            }else{
+                return "<button type='button' class='btn btn-success btn-block' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+            }
+        case 'open':
+        case 'reopen':
+            if (empty($initials)) {
+                return "<button type='button' class='btn btn-secondary addTaskBtn' data-type='".$valueType."' data-id='".$todoID."'>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            }else{
+                return "<button type='button' class='btn btn-success removeTaskBtn' data-id='".$todoID."'>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+            }
     }
 }
 
@@ -109,7 +117,6 @@ function listSheet($page, $sheets)
         default:
             break;
     }
-
     $html = "<div> <!-- Sections d'affichage des différents rapport -->";
     $html .= "<div> <!-- rapports ouvertes -->
         <div class='slugBlank'>" . $function("open", $sheets["open"], $page) . "</div><br>";
@@ -130,40 +137,32 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
     } else {
         $detailAction = "showtodo";
     }
-
-
     $html = "<h3>Rapport(s) " . showState($slug, 1) . "</h3>
                         <button class='btn dropdownButton'><i class='fas fa-caret-square-down' data-list='" . $slug . "' ></i></button>
                     </div>";
-
     if (!empty($sheets)) {
         $html = $html . "<div class='" . $slug . "Sheets' style='margin-top: 0px;'><table class='table table-bordered' style='margin-top: 0px;'>
                             <thead class='thead-dark'><th>Semaine n°</th><th class='actions'>Actions</th></thead>
                             <tbody>";
-
         foreach ($sheets as $sheet) {
-
+            if ($zone == 'drug') {
+                $nbEmpty = 0; //todo need to define ( number of missing value in the sheet )
+            } else {
+                $nbEmpty = getUncheckActionForTodo($sheet['id']);
+            }
             $html = $html . "<tr> <td>Semaine " . $sheet['week'];
-
+            if($nbEmpty > 0 and $slug == 'close'){
+                $html .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='".$nbEmpty." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
+            }
             if (ican('createsheet') && (isset($sheet['template_name']))) {
                 $html = $html . "<i class='fas fa-file-alt template' title='" . $sheet['template_name'] . "'></i>";
             }
-
-            $html = $html . "<td><div class='d-flex justify-content-around'>
-                                        <form>
-                                            <input type='hidden' name='action' value='" . $detailAction . "'>
-                                            <input type='hidden' name='id' value='" . $sheet['id'] . "'>
-                                            <button type='submit' class='btn btn-primary m-1'>Détails</button>
-                                        </form>
-                                        " .slugBtns($zone, $sheet, $slug) . "</div></td>";
+            $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn btn-primary m-1' href='?action=".$detailAction."&id=".$sheet['id']."'>Détails</a>".slugBtns($zone, $sheet, $slug) . "</div></td>";
         }
-
         $html = $html . "</tr> </tbody> </table></div>";
-
     } else {
         $html = $html . "<div class='" . $slug . "Sheets'><p>Aucun rapport de tâche n'est actuellement " . showState($slug) . ".</p></div>";
     }
-
     return $html;
 }
 
@@ -188,6 +187,8 @@ function listShiftSheet($slug, $shiftList, $zone)
             if (isset($shift["modelImage"])) {
                 $body .= "<i class='fas fa-file-alt template' title='Modèle : " . $shift["modelImage"] . "'></i>";
             }
+            $nbEmpty = getUncheckActionForShift($shift['id']);
+            if($nbEmpty != 0 and $slug == 'close')$body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='".$nbEmpty." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
             $body .= "</td>
                 <td>Jour : " . $shift['novaDay'] . "<br>Nuit : " . $shift['novaNight'] . "</td>
                 <td>Jour : " . $shift['bossDay'] . "<br>Nuit : " . $shift['bossNight'] . "</td>
@@ -206,7 +207,13 @@ function listShiftSheet($slug, $shiftList, $zone)
     return $html;
 }
 
-
+/**
+ * function qui retourne le code html pour les boutons possibles de changement d'état et de suppression en fonction de son status et du rôle de l'autilisateur
+ * @param string $page le type rapport depuis lequel la function est appelée, ex : 'shift'
+ * @param array $sheet tableau contenant les informations du rapport
+ * @param array $slug slug du status du rapport, ex. 'open
+ * @return string code html
+ */
 function slugBtns($page, $sheet, $slug)
 {
     $buttonList = "";
@@ -224,7 +231,21 @@ function slugBtns($page, $sheet, $slug)
             if (ican('deletesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "DeleteSheet", "Supprimer");
             break;
         case "open":
-            if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+            if (ican('closesheet')){
+                switch ($page) {
+                    case "drug":
+                        $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+                        break;
+                    case "todo":
+                        $buttonList .= "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick=todoClose(".$sheet['id'].",".$sheet['week'].")>";
+                        break;
+                    case "shift":
+                        $buttonList .= "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick=shiftClose('".$sheet['date']."',".$sheet['id'].")>";
+                        break;
+                    default:
+                        break;
+                }
+            }
             break;
         case "reopen":
             if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer","","close");
@@ -239,6 +260,17 @@ function slugBtns($page, $sheet, $slug)
     return $buttonList;
 }
 
+
+/**
+ * function qui retourne le code html pour un bouton d'un rapport
+ * @param string $page le type rapport depuis lequel la function est appelée, ex : 'shift'
+ * @param int $id id du rapport
+ * @param string $action action du bouton, ex. 'SheetSwitchState'
+ * @param string $actionName nom de l'action affichée sur le bouton, ex. 'Clôturer'
+ * @param string $disableReason si = "" bouton activé, sinon bouton désactivé avec la variable comme indication
+ * @param string $newSlug optionnel, nouveau slug pour l'état du rapport si celui-ci change avec l'action, ex. 'open'
+ * @return string code html
+ */
 function buttonForSheet($page, $id, $action, $actionName, $disableReason = "", $newSlug = "")
 {
     $btn = "<form  method='POST' action='?action=$page$action'>";
@@ -290,7 +322,7 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
     switch ($page) {
         case "shift":
             $title = "Remise de Garde";
-            $switchBaseAction = "listshift";
+            $switchBaseAction = "shiftList";
             $newSheetAction = "?action=newShiftSheet&id=" . $selectedBaseID;
             $newSheetBtnName = "Nouveau Rapport de garde";
             $dateInput = "<input type='date' name='date' value='" . getNextDateForShift($selectedBaseID) . "'>";
@@ -358,6 +390,12 @@ function dropdownTodoMissingTask($missingTasks)
     return $html;
 }
 
+
+/**
+ * @param string $page type de rapport, ex. 'shift'
+ * @param int $id id du rapport
+ * @return bool true si le rapport est prêt
+ */
 function sheetIsReady($page, $id){
     switch ($page) {
         case 'drug':

@@ -9,9 +9,10 @@
  */
 function getTodosheetByID($sheetID)
 {
-    return selectOne("SELECT todosheets.id AS id, week, base_id, template_name, slug, displayname
+    return selectOne("SELECT todosheets.id AS id, week, base_id, template_name, slug, displayname, users.initials as closeBy
                              FROM todosheets
                              LEFT JOIN status ON todosheets.status_id = status.id
+                             LEFT JOIN users ON todosheets.closeBy = users.id
                              WHERE todosheets.id =:sheetID", ['sheetID' => $sheetID]);
 }
 
@@ -102,7 +103,7 @@ function createNewSheet($baseID, $weekNbr)
  */
 function readTodoThingsForDay($sheetID, $daynight, $dayOfWeek)
 {
-    $res = selectMany("SELECT description, type, value, u.initials AS 'initials', todos.id AS id, t.id AS todothingID
+    $res = selectMany("SELECT description, type, value, u.initials AS 'initials', todos.id AS id, t.id as todoThingID, t.type as type
                              FROM todos 
                              INNER JOIN todothings t ON todos.todothing_id = t.id
                              LEFT JOIN users u ON todos.user_id = u.id
@@ -169,14 +170,9 @@ function deleteTemplateName($sheetID)
  * @param int $type : if task has an addition "value" associated or not (1 or 2)
  * @return bool|null
  */
-function invalidateTodo($todoTaskID, $type)
+function invalidateTodo($todoTaskID)
 {
-    if ($type == 1) {
-        return execute("UPDATE todos SET user_id=NULL WHERE id=:id", ['id' => $todoTaskID]);
-    } else {
-        return execute("UPDATE todos SET user_id=NULL, value=NULL WHERE id=:id", ['id' => $todoTaskID]);
-    }
-
+    return execute("UPDATE todos SET user_id=NULL, value=NULL WHERE id=:id", ['id' => $todoTaskID]);
 }
 
 /**
@@ -185,15 +181,15 @@ function invalidateTodo($todoTaskID, $type)
  * @param int $value : value needed to be added for some tasks
  * @return bool|null
  */
-function validateTodo($todoTaskID, $value)
+function validateTodo($todoID, $value)
 {
     $initials = $_SESSION['user']['initials'];
     $user = getUserByInitials($initials);
 
     if (!empty($value)) {
-        return execute("UPDATE todos SET user_id=:userID, value=:value WHERE id=:id;", ['userID' => $user['id'], 'value' => $value, 'id' => $todoTaskID]);
+        return execute("UPDATE todos SET user_id=:userID, value=:value WHERE id=:id;", ['userID' => $user['id'], 'value' => $value, 'id' => $todoID]);
     } else {
-        return execute("UPDATE todos SET user_id=:userID WHERE id=:id;", ['userID' => $user['id'], 'id' => $todoTaskID]);
+        return execute("UPDATE todos SET user_id=:userID WHERE id=:id;", ['userID' => $user['id'], 'id' => $todoID]);
     }
 }
 
@@ -237,13 +233,18 @@ function getTemplateSheet($templateName)
 /**
  *Function to change to state of a todosheets specified by id and slug
  * @param int $sheetID
- * @param string $slug : Name of specified slug. Values: blank, open, close, reopen, archived
+ * @param string $slug : Name of specified slug. Values: blank, open, reopen, archived
  * @return bool|null
  */
 function changeSheetState($sheetID, $slug)
 {
     return execute("UPDATE todosheets SET status_id= (SELECT id FROM status WHERE slug =:slug) WHERE id=:id", ['id' => $sheetID, 'slug' => $slug]);
 }
+
+function closeTodoSheet($sheetID,$userID){
+    return execute("UPDATE todosheets SET status_id= (SELECT id FROM status WHERE slug ='close'), closeBy=:userID WHERE id=:id", ['id' => $sheetID, 'userID' => $userID]);
+}
+
 
 /**
  * Function do delete a todosheets specified by id
@@ -302,4 +303,8 @@ function getTaskDescription($taskID){
     return selectOne("SELECT description
                           FROM todothings
                           WHERE id =:task_id",['task_id' => $taskID])['description'];
+}
+
+function getUncheckActionForTodo($sheetID){
+    return count(selectMany("SELECT todothing_id, day_of_week FROM todos WHERE todosheet_id = :id AND user_id IS null",['id' => $sheetID]));
 }

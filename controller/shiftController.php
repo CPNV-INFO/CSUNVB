@@ -18,10 +18,11 @@ function newShiftSheet($baseID)
     }
 
     $result = addNewShiftSheet($baseID, $modelID, $_POST["date"]);
-    if ($result == false) {
+    if ($result == 0) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le rapport de garde.");
     } else {
         setFlashMessage("le rapport de garde a bien été créé !");
+        writeLog("SHIFT",$result,"Rapport créé");
     }
     redirect("shiftList", $baseID);
 }
@@ -60,6 +61,7 @@ function shiftList($selectedBaseID = null)
 function shiftShow($shiftid)
 {
     $shiftsheet = getshiftsheetByID($shiftid);
+    $shiftsheet["nbEmpty"] = getUncheckActionForShift($shiftsheet['id']);
     $sections = getshiftsections($shiftid, $shiftsheet["baseID"]);
     $enableshiftsheetUpdate = ($shiftsheet['status'] == "open" || ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true));
     $enableshiftsheetFilling = ($shiftsheet['status'] == "open" || $shiftsheet['status'] == "reopen" && $_SESSION['user']['admin'] == true);
@@ -76,13 +78,34 @@ function shiftShow($shiftid)
  */
 function checkShift()
 {
-    $res = checkActionForShift($_POST["action_id"], $_POST["shiftSheet_id"], $_POST["day"]);
+    $res = checkActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["D/N"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de valider la tâche.");
     } else {
         setFlashMessage("La tâche a bien été validée !");
+        $time = "nuit";
+        if($_POST["D/N"]==1)$time = "jour";
+        writeLog("SHIFT",$_POST["sheetID"],getShiftActionName($_POST["actionID"]). " ".$time. " validé");
     }
-    redirect("shiftShow", $_POST["shiftSheet_id"]);
+    redirect("shiftShow", $_POST["sheetID"]);
+}
+
+/**
+ * checkShift : Mark a task as not completed
+ * @param none
+ * shows a message to confirm action or an error message
+ */
+function unCheckShift(){
+    $res = unCheckActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["D/N"]);
+    if ($res == false) {
+        setFlashMessage("Une erreur est survenue. Impossible d'annuler la tâche");
+    } else {
+        setFlashMessage("La tâche a bien été annulée !");
+        $time = "nuit";
+        if($_POST["D/N"]==1)$time = "jour";
+        writeLog("SHIFT",$_POST["sheetID"],getShiftActionName($_POST["actionID"]). " ".$time. " annulé");
+    }
+    redirect("shiftShow", $_POST["sheetID"]);
 }
 
 /**
@@ -92,13 +115,14 @@ function checkShift()
  */
 function commentShift()
 {
-    $res = commentActionForShift($_POST["action_id"], $_POST["shiftSheet_id"], $_POST["comment"]);
+    $res = commentActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["comment"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le commentaire.");
     } else {
         setFlashMessage("Le commentaire a bien été ajouté au rapport !");
+        writeLog("SHIFT",$_POST["sheetID"],"Commentaire pour ".getShiftActionName($_POST["actionID"])." : ".$_POST["comment"]);
     }
-    redirect("shiftShow", $_POST["shiftSheet_id"]);
+    redirect("shiftShow", $_POST["sheetID"]);
 }
 
 /**
@@ -113,6 +137,7 @@ function updateShift()
         setFlashMessage("Une erreur est survenue. Impossible d'enregistrer les données.");
     } else {
         setFlashMessage("Les données ont été correctement enregistrées.");
+        writeLog("SHIFT",$_GET["id"],"Données de la feuille modifiées");//todo à mofifier quand elle seront modifiée automatiquement en précisant le champ modifié
     }
     redirect("shiftShow", $_GET["id"]);
 }
@@ -128,7 +153,9 @@ function addActionForShift($sheetID)
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'enregistrer les données.");
     } else {
-        setFlashMessage("L'action <strong>" . getShiftActionName($_POST["actionID"]) . "</strong> à été ajoutée au rapport");
+        $actionName = getShiftActionName($_POST["actionID"]);
+        setFlashMessage("L'action <strong>" . $actionName . "</strong> à été ajoutée au rapport");
+        writeLog("SHIFT",$sheetID, "Tâche ajoutée : ". $actionName);
     }
     redirect("shiftShow", $sheetID);
 }
@@ -143,9 +170,12 @@ function creatActionForShift($sheetID)
     $actionID = getShiftActionID($_POST["actionToAdd"], $_POST["section"]);
     if ($actionID == null) {
         $actionID = creatShiftAction($_POST["actionToAdd"], $_POST["section"]);
+        writeLog("SHIFT",$sheetID, "Tâche crée et ajoutée au rapport : " . $_POST["actionToAdd"]);
         setFlashMessage("Nouvelle action <strong>" . $_POST["actionToAdd"] . "</strong> créée et ajoutée au rapport");
+
     } else {
         setFlashMessage("L'action <strong>" . $_POST["actionToAdd"] . "</strong> à été ajoutée au rapport");
+        writeLog("SHIFT",$sheetID, "Tâche ajoutée : ". $_POST["actionToAdd"]);
     }
     $modelID = configureModel($sheetID, $_POST["model"]);
     $res = addShiftAction($modelID, $actionID);
@@ -167,7 +197,9 @@ function removeActionForShift($sheetID)
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de supprimer l'action.");
     } else {
-        setFlashMessage("l'action <strong>" . getShiftActionName($_POST["action"]) . "</strong> a été suprimée");
+        $actionName = getShiftActionName($_POST["action"]);
+        setFlashMessage("l'action <strong>" . $actionName . "</strong> a été suprimée");
+        writeLog("SHIFT",$sheetID, "Tâche supprimmée : ". $actionName);
     }
     redirect("shiftShow", $sheetID);
 }
@@ -196,10 +228,12 @@ function configureModel($sheetID, $modelID)
 function shiftSheetSwitchState()
 {
     $res = setSlugForShift($_POST["id"], $_POST["newSlug"]);
+    if($_POST["newSlug"] == 'close')closeBy($_POST["id"],$_SESSION['user']['id']);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de changer l'état du rapport de garde.");
     } else {
         setFlashMessage("L'état du rapport de garde a été correctement modifié.");
+        writeLog("SHIFT",$_POST["id"],"Changement d'état : ".$_POST["newSlug"]);
     }
     redirect("shiftList", getBaseIDForShift($_POST["id"]));
 }
@@ -224,13 +258,13 @@ function shiftDeleteSheet()
  * shows a message to confirm action or an error message
  */
 function removeShiftModel(){
-    $res = disableShiftModel($_POST["action_id"]);
+    $res = disableShiftModel($_POST["modelID"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de retirer le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement retiré de la liste des modèles disponibles.");
     }
-    redirect("shiftShow",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["sheetID"]);
 }
 
 /**
@@ -238,24 +272,33 @@ function removeShiftModel(){
  * shows a message to confirm action or an error message
  */
 function addShiftModel(){
-    $res = enableShiftModel($_POST["action_id"],$_POST["comment"]);
+    $res = enableShiftModel($_POST["modelID"],$_POST["name"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement ajouté.");
     }
-    redirect("shiftShow",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["sheetID"]);
 }
 
 
 function reAddShiftModel(){
-    $res = reEnableShiftModel($_POST["action_id"],$_POST["comment"]);
+    $res = reEnableShiftModel($_POST["modelID"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de réactiver le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement réactivé.");
     }
-    redirect("shiftShow",$_POST["shiftSheet_id"]);
+    redirect("shiftShow",$_POST["sheetID"]);
 }
 
+function shiftLog($sheetID){
+    $type = "SHIFT";
+    $sheet = getshiftsheetByID($sheetID);
+    $logs = getLogs($type,$sheetID);
+    require_once VIEW . 'main/log.php';
+}
 
+function uncheckActionForShift_AJAX($sheetID){
+    echo getUncheckActionForShift($sheetID);
+}

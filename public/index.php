@@ -7,8 +7,14 @@
  * Update : 11-NOV-2020 - michael.gogniat
  * Simplify index. Remove all pages references.
  */
-
 session_start();
+
+
+header("Cache-Control: private, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // A date in the past
+
+
 /**
  * Call definition file pour paths
  */
@@ -60,7 +66,7 @@ require MODEL . "Drugs.php";
 require MODEL . "Nova.php";
 require MODEL . "Shift.php";
 require MODEL . "Todo.php";
-
+require MODEL . "Log.php";
 
 /**
  * Check if user logged in and perform requested action when true

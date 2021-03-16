@@ -88,7 +88,7 @@ table.table-bordered > tbody > tr > td{
     background-color: #dae8fc;
 }
 .slugClose{
-    background-color: #ffffff;
+    background-color: #eeeeee;
 }
 .slugReopen{
     background-color: #fff2cc;
@@ -100,39 +100,16 @@ table.table-bordered > tbody > tr > td{
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour l'affichage de la vue des tâches hebdomadaires
  -------------------------------------------------------------- */
-.trashButtons{
-    cursor: pointer;
-    background-color: red;
-}
-/* -- -- -- */
+
 .week {
-    background-color: white;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 2px;
-    margin: 2px;
 }
-
-.day {
-    /*background-color: pink;
-    background-color: #ffffff;*/
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    padding: 2px;
-    margin: 2px;
-    font-size: 80px;
-}
-
-.hour {
-    text-align: center;
-    /*background-color: chartreuse;
-    background-color: #ffffff;*/
-    padding: 4px;
-    margin: 2px;
+.todoTable{
     border-style: solid;
 }
+
 
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour l'affichage de la vue admin secouriste
@@ -159,4 +136,45 @@ tr:hover .modify {
 .cancelIcon{
     color: #a71d2a;
     margin-left: 5px;
+}
+
+/* -------------------------------------*/
+
+.logIcon{
+    display: inline;
+    float: right;
+}
+
+.backIcon{
+    color: black;
+    margin-right: 10px;
+}
+.backIcon:hover{
+    color: #6c757d;
+}
+
+.warning{
+    color: red;
+}
+
+.incompleteTask{
+    background-color: salmon;
+}
+
+.delTodoTask{
+    color: red;
+    float: left;
+    margin: 5px 5px 0px 0px;
+}
+
+.addTaskBtn , .removeTaskBtn{
+    width: 100%;
+    margin-bottom: 10px;
+}
+.taskCol{
+    padding: 4px;
+}
+
+.navZone{
+    margin:auto;
 }

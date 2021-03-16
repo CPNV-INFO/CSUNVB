@@ -83,7 +83,7 @@ WHERE shiftsheets.base_id =:base_id and status.id =:slugID order by date DESC;',
 
 function getshiftsheetByID($id)
 {
-    return selectOne('SELECT bases.name as baseName,bases.id as baseID, shiftsheets.id, shiftsheets.date, shiftsheets.base_id,shiftsheets.shiftmodel_id as model, status.slug AS status, status.displayname AS displayname, novaDay.number AS novaDay, novaNight.number AS novaNight, bossDay.initials AS bossDay, bossNight.initials AS bossNight,teammateDay.initials AS teammateDay, teammateNight.initials AS teammateNight
+    return selectOne('SELECT bases.name as baseName,bases.id as baseID, shiftsheets.id, shiftsheets.date, shiftsheets.base_id,shiftsheets.shiftmodel_id as model, status.slug AS status, status.displayname AS displayname, novaDay.number AS novaDay, novaNight.number AS novaNight, bossDay.initials AS bossDay, bossNight.initials AS bossNight,teammateDay.initials AS teammateDay, teammateNight.initials AS teammateNight , closeBy.initials AS closeBy
 FROM shiftsheets
 INNER JOIN bases ON bases.id = shiftsheets.base_id
 INNER JOIN status ON status.id = shiftsheets.status_id
@@ -93,23 +93,14 @@ LEFT JOIN users bossDay ON bossDay.id = shiftsheets.dayboss_id
 LEFT JOIN users bossNight ON bossNight.id = shiftsheets.nightboss_id
 LEFT JOIN users teammateDay ON teammateDay.id = shiftsheets.dayteammate_id
 LEFT JOIN users teammateNight ON teammateNight.id = shiftsheets.nightteammate_id
+LEFT JOIN users closeBy ON closeBy.id = shiftsheets.closeBy
 WHERE shiftsheets.id =:id;', ["id" => $id]);
 }
 
 
 function addNewShiftSheet($baseID, $modelID, $date)
 {
-    try {
-        $insertshiftsheet = execute("INSERT INTO shiftsheets (date,shiftmodel_id,status_id,base_id) VALUES (:date,:modelID,1,:base)", ['date' => $date, 'base' => $baseID, 'modelID' => $modelID]);
-        if ($insertshiftsheet == false) {
-            throw new Exception("L'enregistrement ne s'est pas effectué correctement");
-        }
-        $dbh = null;
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        return false;
-    }
-    return true;
+    return intval (insert("INSERT INTO shiftsheets (date,shiftmodel_id,status_id,base_id) VALUES (:date,:modelID,1,:base)", ['date' => $date, 'base' => $baseID, 'modelID' => $modelID]));
 }
 
 function getDateOfLastSheet($baseID)
@@ -140,6 +131,10 @@ function getNbshiftsheet($status,$base_id){
 function checkActionForShift($action_id, $shiftSheet_id, $day)
 {
     return execute("Insert into shiftchecks(day,shiftsheet_id,shiftaction_id,user_id)values(:day,:shiftSheet_id,:action_id,:user_id)", ["day" => $day, "user_id" => $_SESSION['user']['id'], "shiftSheet_id" => $shiftSheet_id, "action_id" => $action_id]);
+}
+
+function unCheckActionForShift($action_id, $shiftSheet_id, $day){
+    return execute("Delete from shiftchecks where shiftsheet_id=:shiftSheet_id and day = :day and shiftaction_id =:action_id", ["day" => $day, "shiftSheet_id" => $shiftSheet_id, "action_id" => $action_id]);
 }
 
 function commentActionForShift($action_id, $shiftSheet_id, $message)
@@ -213,6 +208,16 @@ function getShiftActionName($actionID)
 function setSlugForShift($id, $slug)
 {
     return execute("update shiftsheets set status_id= (select id from status where slug =:slug) WHERE id=:id", ["slug" => $slug, "id" => $id]);
+}
+
+/**
+ * setSlugForShift : set the user who close de sheet
+ * @param int $id : id of the shiftsheet
+ * @param int $userID : id of the user
+ * @return bool : true = ok / false = fail
+ */
+function closeBy($id,$userID){
+    return execute("update shiftsheets set closeBy = :userID WHERE id=:id", ["userID" => $userID, "id" => $id]);
 }
 
 
@@ -328,4 +333,25 @@ function updateDataShift($id, $novaDay, $novaNight, $bossDay, $bossNight, $teamm
     if ($teammateDay == "NULL") $teammateDay = null;
     if ($teammateNight == "NULL") $teammateNight = null;
     return execute("update shiftsheets set daynova_id =:novaDay, nightnova_id =:novaNight, dayboss_id =:bossDay, nightboss_id =:bossNight, dayteammate_id =:teammateDay, nightteammate_id =:teammateNight WHERE id=:id", ["id" => $id, "novaDay" => $novaDay, "novaNight" => $novaNight, "bossDay" => $bossDay, "bossNight" => $bossNight, "teammateDay" => $teammateDay, "teammateNight" => $teammateNight]);
+}
+
+function getUncheckActionForShift($sheetID){
+    return count(selectMany("SELECT day, action_id FROM (
+SELECT 0 as DAY, shiftmodel_has_shiftaction.shiftaction_id AS action_id, CONCAT(shiftmodel_has_shiftaction.shiftaction_id,'/',0) AS 'code' FROM shiftmodels
+INNER JOIN shiftmodel_has_shiftaction
+ON shiftmodels.id = shiftmodel_has_shiftaction.shiftmodel_id
+INNER JOIN shiftsheets
+ON shiftsheets.shiftmodel_id = shiftmodels.id
+WHERE shiftsheets.id = :sheetID
+union SELECT 1 as DAY, shiftmodel_has_shiftaction.shiftaction_id AS action_id,CONCAT(shiftmodel_has_shiftaction.shiftaction_id,'/',1) AS 'code'  FROM shiftmodels
+INNER JOIN shiftmodel_has_shiftaction
+ON shiftmodels.id = shiftmodel_has_shiftaction.shiftmodel_id
+INNER JOIN shiftsheets
+ON shiftsheets.shiftmodel_id = shiftmodels.id
+WHERE shiftsheets.id = :sheetID ) AS test 
+WHERE code not IN(
+SELECT unique CONCAT(shiftactions.id,'/',shiftchecks.day) AS 'code' FROM shiftchecks
+inner JOIN shiftactions
+ON shiftactions.id = shiftchecks.shiftaction_id
+WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]));
 }

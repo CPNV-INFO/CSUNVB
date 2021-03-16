@@ -256,7 +256,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `todosheets` WRITE;
 /*!40000 ALTER TABLE `todosheets` DISABLE KEYS */;
-INSERT INTO `todosheets` VALUES (23,2044,2,2,NULL);
+INSERT INTO `todosheets` VALUES (23,2044,2,2,NULL,NULL);
 /*!40000 ALTER TABLE `todosheets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -384,11 +384,11 @@ UNLOCK TABLES;
 
 -- table shiftsheets
 INSERT INTO `shiftsheets` VALUES
-(1,'2021-01-03',3,2,3,43,32,34,23,1,2),
-(2,'2021-01-03',2,3,3,53,42,35,24,3,4),
-(3,'2021-01-04',2,2,2,63,52,36,25,5,6),
-(4,'2021-01-04',2,3,1,null,null,null,null,null,null),
-(5,'2021-01-05',2,2,1,null,null,null,null,null,NULL);
+(1,'2021-01-03',3,2,3,43,32,34,23,null,1,2),
+(2,'2021-01-03',2,3,3,53,42,35,24,null,3,4),
+(3,'2021-01-04',2,2,2,63,52,36,25,null,5,6),
+(4,'2021-01-04',2,3,1,null,null,null,null,null,null,null),
+(5,'2021-01-05',2,2,1,null,null,null,null,NULL,null,NULL);
 
 -- table shiftchecks
 INSERT INTO `shiftchecks` (id,DAY,shiftsheet_id,user_id,shiftaction_id) VALUES
@@ -427,5 +427,3 @@ INSERT INTO `shiftactions` VALUES
 (21,'Vider les poubelles',1),
 (22,'Faire le ménage',1),
 (23,'Vérification quelconque',2);
-
-
