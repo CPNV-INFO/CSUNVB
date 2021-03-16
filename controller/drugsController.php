@@ -22,6 +22,8 @@ function showDrugSheet($drugSheetID, $edition = false) {
     $dates = getDaysForWeekNumber($drugsheet["week"]);
     $novas = getNovasForSheet($drugSheetID);
     $batchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
+    $drugSignatures = getDrugSignaturesForDrugSheet($drugSheetID);
+
     foreach ($batchesForSheet as $p) {
         $batchesForSheetByDrugId[$p["drug_id"]][] = $p;
     }
@@ -220,5 +222,24 @@ function removeNovaFromDrugSheet(){
     }else{
         setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
     }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+}
+
+function signDrugSheetDay(){
+    $drugSheetID = $_POST['drugSheetID'];
+    $day = $_POST['day'];
+    $userID = $_SESSION['user']['id'];
+    $baseID = $_SESSION['base']['id'];
+
+    //TODO - Contôle de droits ?
+
+    $res = insertDrugSignatures($drugSheetID,$day,$userID,$baseID);
+
+    if ($res == false || $res == null) {
+        setFlashMessage("Une erreur est survenue. Impossible de signer cette journée.");
+    } else {
+        setFlashMessage("La journée à correctement été signée.");
+    }
+
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
