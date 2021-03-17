@@ -133,17 +133,16 @@ function deleteTemplate()
 /**
  *Function used to activate amd deactivate editing mode
  */
-function todoEditionMode()
+function todoEditionMode($id)
 {
     $edition = $_POST['edition'];
-    $todosheetID = $_POST['todosheetID'];
 
     if (!$edition) {
         $edition = true;
-        showtodo($todosheetID, $edition); // todo : faire une redirection
+        showtodo($id, $edition); // todo : faire une redirection
     } else {
         $edition = false;
-        header('Location: ?action=showtodo&id=' . $todosheetID);
+        header('Location: ?action=showtodo&id=' . $id);
     }
 }
 

@@ -143,6 +143,7 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
     if (!empty($sheets)) {
         $html = $html . "<div class='" . $slug . "Sheets' style='margin-top: 0px;'><table class='table table-bordered' style='margin-top: 0px;'>
                             <thead class='thead-dark'><th>Semaine n°</th><th class='actions'>Actions</th></thead>
+                        
                             <tbody>";
         foreach ($sheets as $sheet) {
             if ($zone == 'drug') {
@@ -157,7 +158,7 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
             if (ican('createsheet') && (isset($sheet['template_name']))) {
                 $html = $html . "<i class='fas fa-file-alt template' title='" . $sheet['template_name'] . "'></i>";
             }
-            $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn btn-primary m-1' href='?action=".$detailAction."&id=".$sheet['id']."'>Détails</a>".slugBtns($zone, $sheet, $slug) . "</div></td>";
+            $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn blueBtn m-1' href='?action=".$detailAction."&id=".$sheet['id']."'>Détails</a>".slugBtns($zone, $sheet, $slug) . "</div></td>";
         }
         $html = $html . "</tr> </tbody> </table></div>";
     } else {
@@ -228,7 +229,7 @@ function slugBtns($page, $sheet, $slug)
                 $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Activer",$disableReason,"open");
             }
         case "archive":
-            if (ican('deletesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "DeleteSheet", "Supprimer");
+            if (ican('deletesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "DeleteSheet", "<i class='fas fa-trash'></i>");
             break;
         case "open":
             if (ican('closesheet')){
@@ -237,10 +238,10 @@ function slugBtns($page, $sheet, $slug)
                         $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
                         break;
                     case "todo":
-                        $buttonList .= "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick=todoClose(".$sheet['id'].",".$sheet['week'].")>";
+                        $buttonList .= "<input type='button' class='btn blueBtn m-1' value = Clôturer onclick=todoClose(".$sheet['id'].",".$sheet['week'].")>";
                         break;
                     case "shift":
-                        $buttonList .= "<input type='button' class='btn btn-primary m-1' value = Clôturer onclick=shiftClose('".$sheet['date']."',".$sheet['id'].")>";
+                        $buttonList .= "<input type='button' class='btn blueBtn m-1' value = Clôturer onclick=shiftClose('".$sheet['date']."',".$sheet['id'].")>";
                         break;
                     default:
                         break;
@@ -273,13 +274,13 @@ function slugBtns($page, $sheet, $slug)
  */
 function buttonForSheet($page, $id, $action, $actionName, $disableReason = "", $newSlug = "")
 {
-    $btn = "<form  method='POST' action='?action=$page$action'>";
+    $btn = "<form  method='POST' class='d-inline' action='?action=$page$action'>";
     $btn .= "<input type='hidden' name='id' value='$id'>";
     if (!$newSlug == "") $btn .= "<input type='hidden' name='newSlug' value='$newSlug'>";
     if ($disableReason == "") {
-        $btn .= "<button type='submit' class='btn btn-primary m-1'>$actionName</button></form>";
+        $btn .= "<button type='submit' class='btn blueBtn m-1'>$actionName</button></form>";
     } else {
-        $btn .= "<form><span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='$disableReason'><button type='submit' class='btn btn-primary m-1' disabled>$actionName</button></span></form>";
+        $btn .= "<form><span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='$disableReason'><button type='submit' class='btn blueBtn m-1' disabled>$actionName</button></span></form>";
     }
     return $btn;
 }
@@ -352,7 +353,7 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
         foreach ($models as $model) {
             $header .= "<option value='" . $model['id'] . "'>" . $model['name'] . "</option>";
         }
-        $header .= "</select> <button class='btn btn-primary m-1'>" . $newSheetBtnName . "</button>";
+        $header .= "</select> <button class='btn blueBtn m-1'>" . $newSheetBtnName . "</button>";
         $header .= $dateInput;
         $header .= "</form></div>";
     }

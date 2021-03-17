@@ -32,6 +32,10 @@ textarea{
     cursor: default;
 }
 
+.blueBtn{
+    background-color: #28527a;
+    color: ghostwhite;
+}
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour l'affichage des listes des rapports
  -------------------------------------------------------------- */
@@ -102,6 +106,36 @@ table.table-bordered > tbody > tr > td{
 .todoTable{
     border-style: solid;
 }
+/* ------------------------------------------------------------
+* Styles CSS utilisés pour le formulaire de modification de rapport
+ -------------------------------------------------------------- */
+.editSheetForm{
+    margin: 15px 0 15px 0;
+    padding:10px;
+    background-color: lightblue;
+    border-radius:5px;"
+}
+.editSheetForm input {
+    min-width: 100px;
+    max-width: 100px; /* todo à modifer*/
+    height: 25px;
+}
+.editSheetForm select{
+    min-width: 100px;
+    max-width: 100px; /* todo à modifer*/
+    height: 25px;
+}
+.editSheetForm .addBtn{
+    padding: 0 4px 0 4px;
+    margin-left: 5px;
+    border-radius:3px;
+}
+.marginLeft{
+    margin-left: 20px;
+}
+.marginTop{
+    margin-top: 10px;
+}
 
 
 /* ------------------------------------------------------------
@@ -171,3 +205,4 @@ tr:hover .modify {
 .navZone{
     margin:auto;
 }
+
