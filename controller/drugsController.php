@@ -17,13 +17,13 @@ function listDrugSheets($selectedBaseID = null) {
 }
 
 // Affichage de la page finale
-function showDrugSheet($drugSheetID) {
+function showDrugSheet($drugSheetID, $edition = false) {
     $drugsheet = getDrugSheetById($drugSheetID);
     $dates = getDaysForWeekNumber($drugsheet["week"]);
     $novas = getNovasForSheet($drugSheetID);
-    $BatchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
-    foreach ($BatchesForSheet as $p) {
-        $batchesByDrugId[$p["drug_id"]][] = $p;
+    $batchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
+    foreach ($batchesForSheet as $p) {
+        $batchesForSheetByDrugId[$p["drug_id"]][] = $p;
     }
     $drugs = getDrugsInDrugSheet($drugSheetID);
     $site = getbasebyid($drugsheet['base_id']);
@@ -31,6 +31,34 @@ function showDrugSheet($drugSheetID) {
     //ici pour faire un check dès la generation de la page, systeme absolument affreux, a ameliorer
     $cellType = ($drugsheet['slug'] == "close") ? "p" : "input";
     $UIDs = array();
+
+    if(ican ("modifySheet") && $edition){
+
+        $drugsWithUsableBatches = getDrugsWithUsableBatches($drugsheet['base_id']);
+        $allUsableBatches = getUsableBatches($drugsheet['base_id']); // All usable batches even thoses who are already in the sheet
+        $usableBatches = array(); // usable batch without thoses who are already used in the sheet
+        $allNovas = getNovas();
+        $unusedNovas = array();
+
+       foreach ($allUsableBatches as $usableBatch){
+           $foundInBatch = false;
+           if(isset($batchesForSheetByDrugId[$usableBatch['drug_id']])) {
+               foreach ($batchesForSheetByDrugId[$usableBatch['drug_id']] as $batchForSheetByDrugId) {
+                   if ($usableBatch['number'] == $batchForSheetByDrugId['number']) $foundInBatch = true;
+               }
+           }
+            if(!$foundInBatch) $usableBatches[] = $usableBatch ;
+
+        }
+
+       foreach ($allNovas as $nova){
+           $insheet = in_array($nova,$novas,true );
+
+           if (!$insheet){
+               $unusedNovas[] = $nova;
+           }
+       }
+    }
 
     require_once VIEW . 'drugs/show.php';
 }
@@ -59,4 +87,138 @@ function drugSheetSwitchState() {
 }
 
 function updateDrugSheet() {
+    $novaChecks = $_POST['novaChecks'];
+    $pharmaChecks = $_POST['pharmachecks'];
+    $restock = $_POST['restock'];
+    $drugSheetID = $_POST['drugsheetID'];
+
+    if(ican("editsheet")){
+        $errors = false;
+
+        foreach ($novaChecks as $date => $novas){
+            foreach ($novas as $novaID => $drugs){
+                foreach ($drugs as $drugID => $drug){
+                    $res = inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID);
+                    if($res == null || $res === false ) {
+                        $errors = true;
+                    }
+                }
+            }
+        }
+
+        foreach ($pharmaChecks as $date => $bateches){
+            foreach ($bateches as $batchID => $batch){
+                $res = insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID);
+                if($res == null || $res === false) $errors = true;
+            }
+        }
+
+        foreach ($restock as $date => $batches) {
+            foreach ($batches as $batchID => $novas){
+                foreach ($novas as $novaID => $restockamount){
+                    if($restockamount != ""){
+                        $res = inertOrUpdateRestock($date,$batchID,$novaID,$restockamount);
+                        if($res == null || $res === false) $errors = true;
+                    }
+
+                }
+            }
+        }
+
+        $errors == true ? setFlashMessage("L'enregistrement des données à rencontré une erreur. Veuillez vérifier les données du rapport.") : setFlashMessage("L'enregistrement des données à été effectué.");
+
+
+    }else{
+    setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+
+
+
+}
+
+/**
+ *Function used to activate amd deactivate editing mode
+ */
+function drugSheetEditionMode()
+{
+    $edition = $_POST['edition'];
+    $drugSheetID = $_POST['drugsheetID'];
+
+    if (!$edition) {
+        $edition = true;
+        showDrugSheet($drugSheetID, $edition); // todo : faire une redirection
+    } else {
+        $edition = false;
+        header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+    }
+}
+
+function addBatchesToDrugSheet(){
+    $batchToAdd = $_POST['batchToAddList'];
+    $drugSheetID = $_POST['drugSheetID'];
+    if(ican ("modifySheet")){
+        $res = insertBatchInSheet($drugSheetID,$batchToAdd);
+        if ($res == false) {
+            setFlashMessage("Une erreur est survenue. Impossible d'ajouter le lot au rapport.");
+        } else {
+            setFlashMessage("Le lot " . $batchToAdd . " a été correctement ajouté.");
+        }
+    }else{
+        setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+}
+
+function removeBatchFromDrugSheet(){
+    $batchToRemove = $_POST['batch'];
+    $drugSheetID = $_POST['drugSheetID'];
+
+    if(ican ("modifySheet")){
+        $res = removeBatchFromSheet($drugSheetID,$batchToRemove);
+        if ($res == false) {
+            setFlashMessage("Une erreur est survenue. Impossible de retirer le lot du rapport.");
+        } else {
+            setFlashMessage("Le lot " . $batchToRemove . " a été correctement retiré.");
+        }
+    }else{
+        setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+}
+
+function addNovasToDrugSheet(){
+    $drugSheetID = $_POST['drugSheetID'];
+    $novaToAdd = $_POST['novaToAddList'];
+
+    if(ican ("modifySheet")){
+    $res = insertNovaInSheet($drugSheetID,$novaToAdd);
+        if ($res == false) {
+            setFlashMessage("Une erreur est survenue. Impossible d'ajouter l'ambulance au rapport.");
+        } else {
+            setFlashMessage("L'ambulance " . $novaToAdd . "  a été correctement ajoutée.");
+        }
+
+    }else{
+        setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+
+}
+function removeNovaFromDrugSheet(){
+    $drugSheetID = $_POST['drugSheetID'];
+    $novaToRemove = $_POST['nova'];
+
+    if(ican ("modifySheet")){
+        $res = removeNovaFromSheet($drugSheetID,$novaToRemove);
+        if ($res == false) {
+            setFlashMessage("Une erreur est survenue. Impossible de retirer l'ambulance du rapport.");
+        } else {
+            setFlashMessage("L'ambulance " . $novaToRemove . "  a été correctement retirée.");
+        }
+
+    }else{
+        setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
+    }
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
