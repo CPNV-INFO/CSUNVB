@@ -137,8 +137,7 @@ function readTodoForASheet($sheetID)
  */
 function updateTemplateName($sheetID, $templateName)
 {
-    return execute(
-        "UPDATE todosheets SET template_name=:templateName WHERE id =:id", ['templateName' => $templateName, 'id' => $sheetID]);
+    return execute("UPDATE todosheets SET template_name=:templateName WHERE id =:id", ['templateName' => $templateName, 'id' => $sheetID]);
 }
 
 /**
@@ -315,4 +314,8 @@ function alreadyOnTodoSheet($sheetID,$taskID,$day){
     }else{
         return true;
     }
+}
+
+function getTodoInfo($id){
+    return selectOne("SELECT day_of_week , description, daything FROM todos inner join todothings ON todothings.id = todos.todothing_id WHERE todos.id= :id",['id' => $id]);
 }
