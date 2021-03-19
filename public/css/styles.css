@@ -122,14 +122,12 @@ table.table-bordered > tbody > tr > td{
     background-color: lightblue;
     border-radius:5px;"
 }
-.editSheetForm input {
-    min-width: 100px;
-    max-width: 100px; /* todo à modifer*/
+.editSheetForm .smallInput {
+    width: 100px;
     height: 25px;
 }
-.editSheetForm select{
-    min-width: 100px;
-    max-width: 100px; /* todo à modifer*/
+.editSheetForm .bigInput{
+    width: 300px;
     height: 25px;
 }
 .editSheetForm .addBtn{
@@ -213,3 +211,14 @@ tr:hover .modify {
     margin:auto;
 }
 
+
+@media print{
+    .addTaskBtn{
+        margin: 2px;
+        padding: 3px;
+    }
+}
+
+.inactivForm .maskIfInactiv{
+    display : none;
+}

@@ -19,34 +19,56 @@ trashButtons.forEach((item) => {
     }, false);
 })
 
-// Code lié aux listes de tâches manquantes (Ajout de tâche)
-// Permet l'affichage des listes déroulantes en fonction des choix de jour et créneau
-var dropdownLists = document.querySelectorAll('.missingTasksChoice');
+$( "#selectDay").on( "change", function() {
+    showAddTask();
+});
 
-dropdownLists.forEach((item) => {
-    item.addEventListener('change', function (event) {
+$( "#selectTime").on( "change", function() {
+    showAddTask();
+});
 
-        var day = document.getElementById('missingTaskDay').value;
-        var time = document.getElementById('missingTaskTime').value;
+function showAddTask(){
+    var day = $("#selectDay").val();
+    var time = $("#selectTime").val();
+    if(day != null && time != null){
+        $.ajax({
+            type: "POST",
+            url: "?action=findMissingTasks_AJAX",
+            data: {
+                day: day,
+                time: time,
+                sheetID: $("#sheetID").val()
+            },
+            cache: false,
+            success: function(data) {
+                $("#missingTask").html(data);
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr);
+            }
+        });
+        $( "#editSheetForm" ).removeClass( "inactivForm" )
+    }else{
+        $( "#editSheetForm" ).addClass( "inactivForm" )
+    }
+}
 
-        var elements = document.getElementsByClassName('missingTodoTaskList');
-        var label = document.getElementById('missingTaskLabel');
-        var button = document.getElementById('addTodoTaskBtn');
+$( "#addOldTask").on( "click", function() {
+    const param = {
+        day: $("#selectDay").val(),
+        sheetID: $("#sheetID").val(),
+        taskID: $("#missingTask").val()
+    };
+    post("?action=oldTodoTask", param )
 
-        for (var i = 0; i < elements.length; i ++) {
-            elements[i].classList.add('d-none');
-        }
+});
 
-        if(day != 'default' && time != 'default'){
-            var id = "day"+day+"time"+time;
-            document.getElementById(id).classList.remove('d-none');
-            label.classList.remove('d-none');
-            button.disabled = false;
-        }else{
-            label.classList.add('d-none');
-            button.disabled = true;
-        }
-
-    }, false);
-})
-
+$( "#addNewTask").on( "click", function() {
+    const param = {
+        day: $("#selectDay").val(),
+        time: $("#selectTime").val(),
+        sheetID: $("#sheetID").val(),
+        name: $("#newTask").val()
+    };
+    post("?action=newTodoTask", param )
+});

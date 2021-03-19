@@ -3,7 +3,7 @@ ob_start();
 $title = "CSU-NVB - Tâches hebdomadaires";
 ?>
 <input type="hidden" id="sheetID" value="<?= $week['id'] ?>"><!-- used to get date in javascrpt -->
-<a href="javascript:history.back()" class="text-dark"><i class="fas fa-angle-left backIcon"></i>Retour</a>
+<a href="javascript:history.back()" class="text-dark d-print-none"><i class="fas fa-angle-left backIcon"></i>Retour</a>
 <h1>
     Tâches hebdomadaires
 </h1>
@@ -18,7 +18,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
     Status : <?= $week['displayname'] ?> <?= ($week['slug'] == 'close') ? ' par ' . $week['closeBy'] : '' ?>
 </h5>
 <?php if (ican("modifySheet") && $edition) : ?> <!-- Zone d'ajout de nouvelle tâche -->
-    <div class="d-print-none container editSheetForm">
+    <div class="d-print-none container editSheetForm inactivForm" id="editSheetForm">
         <a href="?action=showtodo&id=<?= $week['id'] ?>"><i
                     class='fas fa-times fa-lg text-dark float-right d-inline'></i></a>
         <h5>Mode d'édition</h5>
@@ -28,25 +28,24 @@ $title = "CSU-NVB - Tâches hebdomadaires";
                     Jour de la semaine
                 </td>
                 <td>
-                    <select name="day" class="marginLeft">
+                    <select name="day" id="selectDay" class="marginLeft smallInput">
                         <option value="" selected disabled hidden></option>
                         <?php foreach ($dates as $index => $date) : ?>
                             <option name="day" value="<?= $index + 1 ?>"><?= $days[$index + 1] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </td>
-                <td>
+                <td class="maskIfInactiv">
                     <div class="marginLeft">
                         Tâche :
                     </div>
                 </td>
-                <td>
-                    <select class='missingTasksChoice'>
-                        <option value="default"></option>
+                <td class="maskIfInactiv">
+                    <select id="missingTask" class="bigInput">
                     </select>
                 </td>
-                <td>
-                    <button class="addBtn btn-dark"><i class="fas fa-plus"></i></button>
+                <td class="maskIfInactiv">
+                    <button class="addBtn btn-dark" id="addOldTask"><i class="fas fa-plus"></i></button>
                 </td>
             </tr>
             <tr>
@@ -54,29 +53,29 @@ $title = "CSU-NVB - Tâches hebdomadaires";
                     Créneau
                 </td>
                 <td class="float-left">
-                    <select name="dayTime" class="float-right marginLeft marginTop">
+                    <select name="dayTime" id="selectTime" class="float-right marginLeft marginTop smallInput">
                         <option value="" selected disabled hidden></option>
                         <option name="dayTime" value="1">Jour</option>
                         <option name="dayTime" value="0">Nuit</option>
                     </select>
                 </td>
-                <td colspan="2">
-                    <input type="text" class='missingTasksChoice float-right marginTop'>
+                <td colspan="2" class="maskIfInactiv">
+                    <input type="text" class='float-right marginTop bigInput' id="newTask">
                 </td>
-                <td>
-                    <button class="addBtn btn-dark marginTop"><i class="fas fa-plus"></i></button>
+                <td class="maskIfInactiv">
+                    <button class="addBtn btn-dark marginTop" id="addNewTask"><i class="fas fa-plus"></i></button>
                 </td>
             </tr>
         </table>
     </div>
 <?php endif; ?>
 <div class="week text-center p-0" style="margin-top: 15px;overflow-x: scroll"> <!-- Affichage des tâches -->
-    <table style="width: 100%" class="todoTable">
+    <table style="width: 100%" class="todoTable flex">
         <thead>
-        <tr>
+        <tr class="flex">
             <?php foreach ($dates as $index => $date) : ?>
                 <th>
-                    <div class='bg-dark text-white col-md font-weight-bold'
+                    <div class='bg-dark text-white col-md font-weight-bold flex-grow-1'
                          id="day-<?= $index + 1 ?>"><?= $days[$index + 1] ?>
                         <br><?= displayDate($date, 0) ?>
                 </th>
@@ -119,7 +118,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
         </tbody>
     </table>
 </div>
-<div class="d-flex flex-row"> <!-- Boutons relatifs aux modèles -->
+<div class="d-flex flex-row d-print-none"> <!-- Boutons relatifs aux modèles -->
     <?php if (ican("createTemplate") && is_null($template['template_name'])) : ?>
         <form action="?action=modelWeek" method="POST">
             <button type="submit" class='btn blueBtn m-1'>Retenir comme modèle</button>

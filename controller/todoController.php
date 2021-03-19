@@ -36,18 +36,14 @@ function showtodo($sheetID, $edition = false)
     $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
     $dates = getDaysForWeekNumber($week['week']);
     $template = getTemplateName($sheetID);
-
-    $missingTasks = array();
     if($edition){
         $state = 'edition';
     }else{
         $state = $week['slug'];
     }
     for ($daynight = 0; $daynight <= 1; $daynight++) {
-        $allTodoTasks[1] = getTasksByTime($daynight);
         for ($dayofweek = 1; $dayofweek <= 7; $dayofweek++) {
             $todoThings[$daynight][$dayofweek] = readTodoThingsForDay($sheetID, $daynight, $dayofweek);
-            $missingTasks[$daynight][$dayofweek] = findMissingTasks($allTodoTasks[$daynight], $todoThings[$daynight][$dayofweek]); // Find tasks that are not present so they can be added
             foreach ($todoThings[$daynight][$dayofweek] as $key => $todoThing) {
                 if (!is_null($todoThing['type']) && !is_null($todoThing['value'])) {
                     $todoThings[$daynight][$dayofweek][$key]['description'] = str_replace("....", "" . $todoThing['value'] . "", "" . $todoThing['description'] . "");
@@ -146,20 +142,7 @@ function todoEditionMode($id)
     }
 }
 
-/**
- *Function to delete a task from a todosheet
- */
-function destroyTaskTodo()
-{
-    $todosheetID = $_POST['todosheetID'];
-    $todoTaskID = $_POST['taskID'];
-    $todoTaskName = getTaskName($_POST['taskID']);
-    $message = 'La tâche  <strong>'.$todoTaskName.'</strong> a été supprimée !';
-    deletethingsID($todoTaskID);
 
-    setFlashMessage($message);
-    showtodo($todosheetID,true); // todo : faire une redirection
-}
 
 
 
@@ -215,53 +198,17 @@ function todoDeleteSheet()
 }
 
 /**
- * Function that looks for missing tasks from a todosheet from a reference list
- * @param array $allTasksList : reference list
- * @param array $taskList : existing list to check
- * @return array
+ * Function that return html option for missing tasks
+ * @return string html code
  */
-function findMissingTasks($allTasksList, $taskList)
+function findMissingTasks_AJAX()
 {
-    $missingTask = array();
-
-    for ($i = 0; $i < count($allTasksList); $i++) {
-        $found = false;
-        for ($j = 0; $j < count($taskList); $j++) {
-            if ($allTasksList[$i]['id'] == $taskList[$j]['todothingID']) {
-                $found = true;
-                $j = count($taskList);
-            }
-        }
-        if ($found == false) {
-            $missingTask[] = $allTasksList[$i];
-        }
+    $missingTasks = getMissingTodo($_POST["day"],$_POST["time"],$_POST["sheetID"]);
+    $options = "";
+    foreach ($missingTasks as $task){
+        $options .= "<option name='task' value='".$task["id"]."'>".$task["description"]."</option>";
     }
-    return $missingTask;
-}
-
-/**
- * Function to add a task to a todosheet
- * Shows a message if successful or an error
- */
-function addTodoTask(){
-    $todoSheetID = $_POST['todosheetID'];
-    $time = $_POST['dayTime'];
-    $day = $_POST['day'];
-    $selectedList = "task".$day."time".$time;
-    $taskID = $_POST[$selectedList];
-
-    $taskDescription = getTaskDescription($taskID);
-
-    $isAdded = addTodoThing($taskID, $todoSheetID, $day);
-
-    if( isset($isAdded) ){
-        $message = 'La tâche <strong>'.$taskDescription.'</strong> a été ajoutée.'; // todo : Message plus parlant pour l'utilisateur (ex: ajout du jour)
-    }else{
-        $message = "Erreur lors de l'ajout de tâche.";
-    }
-
-    setFlashMessage($message);
-    showtodo($todoSheetID,true); // todo : faire une redirection
+    echo $options;
 }
 
 /**
@@ -286,6 +233,73 @@ function unCheckTodo()
 function uncheckActionForTodo_AJAX($sheetID){
     echo getUncheckActionForTodo($sheetID);
 }
+
+function newTodoTask(){
+    $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    if($_POST["day"]==1){
+        $time = "jour";
+    }else{
+        $time = "nuit";
+    }
+    $exist = getTodoTaskByName($_POST["name"],$_POST["time"]);
+    if(!$exist){
+        $newID = createTodoTask($_POST["name"],$_POST["time"]);
+        $res = addTodoForSheet($_POST["sheetID"],$newID,$_POST["day"]);
+        if($res){
+            $message = "Tâche <strong>".$_POST["name"]. "</strong> crée et ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+        }
+    }else{
+        if(!alreadyOnTodoSheet($_POST["sheetID"],$exist["id"],$_POST["day"])){
+            $res = addTodoForSheet($_POST["sheetID"],$exist["id"],$_POST["day"]);
+            if($res){
+                $message = "Tâche <strong>".$_POST["name"]. "</strong> ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+            }
+        }else{
+            $message = "Echec : La tâche : <strong>".$_POST["name"]."</strong> est déjà présente pour le jour en question";
+        }
+    }
+    if(isset($message)){
+        setFlashMessage($message);
+    }else{
+        $message = "Echec lors de l'ajout de la tâche : <strong>".$_POST["name"]."</strong>";
+    }
+    redirect("todoEditionMode",$_POST["sheetID"]);
+}
+
+function oldTodoTask(){
+    $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    $task = getTodoTaskByID($_POST["taskID"]);
+    $res = addTodoForSheet($_POST["sheetID"],$_POST["taskID"],$_POST["day"]);
+    if($res){
+        if($task["dayting"]==1){
+            $time = "jour";
+        }else{
+            $time = "nuit";
+        }
+        $message = "Tâche <strong>".$task["description"]. "</strong> ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+    }else{
+        $message = "Echec lors de l'ajout de la tâche : <strong>".$task["description"]."</strong>";
+    }
+    setFlashMessage($message);
+    redirect("todoEditionMode",$_POST["sheetID"]);
+}
+
+/**
+ *Function to delete a task from a todosheet
+ */
+function destroyTaskTodo()
+{
+    /**
+    $todosheetID = $_POST['todosheetID'];
+    $todoTaskID = $_POST['taskID'];
+    $todoTaskName = getTaskName($_POST['taskID']);
+    $message = 'La tâche  <strong>'.$todoTaskName.'</strong> a été supprimée !';
+    deletethingsID($todoTaskID);
+
+    setFlashMessage($message);
+    showtodo($todosheetID,true); // todo : faire une redirection*/
+}
+
 
 
 

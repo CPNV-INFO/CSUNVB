@@ -127,18 +127,7 @@ function readTodoForASheet($sheetID)
     return selectMany($query, ['sheetID' => $sheetID]);
 }
 
-/**
- *Function that adds a specified task to a todosheet on a specified day
- * @param int $taskID : specified task id
- * @param int $sheetID : specified sheet id
- * @param int $dayOfWeek : day of the week (1-7)
- * @return bool|null
- */
-function addTodoThing($taskID, $sheetID, $dayOfWeek)
-{
-    $query = "INSERT INTO todos (todothing_id, todosheet_id, day_of_week) VALUE (:taskID, :sheetID, :day)";
-    return execute($query, ['taskID' => $taskID, 'sheetID' => $sheetID, 'day' => $dayOfWeek]);
-}
+
 
 /**
  * Function to change name of a template
@@ -273,38 +262,59 @@ function getOpenTodoSheetNumber($baseID){
     return selectOne("SELECT COUNT(todosheets.id) as number FROM  todosheets inner join status on status.id = todosheets.status_id where status.slug = 'open' and todosheets.base_id =:base_id", ['base_id' => $baseID])['number'];
 }
 
-/**
- * Function that returns description of a task specified by id (FROM THE todos TABLE)
- * @param int $todoTaskID
- * @return mixed
- */
-function getTaskName($todoTaskID){
-    return selectOne("SELECT description
-                          FROM todos
-                          LEFT JOIN todothings on todos.todothing_id = todothings.id 
-                          WHERE todos.id =:task_id",['task_id' => $todoTaskID])['description'];
-}
-
-
-/**
- * Function that returns all task by day or night
- *  @param int $daynight : 0 for night and 1 for day
- * @return array|mixed|null
- */
-function getTasksByTime($daynight){
-    return selectMany("SELECT id, description FROM todothings WHERE daything = :daynight",['daynight' => $daynight]);
-}
-
-/** Function that returns description of a task specified by id (FROM THE todothings TABLE)
- * @param int $taskID
- * @return mixed
- */
-function getTaskDescription($taskID){
-    return selectOne("SELECT description
-                          FROM todothings
-                          WHERE id =:task_id",['task_id' => $taskID])['description'];
-}
 
 function getUncheckActionForTodo($sheetID){
     return count(selectMany("SELECT todothing_id, day_of_week FROM todos WHERE todosheet_id = :id AND user_id IS null",['id' => $sheetID]));
+}
+
+function getMissingTodo($day,$time,$sheetID){
+    return selectMany("SELECT * FROM todothings WHERE id NOT IN (SELECT todothing_id FROM todos WHERE todosheet_id = :sheetID AND day_of_week = :day)  AND daything = :time",["day"=>$day,"time"=>$time, "sheetID"=> $sheetID]);
+}
+
+
+/**
+ *Function that add a specified task to a todosheet on a specified day
+ * @param int $taskID : specified task id
+ * @param int $sheetID : specified sheet id
+ * @param int $day : day of the week (1-7)
+ * @return bool
+ */
+function addTodoForSheet($sheetID,$taskID, $day)
+{
+    return insert("INSERT INTO todos (todothing_id, todosheet_id, day_of_week) VALUE (:taskID, :sheetID, :day)", ['taskID' => $taskID, 'sheetID' => $sheetID, 'day' => $day]);
+}
+
+
+
+function createTodoTask($name,$day, $type = null){
+    return insert("INSERT INTO todothings (description, daything, type) VALUE (:name, :day, :type)", ['name' => $name, 'day' => $day, 'type' => $type]);
+}
+
+
+/**
+ * Function that returns the todothing specified by his id (FROM THE todos TABLE)
+ * @param int $todoThingID
+ * @return array
+ */
+function getTodoTaskByID($todoThingID){
+    return selectOne("SELECT * FROM todothings WHERE id =:task_id",['task_id' => $todoThingID]);
+}
+
+/**
+ * Function that returns the todothing specified by his name (FROM THE todos TABLE)
+ * @param string $todoThingName
+ * @return array
+ */
+function getTodoTaskByName($todoThingName,$time){
+    return selectOne("SELECT * FROM todothings WHERE description =:name and daything =:time",['name' => $todoThingName,'time'=>$time]);
+}
+
+function alreadyOnTodoSheet($sheetID,$taskID,$day){
+    var_dump($sheetID,$taskID,$day);
+    $task = selectOne("SELECT id FROM todos WHERE todosheet_id =:sheetID and todothing_id = :taskID and day_of_week = :day",['sheetID' => $sheetID,'taskID' => $taskID,'day'=>$day]);
+    if($task == false){
+        return false;
+    }else{
+        return true;
+    }
 }
