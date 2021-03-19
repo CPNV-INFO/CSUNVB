@@ -213,9 +213,9 @@ tr:hover .modify {
 
 
 @media print{
-    .addTaskBtn{
-        margin: 2px;
-        padding: 3px;
+    .todoTaskBtn{
+        margin: 0px;
+        padding: 0px;
     }
 }
 

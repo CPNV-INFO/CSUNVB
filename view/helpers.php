@@ -25,28 +25,28 @@ function buttonTask($initials, $todoID, $taskName, $state, $valueType = "null")
     switch ($state) {
         case 'blank':
             if (empty($initials)) {
-                return "<button type='button' class='btn btn-secondary btn-block' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+                return "<button type='button' class='btn btn-secondary todoTaskBtn btn-block' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
             }else{
-                return "<button type='button' class='btn btn-success btn-block' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+                return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
         case 'edition':
             if (empty($initials)) {
-                return "<button type='button' class='btn btn-secondary btn-block' disabled><i class='fas fa-times fa-lg delTodoTask' data-id='".$todoID."' enable></i>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+                return "<button type='button' class='btn btn-secondary todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask' data-id='".$todoID."' enable></i>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
             }else{
-                return "<button type='button' class='btn btn-success btn-block' disabled><i class='fas fa-times fa-lg delTodoTask' data-id='".$todoID."' enable></i>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+                return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask' data-id='".$todoID."' enable></i>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
         case 'close':
             if (empty($initials)) {
-                return "<button type='button' class='btn btn-danger btn-block' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+                return "<button type='button' class='btn btn-danger todoTaskBtn btn-block' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
             }else{
-                return "<button type='button' class='btn btn-success btn-block' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+                return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
         case 'open':
         case 'reopen':
             if (empty($initials)) {
-                return "<button type='button' class='btn btn-secondary addTaskBtn' data-type='".$valueType."' data-id='".$todoID."'>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+                return "<button type='button' class='btn btn-secondary todoTaskBtn addTaskBtn' data-type='".$valueType."' data-id='".$todoID."'>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
             }else{
-                return "<button type='button' class='btn btn-success removeTaskBtn' data-id='".$todoID."'>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+                return "<button type='button' class='btn btn-success todoTaskBtn removeTaskBtn' data-id='".$todoID."'>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
     }
 }
