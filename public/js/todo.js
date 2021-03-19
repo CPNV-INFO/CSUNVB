@@ -5,19 +5,7 @@
  **/
 
 
-// Code lié à la pop-up de vérification de suppression de tâches
-// Permet l'affichage de la pop-up de vérification pour la suppression des tâches
-var trashButtons = document.querySelectorAll('.trashButtons');
 
-trashButtons.forEach((item) => {
-    item.addEventListener('click', function (event) {
-        $("#deletingTaskModal").modal("toggle");
-        document.getElementById("modal-deletingTitle").innerHTML = this.getAttribute("data-title");
-        document.getElementById("modal-deletingContent").innerHTML = this.getAttribute("data-content");
-        document.getElementById("modal-deletingTaskID").value = this.getAttribute("data-id");
-
-    }, false);
-})
 
 $( "#selectDay").on( "change", function() {
     showAddTask();
@@ -72,3 +60,14 @@ $( "#addNewTask").on( "click", function() {
     };
     post("?action=newTodoTask", param )
 });
+
+var delTodoBtn = document.querySelectorAll('.delTodoTask');
+delTodoBtn.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        const param = {
+            sheetID: $("#sheetID").val(),
+            todoID: $(this).attr("data-id")
+        };
+        post("?action=delTodoTask", param )
+    }, false);
+})

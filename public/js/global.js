@@ -71,4 +71,3 @@ function post(path, parameters) {
     $(document.body).append(form);
     form.submit();
 }
-

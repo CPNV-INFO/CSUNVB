@@ -245,15 +245,6 @@ function deleteTodoSheet($sheetID){
 }
 
 /**
- * Function do delete a task from a todosheets
- * @param int $todoTaskID
- * @return bool|null
- */
-function deletethingsID($todoTaskID){
-    return execute("DELETE FROM todos WHERE id =:task_id",['task_id' => $todoTaskID]);
-}
-
-/**
  * Function that returns number of open todosheets
  * @param int $baseID
  * @return mixed
@@ -284,10 +275,17 @@ function addTodoForSheet($sheetID,$taskID, $day)
     return insert("INSERT INTO todos (todothing_id, todosheet_id, day_of_week) VALUE (:taskID, :sheetID, :day)", ['taskID' => $taskID, 'sheetID' => $sheetID, 'day' => $day]);
 }
 
-
-
 function createTodoTask($name,$day, $type = null){
     return insert("INSERT INTO todothings (description, daything, type) VALUE (:name, :day, :type)", ['name' => $name, 'day' => $day, 'type' => $type]);
+}
+
+/**
+ * Function do delete a task from a todosheets
+ * @param int $todoID
+ * @return bool
+ */
+function delTodo($todoID){
+    return execute("DELETE FROM todos WHERE id =:task_id",['task_id' => $todoID]);
 }
 
 

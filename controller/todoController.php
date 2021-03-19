@@ -287,19 +287,14 @@ function oldTodoTask(){
 /**
  *Function to delete a task from a todosheet
  */
-function destroyTaskTodo()
+function delTodoTask()
 {
-    /**
-    $todosheetID = $_POST['todosheetID'];
-    $todoTaskID = $_POST['taskID'];
-    $todoTaskName = getTaskName($_POST['taskID']);
-    $message = 'La tâche  <strong>'.$todoTaskName.'</strong> a été supprimée !';
-    deletethingsID($todoTaskID);
-
+    $res = delTodo($_POST["todoID"]);
+    if($res){
+        $message = 'La tâche a été supprimée !';
+    }else{
+        $message = 'Echec de suppression de la tâche';
+    }
     setFlashMessage($message);
-    showtodo($todosheetID,true); // todo : faire une redirection*/
+    redirect("todoEditionMode",$_POST["sheetID"]);
 }
-
-
-
-
