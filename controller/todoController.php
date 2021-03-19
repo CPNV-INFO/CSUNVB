@@ -235,27 +235,31 @@ function uncheckActionForTodo_AJAX($sheetID){
 }
 
 function newTodoTask(){
-    $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-    if($_POST["day"]==1){
-        $time = "jour";
+    if(strlen($_POST["name"] < 3)){
+        $message = "Echec : le nom pour cette nouvelle tâche est trop !";
     }else{
-        $time = "nuit";
-    }
-    $exist = getTodoTaskByName($_POST["name"],$_POST["time"]);
-    if(!$exist){
-        $newID = createTodoTask($_POST["name"],$_POST["time"]);
-        $res = addTodoForSheet($_POST["sheetID"],$newID,$_POST["day"]);
-        if($res){
-            $message = "Tâche <strong>".$_POST["name"]. "</strong> crée et ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+        $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+        if($_POST["day"]==1){
+            $time = "jour";
+        }else{
+            $time = "nuit";
         }
-    }else{
-        if(!alreadyOnTodoSheet($_POST["sheetID"],$exist["id"],$_POST["day"])){
-            $res = addTodoForSheet($_POST["sheetID"],$exist["id"],$_POST["day"]);
+        $exist = getTodoTaskByName($_POST["name"],$_POST["time"]);
+        if(!$exist){
+            $newID = createTodoTask($_POST["name"],$_POST["time"]);
+            $res = addTodoForSheet($_POST["sheetID"],$newID,$_POST["day"]);
             if($res){
-                $message = "Tâche <strong>".$_POST["name"]. "</strong> ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+                $message = "Tâche <strong>".$_POST["name"]. "</strong> crée et ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
             }
         }else{
-            $message = "Echec : La tâche : <strong>".$_POST["name"]."</strong> est déjà présente pour le jour en question";
+            if(!alreadyOnTodoSheet($_POST["sheetID"],$exist["id"],$_POST["day"])){
+                $res = addTodoForSheet($_POST["sheetID"],$exist["id"],$_POST["day"]);
+                if($res){
+                    $message = "Tâche <strong>".$_POST["name"]. "</strong> ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+                }
+            }else{
+                $message = "Echec : La tâche : <strong>".$_POST["name"]."</strong> est déjà présente pour le jour en question";
+            }
         }
     }
     if(isset($message)){
