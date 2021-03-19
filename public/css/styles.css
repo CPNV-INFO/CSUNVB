@@ -63,8 +63,12 @@ table.table-bordered > tbody > tr > td{
     margin: 5px;
 }
 
-.newSheetZone{
+.buttonsZone{
     height: 50px;
+}
+
+div .batchListZone{
+    border: black 1px solid;
 }
 
 .dropdownButton > i {

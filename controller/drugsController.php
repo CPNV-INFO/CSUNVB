@@ -243,3 +243,17 @@ function signDrugSheetDay(){
 
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
+
+function showBatchList()
+{
+    $baseID = $_SESSION['base']['id'];
+
+    $drugs = getDrugs();
+    $batches = getBatchesForBase($baseID);
+
+    foreach ($batches as $batch) {
+        $batchesByDrugId[$batch["drug_id"]][] = $batch;
+    }
+
+    require_once VIEW . 'drugs/listOfbatches.php';
+}
