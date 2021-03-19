@@ -31,9 +31,9 @@ function buttonTask($initials, $todoID, $taskName, $state, $valueType = "null")
             }
         case 'edition':
             if (empty($initials)) {
-                return "<button type='button' class='btn btn-secondary todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask' data-id='".$todoID."' enable></i>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+                return "<button type='button' class='btn btn-secondary todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask d-print-none' data-id='".$todoID."' enable></i>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
             }else{
-                return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask' data-id='".$todoID."' enable></i>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+                return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask d-print-none' data-id='".$todoID."' enable></i>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
         case 'close':
             if (empty($initials)) {
