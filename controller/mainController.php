@@ -21,7 +21,7 @@ function disconnect()
 {
     $_SESSION['user'] =  null;
     $_SESSION['action'] = 'login';
-    login();
+    redirect("login");
 }
 
 /**
