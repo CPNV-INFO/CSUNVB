@@ -85,10 +85,10 @@ table.table-bordered > tbody > tr > td{
 /* ------------------------------------------------------------
 * Fonds de couleur correspondant aux différents slugs
  -------------------------------------------------------------- */
-.slugBlank{
+.slugOpen{
     background-color: #d5e8d4;
 }
-.slugOpen{
+.slugBlank{
     background-color: #dae8fc;
 }
 .slugClose{
