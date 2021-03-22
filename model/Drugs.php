@@ -77,6 +77,10 @@ function getBatchesForSheet($drugSheetID) {
     return selectMany("SELECT batches.id AS id, number, drug_id FROM batches INNER JOIN drugsheet_use_batch ON batches.id = batch_id WHERE drugsheet_id=:drugsheet", ['drugsheet' => $drugSheetID ]);
 }
 
+function getBatchesForBase($baseID) {
+    return selectMany("SELECT batches.id AS id, number, drug_id FROM batches WHERE base_id=:baseID", ['baseID' => $baseID ]);
+}
+
 function insertBatchInSheet($drugSheetID,$batchToAdd){
 return insert("INSERT INTO drugsheet_use_batch (drugsheet_id,batch_id) VALUES (:drugSheetID,(SELECT batches.id from batches WHERE batches.number = :batchToAdd));",['drugSheetID' =>$drugSheetID,'batchToAdd' => $batchToAdd]);
 }
@@ -179,4 +183,12 @@ function getDrugsWithUsableBatches($baseID){
 
 function getUsableBatches($baseID){
     return(selectMany("SELECT drugs.name as name,batches.drug_id as drug_id, batches.number as number, batches.state AS state FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
+}
+
+function getDrugSignaturesForDrugSheet($sheetID){
+    return selectMany("select date, day ,drugsheet_id,users.firstname,users.lastname,bases.name as basename from drugsignatures inner join users on drugsignatures.user_id = users.id inner join bases on drugsignatures.base = bases.id where drugsheet_id = :sheet_id;", ['sheet_id' => $sheetID]);
+}
+
+function insertDrugSignatures($drugSheetID,$day,$userID,$baseID){
+    return insert("INSERT INTO drugsignatures (day, drugsheet_id, user_id, base) values (:day,:drugSheetID,:userID,:baseID);",['drugSheetID' => $drugSheetID, 'day'=>$day,'userID'=>$userID,'baseID'=>$baseID]);
 }

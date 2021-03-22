@@ -15,10 +15,15 @@ $title = "CSU-NVB - Drogues hebdomadaires";
             </select>
         </div>
     </form>
-    <div class="newSheetZone"> <!-- Bouton de nouvelle semaine -->
+    <div class="buttonsZone"> <!-- Bouton de nouvelle semaine -->
         <?php if (ican('createsheet') && ($_SESSION['base']['id'] == $selectedBaseID)) : ?>
             <form method="POST" action="?action=newDrugSheet" style="margin-block-end: 0;" class="float-right">
                 <button type="submit" class="btn btn-primary m-1">Nouvelle semaine</button>
+            </form>
+        <?php endif; ?>
+        <?php if (ican('openBatchList') && ($_SESSION['base']['id'] == $selectedBaseID)) : ?>
+            <form method="POST" action="?action=showBatchList" style="margin-block-end: 0;" class="float-right">
+                <button type="submit" class="btn btn-primary m-1">Lots de médicaments</button>
             </form>
         <?php endif; ?>
     </div>
