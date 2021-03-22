@@ -39,7 +39,7 @@
                         <ul class="navbar-nav">
                             <?php require "../pageList.php"; ?>
                             <li class="nav-item <?= (in_array($_GET["action"], $dashboardPages)) ? 'active' : '' ?>">
-                                <a class="nav-link" href="?action=home">Dashboard</a>
+                                <a class="nav-link" href="?action=home">Accueil</a>
                             </li>
                             <li class="nav-item <?= (in_array($_GET["action"], $shiftPages)) ? 'active' : '' ?>">
                                 <a class="nav-link" href="?action=shiftList">Gardes</a>

@@ -119,9 +119,9 @@ function listSheet($page, $sheets)
     }
     $html = "<div> <!-- Sections d'affichage des différents rapport -->";
     $html .= "<div> <!-- rapports ouvertes -->
-        <div class='slugBlank'>" . $function("open", $sheets["open"], $page) . "</div><br>";
+        <div class='slugOpen'>" . $function("open", $sheets["open"], $page) . "</div><br>";
     $html .= "<div> <!-- rapports en préparation -->
-        <div class='slugOpen'> " . $function("blank", $sheets["blank"], $page) . "</div><br>";
+        <div class='slugBlank'> " . $function("blank", $sheets["blank"], $page) . "</div><br>";
     $html .= "<div> <!-- rapports en correction -->
         <div class='slugReopen'>" . $function("reopen", $sheets["reopen"], $page) . "</div><br>";
     $html .= "<div> <!-- rapports fermés -->
