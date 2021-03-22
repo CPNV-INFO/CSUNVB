@@ -2,6 +2,7 @@
 ob_start();
 $title = "CSU-NVB - Liste de lots de stupéfiants";
 ?>
+<script src="js/drugs.js"></script>
 
 <div>
     <h1>Lots de stupéfiants</h1>
@@ -23,21 +24,21 @@ $title = "CSU-NVB - Liste de lots de stupéfiants";
 
 
         </tr>
-        <?php foreach ($batchesByDrugId[$drug["id"]] as $batch): ?>
+        <?php if(isset($batchesByDrugId[$drug["id"]])) foreach ($batchesByDrugId[$drug["id"]] as $batch): ?>
             <tr>
                 <td class="text-right">
                     <?= $batch['number'] ?>
                 </td>
-                <td class="text-center">
-                    <? switch ($batch['state']){
-                        case 'new':
-                            echo 'neuf';
+                <td>
+                    <?php switch ($batch['state']){
+                        case "new":
+                            echo "neuf";
                             break;
-                        case 'inuse':
-                            echo 'Enntamé';
+                        case "inuse":
+                            echo "Entamé";
                             break;
-                        case 'used':
-                            echo 'utilisé';
+                        case "used":
+                            echo "utilisé";
                             break;
                         default:
                             echo $batch['state'];
@@ -52,7 +53,7 @@ $title = "CSU-NVB - Liste de lots de stupéfiants";
         <?php endforeach; ?>
         <tr>
             <td colspan="2">
-            <button type='button' class='btn btn-primary m-1'>Ajouter un lot</button>
+            <button type='button' class='btn btn-primary m-1' onclick="createNewBatch(<?= $baseID ?>,<?= $drug['id'] ?>)" >Ajouter un lot</button>
             </td>
         </tr>
     <?php endforeach; ?>

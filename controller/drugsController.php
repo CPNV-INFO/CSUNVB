@@ -257,3 +257,14 @@ function showBatchList()
 
     require_once VIEW . 'drugs/listOfbatches.php';
 }
+
+function createBatch(){
+    $res = insertBatchInBase($_POST['baseID'],$_POST['drugID'],$_POST['batch']);
+
+    if ($res == false || $res == null) {
+        setFlashMessage("Une erreur est survenue. Impossible d'ajouter le lot.");
+    } else {
+        setFlashMessage("Le lot à correctement été ajouté.");
+    }
+    header('Location: ?action=showBatchList');
+}

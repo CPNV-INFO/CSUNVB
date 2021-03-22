@@ -78,11 +78,15 @@ function getBatchesForSheet($drugSheetID) {
 }
 
 function getBatchesForBase($baseID) {
-    return selectMany("SELECT batches.id AS id, number, drug_id FROM batches WHERE base_id=:baseID", ['baseID' => $baseID ]);
+    return selectMany("SELECT batches.id AS id, number, drug_id, state FROM batches WHERE base_id=:baseID", ['baseID' => $baseID ]);
 }
 
 function insertBatchInSheet($drugSheetID,$batchToAdd){
 return insert("INSERT INTO drugsheet_use_batch (drugsheet_id,batch_id) VALUES (:drugSheetID,(SELECT batches.id from batches WHERE batches.number = :batchToAdd));",['drugSheetID' =>$drugSheetID,'batchToAdd' => $batchToAdd]);
+}
+
+function insertBatchInBase($baseID,$drugID,$batch){
+return insert("INSERT INTO batches (base_id,drug_id,number) VALUES (:baseID,:drugID,:batch);",['baseID'=>$baseID,'drugID'=>$drugID,'batch'=>$batch]);
 }
 
 function removeBatchFromSheet($drugSheetID,$batchToRemove){

@@ -84,9 +84,9 @@ function NovaListUpdate(){
 function checkForEnable(){
     let novas = document.querySelectorAll(".novacount");
     let batches = document.querySelectorAll(".batchcount");
-    let btnSwitchState = document.getElementById('btn_submit_SheetSwitchState')
+    let btnSwitchState = document.getElementById('btn_submit_SheetSwitchState');
 
-    novas.length >= 1 && batches.length >= 1 ? btnSwitchState.disabled = false : btnSwitchState.disabled = true
+    (novas.length >= 1 && batches.length >= 1) || btnSwitchState.textContent != "Activer" ? btnSwitchState.disabled = false : btnSwitchState.disabled = true;
 }
 
 function signDrugSheetDay(day,drugSheet){
@@ -116,4 +116,42 @@ function signDrugSheetDay(day,drugSheet){
         form.submit();
     }
 
+}
+
+function createNewBatch(baseID,drugID){
+    var batch = prompt("Numéro du lot");
+
+    if(batch == null || batch == ""){
+
+
+    }else {
+        const form = document.createElement('form');
+        form.method = "post";
+        form.action = "?action=createBatch";
+
+        const baseIDInput = document.createElement('input');
+        baseIDInput.type = 'hidden';
+        baseIDInput.name = 'baseID';
+        baseIDInput.value = baseID;
+
+        form.appendChild(baseIDInput);
+
+        const drugIDInput = document.createElement('input');
+        drugIDInput.type = 'hidden';
+        drugIDInput.name = 'drugID';
+        drugIDInput.value = drugID;
+
+        form.appendChild(drugIDInput);
+
+        const batchInput = document.createElement('input');
+        batchInput.type = 'hidden';
+        batchInput.name = 'batch';
+        batchInput.value = batch;
+
+        form.appendChild(batchInput);
+
+        document.body.appendChild(form);
+
+        form.submit();
+    }
 }
