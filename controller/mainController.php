@@ -11,7 +11,7 @@ use PHPMailer\PHPMailer\SMTP;
 
 function home()
 {
-    require VIEW . 'main/home.php';
+    require VIEW . 'main/dashboard.php';
 }
 
 /**
