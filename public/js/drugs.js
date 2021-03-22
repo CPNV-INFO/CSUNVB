@@ -88,32 +88,3 @@ function checkForEnable(){
 
     novas.length >= 1 && batches.length >= 1 ? btnSwitchState.disabled = false : btnSwitchState.disabled = true
 }
-
-function signDrugSheetDay(day,drugSheet){
-    var confirm = window.confirm("Êtes vous bien sûr de vouloir signer cette journée ?");
-
-    if(confirm === true){
-        const form = document.createElement('form');
-        form.method = "post";
-        form.action = "?action=signDrugSheetDay";
-
-        const drugSheetInput = document.createElement('input');
-        drugSheetInput.type = 'hidden';
-        drugSheetInput.name = 'drugSheetID';
-        drugSheetInput.value = drugSheet;
-
-        form.appendChild(drugSheetInput);
-
-        const dayInput = document.createElement('input');
-        dayInput.type = 'hidden';
-        dayInput.name = 'day';
-        dayInput.value = day;
-
-        form.appendChild(dayInput);
-
-        document.body.appendChild(form);
-
-        form.submit();
-    }
-
-}
