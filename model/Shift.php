@@ -362,3 +362,10 @@ JOIN status ON shiftsheets.status_id = status.id
 WHERE status.slug = :slug
 AND ( dayboss_id = :userID OR nightboss_id = :userID OR dayteammate_id= :userID OR nightteammate_id = :userID)",["slug" => $slug, "userID" => $userID]);
 }
+
+function getShiftRole($sheetID,$userID){
+    return selectMany("SELECT 'Responsable Jour' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.dayboss_id = :userID
+UNION SELECT 'Responsable Nuit' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.nightboss_id = :userID
+UNION SELECT 'Equipier Jour' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.dayteammate_id = :userID
+UNION SELECT 'Equipier Nuit' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.nightteammate_id = :userID",["sheetID" => $sheetID, "userID" => $userID]);
+}

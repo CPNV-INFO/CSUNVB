@@ -107,10 +107,10 @@ table.table-bordered > tbody > tr > td{
 
 .dashboardElem{
     width: 100%;
-    height: 80px;
+    min-height: 80px;
     border-radius: 5px;
     margin: 20px 0 20px 0;
-    padding: 5px 0 0 10px;
+    padding: 5px 10px 5px 10px;
     cursor: pointer;
 }
 

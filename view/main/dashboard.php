@@ -14,6 +14,7 @@ $title = "CSU-NVB - Accueil";
             <?php foreach ($todoSheets as $todoSheet): ?>
                 <div class="slugOpen dashboardElem" onclick="location.href='?action=showtodo&id=<?= $todoSheet["id"] ?>';">
                     Semaine : <?= $todoSheet["week"] ?>
+                    <br>Tâches effectuées : X / X
                 </div>
             <?php endforeach; ?>
             <h3>Stupéfiants</h3>
@@ -28,16 +29,32 @@ $title = "CSU-NVB - Accueil";
             <?php foreach ($openShifts as $openShift): ?>
                 <div class="slugOpen dashboardElem" onclick="location.href='?action=shiftShow&id=<?= $openShift["id"] ?>';">
                     <?= date('d.m.Y', strtotime($openShift["date"])) ?>
+                    <br>Rôle :
+                    <?php foreach ($openShift["roles"] as $role): ?>
+                        <?= $role["name"] ?>
+                    <?php endforeach; ?>
+                    <br>Status : Actif
+                    <br>Tâches effectuées : X / X
                 </div>
             <?php endforeach; ?>
             <?php foreach ($blankShifts as $blankShift): ?>
                 <div class="slugBlank dashboardElem" onclick="location.href='?action=shiftShow&id=<?= $blankShift["id"] ?>';">
                     <?= date('d.m.Y', strtotime($blankShift["date"]))?>
+                    <br>Rôle :
+                    <?php foreach ($blankShift["roles"] as $role): ?>
+                        <?= $role["name"] ?>
+                    <?php endforeach; ?>
+                    <br>Status : En Préparation
                 </div>
             <?php endforeach; ?>
             <?php foreach ($reOpenShifts as $reOpenShift): ?>
                 <div class="slugReopen dashboardElem" onclick="location.href='?action=shiftShow&id=<?= $reOpenShift["id"] ?>';">
                     <?= date('d.m.Y', strtotime($reOpenShift["date"])) ?>
+                    <br>Rôle :
+                    <?php foreach ($reOpenShift["roles"] as $role): ?>
+                        <?= $role["name"] ?>
+                    <?php endforeach; ?>
+                    <br>Status : En Correction
                 </div>
             <?php endforeach; ?>
         </div>
