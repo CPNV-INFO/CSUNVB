@@ -22,6 +22,8 @@ function showDrugSheet($drugSheetID, $edition = false) {
     $dates = getDaysForWeekNumber($drugsheet["week"]);
     $novas = getNovasForSheet($drugSheetID);
     $batchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
+    $drugSignatures = getDrugSignaturesForDrugSheet($drugSheetID);
+
     foreach ($batchesForSheet as $p) {
         $batchesForSheetByDrugId[$p["drug_id"]][] = $p;
     }
