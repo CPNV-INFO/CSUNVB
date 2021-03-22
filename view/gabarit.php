@@ -30,10 +30,10 @@
             </a>
             <div class="title col mt-4">
                 Gestion des rapports
+                <?= gitBranchTag() ?>
             </div>
             <?php if (isset($_SESSION['user'])) : ?>
                 <a href="?action=disconnect" class="btn btn-primary mt-2 mr-5 float-right"><div class="font-weight-bold m-2">Déconnecter</div><div class="small"><?= $_SESSION['user']['initials'] ?>@<?= $_SESSION['base']['name'] ?></div></a><br>
-                <?= gitBranchTag() ?>
                 <div class="container navZone">
                     <nav class="navbar navbar-expand-sm bg-dark navbar-dark rounded">
                         <ul class="navbar-nav">

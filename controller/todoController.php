@@ -3,6 +3,9 @@
 /**
  * Function that creates the display of weekly tasks (todosheet) for the base selected at login
  */
+
+
+
 function listtodo()
 {
     listtodoforbase($_SESSION['base']['id']);
@@ -26,6 +29,14 @@ function listtodoforbase($baseID)
 }
 
 /**
+ *Function used to activate editing mode
+ */
+function todoEditionMode($id)
+{
+    showtodo($id, true);
+}
+
+/**
  * Function that creates the display of weekly tasks (todosheet) specified by todosheet ID
  * @param int $sheetID : ID of specified todosheet
  */
@@ -36,18 +47,14 @@ function showtodo($sheetID, $edition = false)
     $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
     $dates = getDaysForWeekNumber($week['week']);
     $template = getTemplateName($sheetID);
-
-    $missingTasks = array();
     if($edition){
         $state = 'edition';
     }else{
         $state = $week['slug'];
     }
     for ($daynight = 0; $daynight <= 1; $daynight++) {
-        $allTodoTasks[1] = getTasksByTime($daynight);
         for ($dayofweek = 1; $dayofweek <= 7; $dayofweek++) {
             $todoThings[$daynight][$dayofweek] = readTodoThingsForDay($sheetID, $daynight, $dayofweek);
-            $missingTasks[$daynight][$dayofweek] = findMissingTasks($allTodoTasks[$daynight], $todoThings[$daynight][$dayofweek]); // Find tasks that are not present so they can be added
             foreach ($todoThings[$daynight][$dayofweek] as $key => $todoThing) {
                 if (!is_null($todoThing['type']) && !is_null($todoThing['value'])) {
                     $todoThings[$daynight][$dayofweek][$key]['description'] = str_replace("....", "" . $todoThing['value'] . "", "" . $todoThing['description'] . "");
@@ -65,31 +72,29 @@ function showtodo($sheetID, $edition = false)
 function addWeek()
 {
     $baseID = $_SESSION['base']['id']; // On ne peut ajouter un rapport que dans la base où l'on se trouve
-
     $week = getLastWeek($baseID); // Récupère la dernière semaine
-
     if ($_POST['selectModel'] == 'lastValue') {
         $template = getLastWeekClosed($baseID);
     } else {
         $template = getTemplateSheet($_POST['selectModel']);
     }
-
     if(isset($week['week'])){
         $newWeekNumber = nextWeekNumber($week['week']);
     } else{
         $newWeekNumber = date("yW");
     }
-
     $todos = readTodoForASheet($template['id']);
-
     $newWeekID = createNewSheet($baseID, $newWeekNumber);
-
-    foreach ($todos as $todo) {
-        addTodoThing($todo['id'], $newWeekID, $todo['day']);
+    if($newWeekID != null){
+        foreach ($todos as $todo) {
+            addTodoForSheet($newWeekID,$todo['id'],$todo['day']);
+        }
+        writeLog("TODO",$newWeekID,"Semaine créée");
+        setFlashMessage("La semaine " . $newWeekNumber . " a été créée.");
+    }else{
+        setFlashMessage("Echec de création de la semaine");
     }
-
-    setFlashMessage("La semaine " . $newWeekNumber . " a été créée."); // todo : afficher le message uniquement si la tâche a réellement été faite
-    header('Location: ?action=listtodoforbase&id=' . $baseID);
+    redirect("listtodoforbase",$baseID);
 }
 
 /**
@@ -101,10 +106,8 @@ function nextWeekNumber($weekNbr)
 {
     $year = 2000 + intdiv($weekNbr, 100);
     $week = $weekNbr % 100;
-
     $time = strtotime(sprintf("%4dW%02d", $year, $week));
     $nextWeek = date(strtotime("+ 1 week", $time));
-
     return date("yW", $nextWeek);
 }
 
@@ -114,9 +117,8 @@ function nextWeekNumber($weekNbr)
 function modelWeek()
 {
     $todosheetID = $_POST['todosheetID'];
-
     updateTemplateName($todosheetID, $_POST['template_name']);
-    header('Location: ?action=showtodo&id=' . $todosheetID);
+    redirect("showtodo",$todosheetID);
 }
 
 /**
@@ -125,44 +127,9 @@ function modelWeek()
 function deleteTemplate()
 {
     $todosheetID = $_POST['todosheetID'];
-
     deleteTemplateName($todosheetID);
-    header('Location: ?action=showtodo&id=' . $todosheetID);
+    redirect("showtodo",$todosheetID);
 }
-
-/**
- *Function used to activate amd deactivate editing mode
- */
-function todoEditionMode()
-{
-    $edition = $_POST['edition'];
-    $todosheetID = $_POST['todosheetID'];
-
-    if (!$edition) {
-        $edition = true;
-        showtodo($todosheetID, $edition); // todo : faire une redirection
-    } else {
-        $edition = false;
-        header('Location: ?action=showtodo&id=' . $todosheetID);
-    }
-}
-
-/**
- *Function to delete a task from a todosheet
- */
-function destroyTaskTodo()
-{
-    $todosheetID = $_POST['todosheetID'];
-    $todoTaskID = $_POST['taskID'];
-    $todoTaskName = getTaskName($_POST['taskID']);
-    $message = 'La tâche  <strong>'.$todoTaskName.'</strong> a été supprimée !';
-    deletethingsID($todoTaskID);
-
-    setFlashMessage($message);
-    showtodo($todosheetID,true); // todo : faire une redirection
-}
-
-
 
 /**
  * Function to change the active status of a sheet
@@ -183,21 +150,25 @@ function todoSheetSwitchState()
     switch ($newSlug) {
         case "open":
             $message = $message . "ouvert.";
+            writeLog("TODO",$sheetID,"nouvel état : ouvert");
             break;
         case "reopen":
             $message = $message . "ré-ouvert.";
+            writeLog("TODO",$sheetID,"nouvel état : ré-ouvert");
             break;
         case "close":
             $message = $message . "fermé.";
+            writeLog("TODO",$sheetID,"nouvel état : fermé");
             break;
         case "archive":
             $message = $message . "archivé.";
+            writeLog("TODO",$sheetID,"nouvel état : archivé");
             break;
         default:
             break;
     }
     setFlashMessage($message);
-    header('Location: ?action=listtodoforbase&id=' . $sheet['base_id']);
+    redirect("listtodoforbase",$sheet['base_id']);
 }
 
 /**
@@ -208,61 +179,23 @@ function todoDeleteSheet()
 {
     $sheetID = $_POST['id'];
     $sheet = getTodosheetByID($sheetID);
-
     deleteTodoSheet($sheetID);
-
     setFlashMessage("La semaine " . $sheet['week'] . " a correctement été supprimée.");
-    header('Location: ?action=listtodoforbase&id=' . $sheet['base_id']);
+    redirect("listtodoforbase",$sheet['base_id']);
 }
 
 /**
- * Function that looks for missing tasks from a todosheet from a reference list
- * @param array $allTasksList : reference list
- * @param array $taskList : existing list to check
- * @return array
+ * Function that return html option for missing tasks
+ * @return string html code
  */
-function findMissingTasks($allTasksList, $taskList)
+function findMissingTasks_AJAX()
 {
-    $missingTask = array();
-
-    for ($i = 0; $i < count($allTasksList); $i++) {
-        $found = false;
-        for ($j = 0; $j < count($taskList); $j++) {
-            if ($allTasksList[$i]['id'] == $taskList[$j]['todothingID']) {
-                $found = true;
-                $j = count($taskList);
-            }
-        }
-        if ($found == false) {
-            $missingTask[] = $allTasksList[$i];
-        }
+    $missingTasks = getMissingTodo($_POST["day"],$_POST["time"],$_POST["sheetID"]);
+    $options = "";
+    foreach ($missingTasks as $task){
+        $options .= "<option name='task' value='".$task["id"]."'>".$task["description"]."</option>";
     }
-    return $missingTask;
-}
-
-/**
- * Function to add a task to a todosheet
- * Shows a message if successful or an error
- */
-function addTodoTask(){
-    $todoSheetID = $_POST['todosheetID'];
-    $time = $_POST['dayTime'];
-    $day = $_POST['day'];
-    $selectedList = "task".$day."time".$time;
-    $taskID = $_POST[$selectedList];
-
-    $taskDescription = getTaskDescription($taskID);
-
-    $isAdded = addTodoThing($taskID, $todoSheetID, $day);
-
-    if( isset($isAdded) ){
-        $message = 'La tâche <strong>'.$taskDescription.'</strong> a été ajoutée.'; // todo : Message plus parlant pour l'utilisateur (ex: ajout du jour)
-    }else{
-        $message = "Erreur lors de l'ajout de tâche.";
-    }
-
-    setFlashMessage($message);
-    showtodo($todoSheetID,true); // todo : faire une redirection
+    echo $options;
 }
 
 /**
@@ -270,17 +203,25 @@ function addTodoTask(){
  */
 function checkTodo()
 {
+    $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    $time = [0 => "Nuit","Jour"];
+    $checkedTodo = getTodoInfo($_POST["todoID"]);
     $todoValue = "";
     if(isset($_POST["todoValue"])){
         $todoValue = $_POST["todoValue"];
     }
     validateTodo($_POST["todoID"], $todoValue);
+    writeLog("TODO",$_POST["todoSheetID"],"Tâche : ".$checkedTodo["description"]." (".$days[$checkedTodo["day_of_week"]]."-".$time[$checkedTodo["daything"]].") validée");
     redirect("showtodo",$_POST["todoSheetID"]);
 }
 
 function unCheckTodo()
 {
+    $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    $time = [0 => "Nuit","Jour"];
+    $checkedTodo = getTodoInfo($_POST["todoID"]);
     invalidateTodo($_POST["todoID"]);
+    writeLog("TODO",$_POST["todoSheetID"],"Tâche : ".$checkedTodo["description"]." (".$days[$checkedTodo["day_of_week"]]."-".$time[$checkedTodo["daything"]].") annulée");
     redirect("showtodo",$_POST["todoSheetID"]);
 }
 
@@ -288,5 +229,81 @@ function uncheckActionForTodo_AJAX($sheetID){
     echo getUncheckActionForTodo($sheetID);
 }
 
+function newTodoTask(){
+    if(strlen($_POST["name"]) < 3){
+        $message = "Echec : le nom pour cette nouvelle tâche est trop !";
+    }else{
+        $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+        if($_POST["day"]==1){
+            $time = "jour";
+        }else{
+            $time = "nuit";
+        }
+        $exist = getTodoTaskByName($_POST["name"],$_POST["time"]);
+        if(!$exist){
+            $newID = createTodoTask($_POST["name"],$_POST["time"]);
+            $res = addTodoForSheet($_POST["sheetID"],$newID,$_POST["day"]);
+            if($res){
+                $message = "Tâche <strong>".$_POST["name"]. "</strong> crée et ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+                writeLog("TODO",$_POST["sheetID"],"Tâche ".$_POST["name"] ."ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time);
+            }
+        }else{
+            if(!alreadyOnTodoSheet($_POST["sheetID"],$exist["id"],$_POST["day"])){
+                $res = addTodoForSheet($_POST["sheetID"],$exist["id"],$_POST["day"]);
+                if($res){
+                    $message = "Tâche <strong>".$_POST["name"]. "</strong> ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+                    writeLog("TODO",$_POST["sheetID"],"Tâche ".$_POST["name"]." ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time);
+                }
+            }else{
+                $message = "Echec : La tâche : <strong>".$_POST["name"]."</strong> est déjà présente pour le jour en question";
+            }
+        }
+    }
+    if(isset($message)){
+        setFlashMessage($message);
+    }else{
+        $message = "Echec lors de l'ajout de la tâche : <strong>".$_POST["name"]."</strong>";
+    }
+    redirect("todoEditionMode",$_POST["sheetID"]);
+}
 
+function oldTodoTask(){
+    $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    $task = getTodoTaskByID($_POST["taskID"]);
+    $res = addTodoForSheet($_POST["sheetID"],$_POST["taskID"],$_POST["day"]);
+    if($res){
+        if($task["dayting"]==1){
+            $time = "jour";
+        }else{
+            $time = "nuit";
+        }
+        $message = "Tâche <strong>".$task["description"]. "</strong> ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
+        writeLog("TODO",$_POST["sheetID"],"Tâche ".$task["description"]." ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )");
+    }else{
+        $message = "Echec lors de l'ajout de la tâche : <strong>".$task["description"]."</strong>";
+    }
+    setFlashMessage($message);
+    redirect("todoEditionMode",$_POST["sheetID"]);
+}
 
+/**
+ *Function to delete a task from a todosheet
+ */
+function delTodoTask()
+{
+    $res = delTodo($_POST["todoID"]);
+    if($res){
+        $message = 'La tâche a été supprimée !';
+    }else{
+        $message = 'Echec de suppression de la tâche';
+    }
+    setFlashMessage($message);
+    redirect("todoEditionMode",$_POST["sheetID"]);
+}
+
+function todoLog($sheetID){
+    $type = "TODO";
+    $sheet = getTodosheetByID($sheetID);
+    $logs = getLogs($type,$sheetID);
+    require_once VIEW . 'main/log.php';
+}
