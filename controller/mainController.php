@@ -11,6 +11,8 @@ use PHPMailer\PHPMailer\SMTP;
 
 function home()
 {
+    $todoSheets = getWeeksBySlugs($_SESSION['base']['id'],"open");
+    $stupSheet;
     require VIEW . 'main/dashboard.php';
 }
 

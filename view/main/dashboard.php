@@ -23,9 +23,11 @@ $title = "CSU-NVB - Accueil";
         </div>
         <div class="col">
             <h3>Tâches</h3>
-            <div style="width: 100%;height: 80px;border-radius: 5px;margin: 20px 0 20px 0;" class="slugOpen">
-
-            </div>
+            <?php foreach ($todoSheets as $todoSheet): ?>
+                <div class="slugOpen dashboardElem" onclick="location.href='?action=showtodo&id=<?= $todoSheet["id"] ?>';">
+                    Semaine : <?= $todoSheet["week"] ?>
+                </div>
+            <?php endforeach; ?>
             <h3>Stupéfiants</h3>
             <div style="width: 100%;height: 80px;border-radius: 5px;margin: 20px 0 20px 0;" class="slugOpen">
 
@@ -34,7 +36,7 @@ $title = "CSU-NVB - Accueil";
     </div>
 
 
-<?php
-$content = ob_get_clean();
-require GABARIT;
-?>
+    <?php
+    $content = ob_get_clean();
+    require GABARIT;
+    ?>
