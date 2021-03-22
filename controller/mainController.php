@@ -11,8 +11,11 @@ use PHPMailer\PHPMailer\SMTP;
 
 function home()
 {
+    $openShifts = getShiftBySlutWithUser("open",$_SESSION["user"]["id"]);
+    $blankShifts = getShiftBySlutWithUser("blank",$_SESSION["user"]["id"]);
+    $reOpenShifts = getShiftBySlutWithUser("reopen",$_SESSION["user"]["id"]);
     $todoSheets = getWeeksBySlugs($_SESSION['base']['id'],"open");
-    $stupSheet;
+    $stupSheets = getDrugSheetsByState($_SESSION['base']['id'],"open");
     require VIEW . 'main/dashboard.php';
 }
 

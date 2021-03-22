@@ -355,3 +355,10 @@ inner JOIN shiftactions
 ON shiftactions.id = shiftchecks.shiftaction_id
 WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]));
 }
+
+function getShiftBySlutWithUser($slug,$userID){
+    return selectMany("SELECT date, shiftsheets.id AS id FROM shiftsheets
+JOIN status ON shiftsheets.status_id = status.id
+WHERE status.slug = :slug
+AND ( dayboss_id = :userID OR nightboss_id = :userID OR dayteammate_id= :userID OR nightteammate_id = :userID)",["slug" => $slug, "userID" => $userID]);
+}

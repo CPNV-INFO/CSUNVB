@@ -10,18 +10,6 @@ $title = "CSU-NVB - Accueil";
 <div class="container">
     <div class="row">
         <div class="col">
-            <h3>Gardes</h3>
-            <div style="width: 100%;height: 80px;border-radius: 5px;margin: 20px 0 20px 0;" class="slugOpen">
-
-            </div>
-            <div style="width: 100%;height: 80px;border-radius: 5px;margin: 20px 0 20px 0;" class="slugBlank">
-
-            </div>
-            <div style="width: 100%;height: 80px;border-radius: 5px;margin: 20px 0 20px 0;" class="slugReopen">
-
-            </div>
-        </div>
-        <div class="col">
             <h3>Tâches</h3>
             <?php foreach ($todoSheets as $todoSheet): ?>
                 <div class="slugOpen dashboardElem" onclick="location.href='?action=showtodo&id=<?= $todoSheet["id"] ?>';">
@@ -29,14 +17,33 @@ $title = "CSU-NVB - Accueil";
                 </div>
             <?php endforeach; ?>
             <h3>Stupéfiants</h3>
-            <div style="width: 100%;height: 80px;border-radius: 5px;margin: 20px 0 20px 0;" class="slugOpen">
-
-            </div>
+            <?php foreach ($stupSheets as $stupSheet): ?>
+                <div class="slugOpen dashboardElem" onclick="location.href='?action=showDrugSheet&id=<?= $stupSheet["id"] ?>';">
+                    Semaine : <?= $stupSheet["week"] ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="col">
+            <h3>Gardes</h3>
+            <?php foreach ($openShifts as $openShift): ?>
+                <div class="slugOpen dashboardElem" onclick="location.href='?action=shiftShow&id=<?= $openShift["id"] ?>';">
+                    <?= date('d.m.Y', strtotime($openShift["date"])) ?>
+                </div>
+            <?php endforeach; ?>
+            <?php foreach ($blankShifts as $blankShift): ?>
+                <div class="slugBlank dashboardElem" onclick="location.href='?action=shiftShow&id=<?= $blankShift["id"] ?>';">
+                    <?= date('d.m.Y', strtotime($blankShift["date"]))?>
+                </div>
+            <?php endforeach; ?>
+            <?php foreach ($reOpenShifts as $reOpenShift): ?>
+                <div class="slugReopen dashboardElem" onclick="location.href='?action=shiftShow&id=<?= $reOpenShift["id"] ?>';">
+                    <?= date('d.m.Y', strtotime($reOpenShift["date"])) ?>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
-
-
-    <?php
-    $content = ob_get_clean();
-    require GABARIT;
-    ?>
+</div>
+<?php
+$content = ob_get_clean();
+require GABARIT;
+?>
