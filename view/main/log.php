@@ -10,6 +10,10 @@ switch ($type) {
         $title = "CSU-NVB - Log Remise de garde";
         $shiftName = "Log : Rapport de garde du : ".$sheet["date"];
         break;
+    case "TODO":
+        $title = "CSU-NVB - Log Tâches Hebdomadaires";
+        $shiftName = "Log : Tâches Hebdomadaires : Semaine ". $sheet["week"];
+        break;
     default:
         $title = "CSU-NVB - Logs inderterminés";
         $shiftName = "Logs inderterminés";
@@ -23,7 +27,6 @@ switch ($type) {
     <?php foreach ($logs as $log) : ?>
         <tr>
             <td>[ <?= $log["initials"] ?> - <?= date('H:i / d.m.Y', strtotime($log["date"])) ?> ] : <?= $log["info"] ?></td>
-
         </tr>
     <?php endforeach; ?>
     </tbody>
