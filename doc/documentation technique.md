@@ -155,3 +155,25 @@ Pour les rapports clôturés
 - Une icône /!\ indique l'erreur dans la liste des rapport, au survol de l'icone est affiché le nombre de tâches non effectuées
 
 De plus les initiales de la personnes ayant clôturé un rapport seront affichées en haut de celui-ci
+
+### Navbar
+
+La Navbar est présente sur toutes les pages tant que l'utilisateur est connecté
+
+Pour faire correspondre l'action ( paramètre GET ) à l'onglet de la Navbar, le fichier pageList.php est utilisé
+Il contient une liste des actions possible pour chaque onglet de la navbar comme par exemple :
+ $shiftPages = array("shiftList","shiftShow","shiftLog");
+ 
+Pour chaque onglet de la navbar si le paramètre $_Get['action'] est présent dans la liste, celui sera mis en évidence
+
+### Edition Rapport Todo
+
+Pour éditer un rapport un icone crayon est présent, et pour sortir de ce mode il faut fermer le formulaire d'édition
+
+Les listes déroulentes jour est créneau possèdent un champ vide avec comme paramètre "selected disabled hidden" afin d'avoir une option par défaut non-sélectionnable
+
+à faire ...
+
+### Envois de formulaire automatique en javascript
+
+à faire ...
