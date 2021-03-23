@@ -26,6 +26,7 @@ return [
         "createTemplate" => true,
         "deleteTemplate" => true,
         "modifySheet" => true,
-        "consultLog" => true
+        "consultLog" => true,
+        "openBatchList" => true
     ]
 ];

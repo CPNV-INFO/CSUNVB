@@ -222,3 +222,36 @@ function removeNovaFromDrugSheet(){
     }
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
+
+function signDrugSheetDay(){
+    $drugSheetID = $_POST['drugSheetID'];
+    $day = $_POST['day'];
+    $userID = $_SESSION['user']['id'];
+    $baseID = $_SESSION['base']['id'];
+
+    //TODO - Contôle de droits ?
+
+    $res = insertDrugSignatures($drugSheetID,$day,$userID,$baseID);
+
+    if ($res == false || $res == null) {
+        setFlashMessage("Une erreur est survenue. Impossible de signer cette journée.");
+    } else {
+        setFlashMessage("La journée à correctement été signée.");
+    }
+
+    header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
+}
+
+function showBatchList()
+{
+    $baseID = $_SESSION['base']['id'];
+
+    $drugs = getDrugs();
+    $batches = getBatchesForBase($baseID);
+
+    foreach ($batches as $batch) {
+        $batchesByDrugId[$batch["drug_id"]][] = $batch;
+    }
+
+    require_once VIEW . 'drugs/listOfbatches.php';
+}
