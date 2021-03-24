@@ -133,21 +133,21 @@ div .batchListZone{
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour le formulaire de modification de rapport
  -------------------------------------------------------------- */
-.editSheetForm{
+.sheetForm{
     margin: 15px 0 15px 0;
     padding:10px;
     background-color: lightblue;
     border-radius:5px;"
 }
-.editSheetForm .smallInput {
+.sheetForm .smallInput {
     width: 100px;
     height: 25px;
 }
-.editSheetForm .bigInput{
+.sheetForm .bigInput{
     width: 300px;
     height: 25px;
 }
-.editSheetForm .addBtn{
+.sheetForm .addBtn{
     padding: 0 4px 0 4px;
     margin-left: 5px;
     border-radius:3px;
@@ -157,6 +157,11 @@ div .batchListZone{
 }
 .marginTop{
     margin-top: 10px;
+}
+
+.newSheet{
+    justify-content: flex-end;
+    display: flex
 }
 
 
@@ -213,7 +218,7 @@ tr:hover .modify {
 .delTodoTask{
     color: red;
     float: left;
-    margin: 5px 5px 0px 0px;
+    margin: 5px 5px 0 0;
 }
 
 .addTaskBtn , .removeTaskBtn{

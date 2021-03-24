@@ -19,7 +19,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
     Status : <?= $week['displayname'] ?> <?= ($week['slug'] == 'close') ? ' par ' . $week['closeBy'] : '' ?>
 </h5>
 <?php if (ican("modifySheet") && $edition) : ?> <!-- Zone d'ajout de nouvelle tâche -->
-    <div class="d-print-none container editSheetForm inactivForm" id="editSheetForm">
+    <div class="d-print-none sheetForm inactivForm" id="editSheetForm">
         <a href="?action=showtodo&id=<?= $week['id'] ?>"><i
                     class='fas fa-times fa-lg text-dark float-right d-inline'></i></a>
         <h5>Mode d'édition</h5>
