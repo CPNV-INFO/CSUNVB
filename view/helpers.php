@@ -26,27 +26,27 @@ function buttonTask($initials, $todoID, $taskName, $state, $valueType = "null")
         case 'blank':
             if (empty($initials)) {
                 return "<button type='button' class='btn btn-secondary todoTaskBtn btn-block' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
-            }else{
+            } else {
                 return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
         case 'edition':
             if (empty($initials)) {
-                return "<button type='button' class='btn btn-secondary todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask d-print-none' data-id='".$todoID."' enable></i>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
-            }else{
-                return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask d-print-none' data-id='".$todoID."' enable></i>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+                return "<button type='button' class='btn btn-secondary todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask d-print-none' data-id='" . $todoID . "' enable></i>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            } else {
+                return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled><i class='fas fa-times fa-lg delTodoTask d-print-none' data-id='" . $todoID . "' enable></i>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
         case 'close':
             if (empty($initials)) {
                 return "<button type='button' class='btn btn-danger todoTaskBtn btn-block' disabled>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
-            }else{
+            } else {
                 return "<button type='button' class='btn btn-success todoTaskBtn btn-block' disabled>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
         case 'open':
         case 'reopen':
             if (empty($initials)) {
-                return "<button type='button' class='btn btn-secondary todoTaskBtn addTaskBtn' data-type='".$valueType."' data-id='".$todoID."'>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
-            }else{
-                return "<button type='button' class='btn btn-success todoTaskBtn removeTaskBtn' data-id='".$todoID."'>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
+                return "<button type='button' class='btn btn-secondary todoTaskBtn addTaskBtn' data-type='" . $valueType . "' data-id='" . $todoID . "'>" . $taskName . "<div class='bg-white rounded mt-1'><br></div></button>";
+            } else {
+                return "<button type='button' class='btn btn-success todoTaskBtn removeTaskBtn' data-id='" . $todoID . "'>" . $taskName . "<div class='text-dark bg-white rounded mt-1'>" . $initials . "</div></button>";
             }
     }
 }
@@ -119,13 +119,13 @@ function listSheet($page, $sheets)
     }
     $html = "<div> <!-- Sections d'affichage des différents rapport -->";
     $html .= "<div> <!-- rapports ouvertes -->
-        <div class='slugOpen'>" . $function("open", $sheets["open"], $page) . "</div><br>";
+        <div class='slugOpen slugListTitle'>" . $function("open", $sheets["open"], $page) . "</div><br>";
     $html .= "<div> <!-- rapports en préparation -->
-        <div class='slugBlank'> " . $function("blank", $sheets["blank"], $page) . "</div><br>";
+        <div class='slugBlank slugListTitle'> " . $function("blank", $sheets["blank"], $page) . "</div><br>";
     $html .= "<div> <!-- rapports en correction -->
-        <div class='slugReopen'>" . $function("reopen", $sheets["reopen"], $page) . "</div><br>";
+        <div class='slugReopen slugListTitle'>" . $function("reopen", $sheets["reopen"], $page) . "</div><br>";
     $html .= "<div> <!-- rapports fermés -->
-        <div class='slugClose'>" . $function("close", $sheets["close"], $page) . "</div>";
+        <div class='slugClose slugListTitle'>" . $function("close", $sheets["close"], $page) . "</div>";
 
     return $html;
 }
@@ -138,7 +138,8 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
         $detailAction = "showtodo";
     }
     $html = "<h3>Rapport(s) " . showState($slug, 1) . "</h3>
-                        <button class='btn dropdownButton'><i class='fas fa-caret-square-down' data-list='" . $slug . "' ></i></button>
+<i class='fas fa-caret-square-down fa-2x showSheetsList d-none' data-list='" . $slug . "' id='show-" . $slug . "'></i>
+                        <i class='fas fa-caret-square-up fa-2x hideSheetsList' data-list='" . $slug . "' id='hide-" . $slug . "'></i>
                     </div>";
     if (!empty($sheets)) {
         $html = $html . "<div class='" . $slug . "Sheets' style='margin-top: 0px;'><table class='table table-bordered' style='margin-top: 0px;'>
@@ -152,13 +153,13 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
                 $nbEmpty = getUncheckActionForTodo($sheet['id']);
             }
             $html = $html . "<tr> <td>Semaine " . $sheet['week'];
-            if($nbEmpty > 0 and $slug == 'close'){
-                $html .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='".$nbEmpty." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
+            if ($nbEmpty > 0 and $slug == 'close') {
+                $html .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='" . $nbEmpty . " vide(s)" . "'><i class='fas fa-exclamation-triangle warning'></i></span>";
             }
             if (ican('createsheet') && (isset($sheet['template_name']))) {
                 $html = $html . "<i class='fas fa-file-alt template' title='" . $sheet['template_name'] . "'></i>";
             }
-            $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn blueBtn m-1' href='?action=".$detailAction."&id=".$sheet['id']."'>Détails</a>".slugBtns($zone, $sheet, $slug) . "</div></td>";
+            $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn blueBtn m-1' href='?action=" . $detailAction . "&id=" . $sheet['id'] . "'>Détails</a>" . slugBtns($zone, $sheet, $slug) . "</div></td>";
         }
         $html = $html . "</tr> </tbody> </table></div>";
     } else {
@@ -170,7 +171,8 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
 function listShiftSheet($slug, $shiftList, $zone)
 {
     $html = "<h3>Rapport(s) " . showState($slug, 1) . "</h3>
-                    <button class='btn dropdownButton'><i class='fas fa-caret-square-down' data-list='" . $slug . "' ></i></button>
+                    <i class='fas fa-caret-square-down fa-2x showSheetsList d-none' data-list='" . $slug . "' id='show-" . $slug . "'></i>
+                    <i class='fas fa-caret-square-up fa-2x hideSheetsList' data-list='" . $slug . "' id='hide-" . $slug . "'></i>
                     </div>";
     if (count($shiftList) > 0) {
         $head = '<table class="table table-bordered ' . $slug . 'Sheets" style="margin-top:0px; text-align: center">
@@ -189,13 +191,13 @@ function listShiftSheet($slug, $shiftList, $zone)
                 $body .= "<i class='fas fa-file-alt template' title='Modèle : " . $shift["modelImage"] . "'></i>";
             }
             $nbEmpty = getUncheckActionForShift($shift['id']);
-            if($nbEmpty != 0 and $slug == 'close')$body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='".$nbEmpty." vide(s)"."'><i class='fas fa-exclamation-triangle warning'></i></span>";
+            if ($nbEmpty != 0 and $slug == 'close') $body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='" . $nbEmpty . " vide(s)" . "'><i class='fas fa-exclamation-triangle warning'></i></span>";
             $body .= "</td>
                 <td>Jour : " . $shift['novaDay'] . "<br>Nuit : " . $shift['novaNight'] . "</td>
                 <td>Jour : " . $shift['bossDay'] . "<br>Nuit : " . $shift['bossNight'] . "</td>
                 <td>Jour : " . $shift['teammateDay'] . "<br>Nuit : " . $shift['teammateNight'] . "</td>";
             $body .= "<td><div class='d-flex justify-content-around'>";
-            $body .= buttonForSheet("shift",$shift['id'],"Show&id=".$shift['id'],"Détails");
+            $body .= buttonForSheet("shift", $shift['id'], "Show&id=" . $shift['id'], "Détails");
             $body .= slugBtns("shift", $shift, $slug) . "</div></td>";
             $body .= "</td></tr>";
         }
@@ -223,25 +225,25 @@ function slugBtns($page, $sheet, $slug)
             if (ican('opensheet')) {
                 $disableReason = "";
                 // Test pour vérifier si le rapport est prêt
-                if(!sheetIsReady($page, $sheet['id']))$disableReason = "Définissez les équipes avant d&#39activer le rapport";
+                if (!sheetIsReady($page, $sheet['id'])) $disableReason = "Définissez les équipes avant d&#39activer le rapport";
                 // Test pour vérifier si un autre rapport est déjà ouverte
-                if(checkOpen($page, $sheet['base_id']))$disableReason = "un autre rapport est déjà ouvert";
-                $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Activer",$disableReason,"open");
+                if (checkOpen($page, $sheet['base_id'])) $disableReason = "un autre rapport est déjà ouvert";
+                $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Activer", $disableReason, "open");
             }
         case "archive":
             if (ican('deletesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "DeleteSheet", "<i class='fas fa-trash'></i>");
             break;
         case "open":
-            if (ican('closesheet')){
+            if (ican('closesheet')) {
                 switch ($page) {
                     case "drug":
-                        $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer","","close");
+                        $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Clôturer", "", "close");
                         break;
                     case "todo":
-                        $buttonList .= "<input type='button' class='btn blueBtn m-1' value = Clôturer onclick=todoClose(".$sheet['id'].",".$sheet['week'].")>";
+                        $buttonList .= "<input type='button' class='btn blueBtn m-1' value = Clôturer onclick=todoClose(" . $sheet['id'] . "," . $sheet['week'] . ")>";
                         break;
                     case "shift":
-                        $buttonList .= "<input type='button' class='btn blueBtn m-1' value = Clôturer onclick=shiftClose('".$sheet['date']."',".$sheet['id'].")>";
+                        $buttonList .= "<input type='button' class='btn blueBtn m-1' value = Clôturer onclick=shiftClose('" . $sheet['date'] . "'," . $sheet['id'] . ")>";
                         break;
                     default:
                         break;
@@ -249,11 +251,11 @@ function slugBtns($page, $sheet, $slug)
             }
             break;
         case "reopen":
-            if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer","","close");
+            if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer", "", "close");
             break;
         case "close":
-            if (ican('opensheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger","","reopen");
-            if (ican('archivesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver","","archive");
+            if (ican('opensheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
+            if (ican('archivesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
             break;
         default:
             break;
@@ -331,9 +333,8 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
         default:
             return "<h1>Header pour la page non défini</h1>";
     }
-    $header = "<div class='row'><h1 class='mr-3'>" . $title . " à</h1>";
     //Liste déroulante pour le choix de la base
-    $header .= "<form><input type='hidden' name='action' value='" . $switchBaseAction . "'><select onchange='this.form.submit()' name='id' size='1' class='bigfont mb-3'>";
+    $header = "<form><h1 class='mr-3 d-inline'>" . $title . " à</h1><input type='hidden' name='action' value='" . $switchBaseAction . "'><select onchange='this.form.submit()' name='id' size='1' class='bigfont mb-3'>";
     foreach ($bases as $base) {
         $header .= "<option value='" . $base['id'] . "'";
         if ($selectedBaseID == $base['id']) {
@@ -341,11 +342,11 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
         }
         $header .= "name='base'>" . $base['name'] . "</option>";
     }
-    $header .= "</select></form></div>";
+    $header .= "</select></form>";
 
     //Création d'une nouveau rapport
     if (ican('createsheet') && $_SESSION['base']['id'] == $selectedBaseID) {
-        $header .= "<div class='sheetForm newSheet'><form method='POST' action='" . $newSheetAction . "' class='float-right'>Utiliser le modèle : <select name='selectedModel' class='choseModel'>";
+        $header .= "<div class='sheetForm newSheet'><form method='POST' action='" . $newSheetAction . "' class='float-right'>Modèle : <select name='selectedModel' class='choseModel'>";
         if ($emptyBase == false) {
             $header .= "<option value='lastModel' selected=selected>Dernier rapport clôturé</option>";
         }
@@ -396,7 +397,8 @@ function dropdownTodoMissingTask($missingTasks)
  * @param int $id id du rapport
  * @return bool true si le rapport est prêt
  */
-function sheetIsReady($page, $id){
+function sheetIsReady($page, $id)
+{
     switch ($page) {
         case 'drug':
             return true;
@@ -404,7 +406,7 @@ function sheetIsReady($page, $id){
             return true;
         case 'shift':
             $shiftsheet = getshiftsheetByID($id);
-            if(!empty($shiftsheet["teammateDay"]) and !empty($shiftsheet["teammateNight"]) and !empty($shiftsheet["novaNight"]) and !empty($shiftsheet["bossDay"]) and !empty($shiftsheet["bossNight"]) and !empty($shiftsheet["novaDay"]))return true;
+            if (!empty($shiftsheet["teammateDay"]) and !empty($shiftsheet["teammateNight"]) and !empty($shiftsheet["novaNight"]) and !empty($shiftsheet["bossDay"]) and !empty($shiftsheet["bossNight"]) and !empty($shiftsheet["novaDay"])) return true;
             return false;
     }
 }

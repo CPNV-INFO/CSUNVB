@@ -75,10 +75,6 @@ div .batchListZone{
     border: black 1px solid;
 }
 
-.dropdownButton > i {
-    font-size: 1.75rem;
-}
-
 .edit-form{
     border: 1px black solid;
     padding: 5px;
@@ -89,6 +85,12 @@ div .batchListZone{
 /* ------------------------------------------------------------
 * Fonds de couleur correspondant aux différents slugs
  -------------------------------------------------------------- */
+.slugListTitle{
+    display: flex;
+    padding: 8px 15px;
+    align-items: center;
+    border-radius: 10px 10px 0 0;
+}
 .slugOpen{
     background-color: #d5e8d4;
 }
@@ -285,4 +287,11 @@ tr:hover .modify {
 .navbar ul .active a:after {
     width: 100%;
     left: 0;
+}
+
+.mainContent{
+    margin-top: 30px;
+}
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
 }
