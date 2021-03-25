@@ -325,14 +325,13 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
             $title = "Remise de Garde";
             $switchBaseAction = "shiftList";
             $newSheetAction = "?action=newShiftSheet&id=" . $selectedBaseID;
-            $newSheetBtnName = "Nouveau Rapport de garde";
             $dateInput = "<input type='date' name='date' value='" . getNextDateForShift($selectedBaseID) . "'>";
             // <input type="week" name="week" value="2017-W01"> exemple for week
             break;
         default:
             return "<h1>Header pour la page non défini</h1>";
     }
-    $header = "<div class='row'><h1 class='mr-3'>" . $title . "</h1>";
+    $header = "<div class='row'><h1 class='mr-3'>" . $title . " à</h1>";
     //Liste déroulante pour le choix de la base
     $header .= "<form><input type='hidden' name='action' value='" . $switchBaseAction . "'><select onchange='this.form.submit()' name='id' size='1' class='bigfont mb-3'>";
     foreach ($bases as $base) {
@@ -346,14 +345,14 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
 
     //Création d'une nouveau rapport
     if (ican('createsheet') && $_SESSION['base']['id'] == $selectedBaseID) {
-        $header .= "<div class='newSheetZone'><form method='POST' action='" . $newSheetAction . "' class='float-right'>Utiliser le modèle :<select name='selectedModel'>";
+        $header .= "<div class='sheetForm newSheet'><form method='POST' action='" . $newSheetAction . "' class='float-right'>Utiliser le modèle : <select name='selectedModel' class='choseModel'>";
         if ($emptyBase == false) {
             $header .= "<option value='lastModel' selected=selected>Dernier rapport clôturé</option>";
         }
         foreach ($models as $model) {
             $header .= "<option value='" . $model['id'] . "'>" . $model['name'] . "</option>";
         }
-        $header .= "</select> <button class='btn blueBtn m-1'>" . $newSheetBtnName . "</button>";
+        $header .= "</select> <button class='btn blueBtn m-1'>Nouveau Rapport</button>";
         $header .= $dateInput;
         $header .= "</form></div>";
     }

@@ -164,6 +164,9 @@ div .batchListZone{
     display: flex
 }
 
+.choseModel{
+    min-width: 100px;
+}
 
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour l'affichage de la vue admin secouriste

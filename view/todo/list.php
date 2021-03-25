@@ -26,8 +26,8 @@ $title = "CSU-NVB - Tâches hebdomadaires";
     <div class="sheetForm newSheet"><!-- Liste déroulante pour le choix du modèle et bouton de nouvelle semaine -->
         <?php if (ican('createsheet') && ($_SESSION['base']['id'] == $baseID)) : ?>
             <form method=" POST" action="?action=addWeek">
-                Mdoèle :
-                <select name="selectModel" id="selectTodoModel">
+                Modèle :
+                <select name="selectModel" id="selectTodoModel" class="choseModel">
                     <?php if (isset($lastClosedWeek['id'])): ?>
                         <option value='lastValue' selected=selected>Dernier rapport clôturé</option>
                     <?php endif; ?>
