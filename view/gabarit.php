@@ -37,9 +37,8 @@
                 <nav class="navbar navbar-expand-sm bg-dark navbar-dark rounded">
                     <ul class="navbar-nav mr-auto">
                         <?php require "../pageList.php"; ?>
-                        <li class="nav-item <?= (in_array($_GET["action"], $dashboardPages)) ? 'active' : '' ?>"
-                            style="background-color: #4e555b">
-                            <a class="nav-link" href="?action=home">Dashboard</a>
+                        <li class="nav-item <?= (in_array($_GET["action"], $dashboardPages)) ? 'active' : '' ?>">
+                            <a class="nav-link" href="?action=home">Accueil</a>
                         </li>
                         <li class="nav-item <?= (in_array($_GET["action"], $shiftPages)) ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=shiftList">Gardes</a>
