@@ -23,15 +23,18 @@
 <body>
 <div class="d-print-none banner">
     <header>
-        <div class="row">
-            <a href="?action=home" class="col-auto">
-                <img class="logo m-3 justify-content-center" src="assets/images/logo.png">
-            </a>
-            <div class="title col mt-4">
-                Gestion des rapports
-                <?= gitBranchTag() ?>
+        <div class="container">
+            <div class="row">
+                <a href="?action=home" class="col-auto">
+                    <img class="logo m-3 justify-content-center" src="assets/images/logo.png">
+                </a>
+                <div class="title col mt-4">
+                    Gestion des rapports
+                    <?= gitBranchTag() ?>
+                </div>
             </div>
         </div>
+
         <?php if (isset($_SESSION['user'])) : ?>
             <div class="container navZone">
                 <nav class="navbar navbar-expand-sm bg-dark navbar-dark rounded">
@@ -69,7 +72,7 @@
     </header>
 </div>
 
-<div class="container p-4">
+<div class="container mainContent">
     <div id="flashMessage">
         <?= getFlashMessage() ?>
     </div>
