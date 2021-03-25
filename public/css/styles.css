@@ -32,10 +32,11 @@ textarea{
     cursor: default;
 }
 
-.blueBtn{
+.blueBtn, .blueBtn:hover{
     background-color: #28527a;
     color: ghostwhite;
 }
+
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour l'affichage des listes des rapports
  -------------------------------------------------------------- */
