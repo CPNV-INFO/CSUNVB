@@ -109,7 +109,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
         </tr>
         <tr value="Nuit">
             <?php foreach ($dates as $index => $date) : ?>
-                <td style="vertical-align: top;" class="taskCol" value=<?= $index + 1 ?>>
+                <td class="taskCol" value=<?= $index + 1 ?>>
                     <?php foreach ($todoThings[0][$index + 1] as $todothing): ?>
                         <?= buttonTask($todothing['initials'], $todothing['id'], $todothing['description'], $state, $todothing['type']) ?>
                     <?php endforeach; ?>

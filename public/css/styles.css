@@ -230,6 +230,8 @@ tr:hover .modify {
 }
 .taskCol{
     padding: 4px;
+    vertical-align: top;
+    width: 14.286%;
 }
 
 .navZone{
