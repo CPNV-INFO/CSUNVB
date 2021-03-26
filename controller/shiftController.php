@@ -63,7 +63,7 @@ function shiftShow($shiftid)
     $shiftsheet = getshiftsheetByID($shiftid);
     $shiftsheet["nbEmpty"] = getUncheckActionForShift($shiftsheet['id']);
     $sections = getshiftsections($shiftid, $shiftsheet["baseID"]);
-    $enableshiftsheetUpdate = ($shiftsheet['status'] == "open" || ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true));
+    $enableshiftsheetUpdate = ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true);
     $enableshiftsheetFilling = ($shiftsheet['status'] == "open" || $shiftsheet['status'] == "reopen" && $_SESSION['user']['admin'] == true);
     $model = getModelByID($shiftsheet['model']);
     $novas = getNovas();
