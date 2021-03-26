@@ -24,7 +24,7 @@ function shiftCommentModal(date, action, actionID, sheetID) {
     setBodyModal("Ajouter un commentaire à " + action);
     addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value=' + sheetID + '>');
     addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + actionID + '>');
-    addBodyModal('<input type="text" name="comment" id="comment" style="margin:10px 0px 0px 0px; width:400px;">');
+    addBodyModal('<textarea rows="3" name="comment" id="comment" style="margin:10px 0 0 0; width:400px;"></textarea>');
     setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Ajouter">');
     showModal();
 }
