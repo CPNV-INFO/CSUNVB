@@ -153,12 +153,12 @@ $title = "CSU-NVB - Remise de garde";
 <div>
     <?php foreach ($sections as $section): ?>
         <div class="SH_sectionName"><?= $section["title"] ?></div>
-        <table class="table table-bordered float-left" style="margin: 20px 0 40px 0">
+        <table class="table table-bordered SH_table">
             <thead class="thead-dark">
-            <th></th>
+            <th class="SH_actionCase"></th>
             <th class="SH_checkCase">Jour</th>
             <th class="SH_checkCase">Nuit</th>
-            <th>Remarques</th>
+            <th class="SH_comment">Remarques</th>
             </thead>
             <tbody>
             <?php
@@ -216,8 +216,8 @@ $title = "CSU-NVB - Remise de garde";
                             <?php endif; ?>
                         </td>
                         <!-- Comments for the action -->
-                        <td>
-                            <div id="commentList<?= $action['id'] ?>" class="SH_comment">
+                        <td class="SH_comment">
+                            <div id="commentList<?= $action['id'] ?>" >
                                 <?php foreach ($action["comments"] as $comment): ?>
                                     <div class="<?= ($comment['carryOn'] == 1 and $comment['endOfCarryOn'] == null) ? 'carry' : 'notCarry' ?>"
                                          id="comment-<?= $comment['id'] ?>">

@@ -20,13 +20,8 @@
     display: block;/** used for good display in the pdf **/
 }
 
-/** title for actions in the page showshift **/
-.SH_actionName{
-    display: inline;
-}
-
 .SH_actionCase{
-    width: 300px;
+    width: 170px;
 }
 
 .SH_checkCase{
@@ -34,8 +29,7 @@
 }
 
 .SH_comment{
-    word-wrap: break-word;
-    max-width: 650px;
+    word-break: break-all;
 }
 
 
@@ -57,4 +51,8 @@
 }
 .notCarry:hover .addCarry {
     display: inline;
+}
+
+.SH_table{
+    margin: 20px 0 40px 0;
 }
