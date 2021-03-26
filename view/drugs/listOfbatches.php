@@ -1,4 +1,9 @@
 <?php
+/**
+ * Author: Theo.GAUTIER@cpnv.ch
+ * Date: 16.03.2021
+ */
+
 ob_start();
 $title = "CSU-NVB - Liste de lots de stupéfiants";
 ?>
@@ -32,7 +37,7 @@ $title = "CSU-NVB - Liste de lots de stupéfiants";
                 <td>
                     <?php switch ($batch['state']){
                         case "new":
-                            echo "neuf";
+                            echo "Disponible";
                             break;
                         case "inuse":
                             echo "Entamé";

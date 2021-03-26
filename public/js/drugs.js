@@ -89,6 +89,11 @@ function checkForEnable(){
     (novas.length >= 1 && batches.length >= 1) || btnSwitchState.textContent != "Activer" ? btnSwitchState.disabled = false : btnSwitchState.disabled = true;
 }
 
+/** This function is used to submit a isgnature
+ *
+ * @param day - The day we want to sign
+ * @param drugSheet - The drugsheet where there is the day
+ */
 function signDrugSheetDay(day,drugSheet){
     var confirm = window.confirm("Êtes vous bien sûr de vouloir signer cette journée ?");
 
@@ -118,6 +123,11 @@ function signDrugSheetDay(day,drugSheet){
 
 }
 
+/** This function is used to ask the user for the number of the new batch and submit it
+ *
+ * @param baseID - The ID of the base where the new batch will be created
+ * @param drugID - The drug ID of the batch
+ */
 function createNewBatch(baseID,drugID){
     var batch = prompt("Numéro du lot");
 
