@@ -263,10 +263,6 @@ tr:hover .modify {
     color: #fff;
     padding: 5px 0 5px 0;
     position: relative;
-
-    text-transform: uppercase;
-    text-decoration: none;
-    letter-spacing: 0.15em;
 }
 .navbar ul a:after {
     background: none repeat scroll 0 0 transparent;
@@ -326,3 +322,18 @@ table tr:last-child td:first-child {
 .SH_dropdownInfo {
     width: 80px;
 }
+
+@media screen and (max-width: 1000px) {
+    .navbar li {
+        margin: 0;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .navbar ul a {
+        text-transform: uppercase;
+        text-decoration: none;
+        letter-spacing: 0.15em;
+    }
+}
+
