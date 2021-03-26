@@ -33,6 +33,11 @@
     width: 110px;
 }
 
+.SH_comment{
+    word-wrap: break-word;
+    max-width: 650px;
+}
+
 
 /** carryOn button for shiftcomment **/
 .carry .carried {

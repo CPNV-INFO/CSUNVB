@@ -292,6 +292,7 @@ tr:hover .modify {
 
 .mainContent{
     margin-top: 30px;
+    margin-bottom: 50px;
 }
 table tr:last-child td:first-child {
     border-bottom-left-radius: 10px;
@@ -305,6 +306,7 @@ table tr:last-child td:first-child {
 
 .selectForNight{
     background-color: #343a40;
+    color: white;
     padding: 5px 10px;
     margin-left: 10px;
 }

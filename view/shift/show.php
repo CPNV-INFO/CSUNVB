@@ -7,13 +7,16 @@ $title = "CSU-NVB - Remise de garde";
 <h1>
     Remise de Garde
 </h1>
-<div style="display: flex; justify-content: space-between">
+<div style="display: flex; justify-content: space-between;margin: 30px 0;">
     <div>
-        <h5>
-            Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?><br>
-            Base : <?= $shiftsheet['baseName'] ?><br>
+        <h6>
+            Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>
+        </h6>
+        <h6 style="margin: 15px 0;">
+            Base : <?= $shiftsheet['baseName'] ?> </h6>
+        <h6>
             Status : <?= $shiftsheet['displayname'] ?> <?= ($shiftsheet['status'] == 'close') ? ' par ' . $shiftsheet['closeBy'] : '' ?>
-        </h5>
+        </h6>
     </div>
     <div>
         <form action="?action=updateShift&id=<?= $shiftsheet['id'] ?>" method="POST">
@@ -22,10 +25,24 @@ $title = "CSU-NVB - Remise de garde";
                 <div class="col-auto">
                     <table cellspacing="0" cellpadding="0">
                         <tr>
+                            <td><div class="text-center d-none"></div></td>
+                            <td>
+                                <div class="text-center d-none d-print-block">
+                                    <strong>Jour</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center d-none d-print-block">
+                                    <strong>Nuit</strong>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Novas</td>
-                            <td style="border: 0">
+                            <td>
                                 <div class="text-center selectForDay first">
                                 <?php if ($enableshiftsheetUpdate) : ?>
+
                                     <select name="novaDay" class="SH_dropdownInfo">
                                         <?= ($shiftsheet['novaDay'] == NULL) ? '<option value="NULL" selected></option>' : '' ?>
                                         <?php foreach ($novas as $nova): ?>
@@ -33,7 +50,6 @@ $title = "CSU-NVB - Remise de garde";
                                         <?php endforeach; ?>
                                         <option value="NULL" selected disabled>Jour</option>
                                     </select>
-
                                 <?php else : ?>
                                     <?= $shiftsheet['novaDay'] ?>
                                 <?php endif; ?>
@@ -134,10 +150,10 @@ $title = "CSU-NVB - Remise de garde";
     </div>
 </div>
 
-<div class="container">
+<div>
     <?php foreach ($sections as $section): ?>
-        <div class="row SH_sectionName"><?= $section["title"] ?></div>
-        <table class="table table-bordered float-left">
+        <div class="SH_sectionName"><?= $section["title"] ?></div>
+        <table class="table table-bordered float-left" style="margin: 20px 0 40px 0">
             <thead class="thead-dark">
             <th></th>
             <th class="SH_checkCase">Jour</th>
@@ -167,7 +183,7 @@ $title = "CSU-NVB - Remise de garde";
                         <td class="SH_checkCase">
                             <?php if (count($action["checksDay"]) == 0): ?>
                                 <button onclick="shiftCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,1)"
-                                        class="btn btn-warning toggleShiftModal">A Valider
+                                        class="btn btn-secondary toggleShiftModal">A Valider
                                 </button>
                             <?php else: ?>
                                 <button onclick="shiftUnCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,1)"
@@ -185,7 +201,7 @@ $title = "CSU-NVB - Remise de garde";
                         <td class="SH_checkCase">
                             <?php if (count($action["checksNight"]) == 0): ?>
                                 <button onclick="shiftCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,0)"
-                                        class="btn btn-warning toggleShiftModal">A Valider
+                                        class="btn btn-secondary toggleShiftModal">A Valider
                                 </button>
                             <?php else: ?>
                                 <button onclick="shiftUnCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,0)"
@@ -201,29 +217,32 @@ $title = "CSU-NVB - Remise de garde";
                         </td>
                         <!-- Comments for the action -->
                         <td>
-                            <div id="commentList<?= $action['id'] ?>">
+                            <div id="commentList<?= $action['id'] ?>" class="SH_comment">
                                 <?php foreach ($action["comments"] as $comment): ?>
                                     <div class="<?= ($comment['carryOn'] == 1 and $comment['endOfCarryOn'] == null) ? 'carry' : 'notCarry' ?>"
                                          id="comment-<?= $comment['id'] ?>">
-                                        <!-- CarryOn button -->
-                                        <button class="removeCarryOnBtn carried" value=<?= $comment['id'] ?>>
-                                            <i class="fas fa-thumbtack fa-lg" style="color:#000000"></i>
-                                        </button>
-                                        <button class="addCarryOnBtn addCarry" value=<?= $comment['id'] ?>>
-                                            <i class="fas fa-thumbtack fa-rotate-90 fa-lg" style="color:#777777"></i>
-                                        </button>
+                                        <!-- title -->
+                                        <div style="height: 35px">
+                                            <button class="removeCarryOnBtn carried" value=<?= $comment['id'] ?>>
+                                                <i class="fas fa-thumbtack fa-lg" style="color:#000000"></i>
+                                            </button>
+                                            <button class="addCarryOnBtn addCarry" value=<?= $comment['id'] ?>>
+                                                <i class="fas fa-thumbtack fa-rotate-90 fa-lg" style="color:#777777"></i>
+                                            </button>
+                                            <strong>[ <?= $comment['initials'] ?>
+                                                - <?= date('H:i', strtotime($comment['time'])) ?> <?= ($comment['carryOn'] == 1) ? date('/  d.m.Y ', strtotime($comment['time'])) : "" ?>
+                                                ] :</strong>
+                                        </div>
+
                                         <!-- Comment -->
-                                        <strong>[ <?= $comment['initials'] ?>
-                                            - <?= date('H:i', strtotime($comment['time'])) ?> <?= ($comment['carryOn'] == 1) ? date('/  d.m.Y ', strtotime($comment['time'])) : "" ?>
-                                            ] :</strong>
                                         <?= $comment['message'] ?>
                                         <hr>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
                             <button onclick="shiftCommentModal('<?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>)"
-                                    class="btn btn-secondary btn-block m-1 d-print-none addShiftComment"
-                                    style="width:200px;"> Nouveau commentaire
+                                    class="btn blueBtn btn-block m-1 d-print-none addShiftComment"
+                                    style="width:200px;color: white"> Nouveau commentaire
                             </button>
                         </td>
                     <?php else: ?>
@@ -290,19 +309,19 @@ $title = "CSU-NVB - Remise de garde";
         <div class="d-flex flex-row">
             <?php if ($model["suggested"] == 0) : ?>
                 <?php if ($model["name"] != "") : ?>
-                    <button class="btn btn-primary m-1"
+                    <button class="btn blueBtn m-1"
                             onclick="reAddShiftModel(<?= $shiftsheet["model"] ?>, '<?= $model["name"] ?>',<?= $shiftsheet['id'] ?>)">
                         Ré-activer le modèle
                     </button>
                 <?php else : ?>
-                    <button class="btn btn-primary m-1"
+                    <button class="btn blueBtn m-1"
                             onclick="saveShiftModel(<?= $shiftsheet['id'] ?>,<?= $shiftsheet["model"] ?>)">
                         Enregistrer comme modèle
                     </button>
                 <?php endif; ?>
             <?php else : ?>
                 <?php if ($model["name"] != "Vide") : ?>
-                    <button class="btn btn-primary m-1"
+                    <button class="btn blueBtn m-1"
                             onclick="disableShiftModel(<?= $shiftsheet["model"] ?>, <?= $model["name"] ?>,<?= $shiftsheet['id'] ?>)">
                         Oublier le modèle
                     </button>
