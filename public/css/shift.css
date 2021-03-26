@@ -6,11 +6,6 @@
 
 /** SH means styles are only used for Shift **/
 
-/** dropdowns for Info in the page showshift (at the top) **/
-.SH_dropdownInfo {
-    width: 80px;
-    margin: 3px 10px 3px 10px;
-}
 
 /** update button for Info in the page showshift (at the top) **/
 #SH_updateInfoBtn{

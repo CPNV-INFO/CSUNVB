@@ -296,3 +296,31 @@ tr:hover .modify {
 table tr:last-child td:first-child {
     border-bottom-left-radius: 10px;
 }
+
+.selectForDay{
+    background-color: lightblue;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+
+.selectForNight{
+    background-color: #343a40;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+
+.selectForDay.first, .selectForNight.first{
+    border-radius: 10px 10px 0 0;
+    padding-top: 10px;
+}
+
+.selectForDay.last, .selectForNight.last{
+    border-radius: 0 0 10px 10px;
+    padding-bottom: 10px;
+}
+
+
+
+.SH_dropdownInfo {
+    width: 80px;
+}
