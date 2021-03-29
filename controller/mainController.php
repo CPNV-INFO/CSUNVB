@@ -76,7 +76,7 @@ function tryLogin()
             firstLogin();
         } else {
             setFlashMessage('Bienvenue ' . $user['firstname'] . ' ' . $user['lastname'] . ' !');
-            home();
+            redirect("home");
         }
     } else {
         setFlashMessage('Identifiants incorrects ...');
