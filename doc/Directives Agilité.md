@@ -76,6 +76,8 @@ Deux journaux distincts sont tenus à jour:
 ## Bilan
 
 En fin de projet, le candidat fournit un document de bilan de projet, qui contient des points tels que:
+- Planification initiale
+- Analyse de risques
 - Objectifs atteints / non-atteints
 - Points positifs / négatifs
 - Difficultés particulières
