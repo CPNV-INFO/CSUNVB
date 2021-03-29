@@ -3,6 +3,7 @@ ob_start();
 $title = "CSU-NVB - Remise de garde";
 ?>
 <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
+<input type="hidden" id="sheetID" value="<?= $shiftsheet['id'] ?>"><!-- used to get date in javascrpt -->
 <a href="?action=shiftList&id=<?= $shiftsheet["base_id"] ?>" class="text-dark d-print-none"><i class="fas fa-angle-left backIcon"></i>Retour</a>
 <h1>
     Remise de Garde
@@ -180,14 +181,11 @@ $title = "CSU-NVB - Remise de garde";
                     </td>
                     <?php if ($enableshiftsheetFilling): ?>
                         <!-- Check for the day -->
-                        <td class="SH_checkCase">
+                        <td class="SH_checkCase" value="1">
                             <?php if (count($action["checksDay"]) == 0): ?>
-                                <button onclick="shiftCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,1)"
-                                        class="btn btn-secondary toggleShiftModal">A Valider
-                                </button>
+                                <button class="btn btn-secondary checkShiftBtn">A Valider</button>
                             <?php else: ?>
-                                <button onclick="shiftUnCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,1)"
-                                        class="btn btn-success toggleShiftModal">
+                                <button class="btn btn-success unCheckShiftBtn">
                                     Validé Par
                                     <div class="text-success bg-white rounded mt-1">
                                         <?php foreach ($action["checksDay"] as $check): ?>
@@ -198,14 +196,11 @@ $title = "CSU-NVB - Remise de garde";
                             <?php endif; ?>
                         </td>
                         <!-- Check for the night -->
-                        <td class="SH_checkCase">
+                        <td class="SH_checkCase" value="0">
                             <?php if (count($action["checksNight"]) == 0): ?>
-                                <button onclick="shiftCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,0)"
-                                        class="btn btn-secondary toggleShiftModal">A Valider
-                                </button>
+                                <button class="btn btn-secondary checkShiftBtn">A Valider</button>
                             <?php else: ?>
-                                <button onclick="shiftUnCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,0)"
-                                        class="btn btn-success toggleShiftModal">
+                                <button class="btn btn-success unCheckShiftBtn">
                                     Validé Par
                                     <div class="text-success bg-white rounded mt-1">
                                         <?php foreach ($action["checksNight"] as $check): ?>
@@ -240,10 +235,7 @@ $title = "CSU-NVB - Remise de garde";
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <button onclick="shiftCommentModal('<?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>)"
-                                    class="btn blueBtn btn-block m-1 d-print-none addShiftComment"
-                                    style="width:200px;color: white"> Nouveau commentaire
-                            </button>
+                            <button class="btn blueBtn btn-block m-1 d-print-none addShiftCommentBtn">Nouveau commentaire</button>
                         </td>
                     <?php else: ?>
                         <td <?= ($shiftsheet['status'] == 'close'and count($action["checksDay"]) == 0 ) ? 'class="incompleteTask"' : '' ?> >
