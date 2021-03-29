@@ -410,3 +410,13 @@ function sheetIsReady($page, $id)
             return false;
     }
 }
+
+function getPage($action){
+    require "../pageList.php";
+    if(in_array($action, $dashboardPages)) return "dashboard";
+    if(in_array($action, $shiftPages)) return "shift";
+    if(in_array($action, $todoPages)) return "todo";
+    if(in_array($action, $stupPages)) return "drug";
+    if(in_array($action, $adminPages)) return "admin";
+    return "undefined";
+}

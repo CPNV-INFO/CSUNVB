@@ -1,25 +1,46 @@
+<?php
+$page = getPage($_GET["action"]);
+?>
 <!DOCTYPE HTML>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>
         <?= (isset($title)) ? $title : "Page sans nom" ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- paths are from root ( where there is index.php ) -->
     <link href="assets/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
-    <link href="css/shift.css" rel="stylesheet">
-
     <link rel="stylesheet" href="assets/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
-
 
     <script src="assets/jquery/dist/jquery.js"></script>
     <script src="assets/bootstrap/dist/js/bootstrap.js"></script>
+
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/global.css" rel="stylesheet">
+
+    <script src="js/main.js" defer></script>
     <script src="js/global.js" defer></script>
     <script src="js/modal.js" defer></script>
+    <?php
+    switch ($page) {
+        case "shift":
+            echo '<link href="css/shift.css" rel="stylesheet"><script src="js/shiftt.js" defer></script>';
+            break;
+        case "todo":
+            echo '<link href="css/todo.css" rel="stylesheet"><script src="js/todo.js" defer></script>';
+            break;
+        case "drug":
+            echo '<link href="css/drug.css" rel="stylesheet"><script src="js/drug.js" defer></script>';
+            break;
+        case "admin":
+            echo '<link href="css/admin.css" rel="stylesheet"><script src="js/admin.js" defer></script>';
+            break;
+        default:
+    }
+    ?>
 </head>
+
 <body>
 <div class="d-print-none banner">
     <header>
@@ -39,21 +60,20 @@
             <div class="container navZone">
                 <nav class="navbar navbar-expand-sm bg-dark navbar-dark rounded">
                     <ul class="navbar-nav mr-auto">
-                        <?php require "../pageList.php"; ?>
-                        <li class="nav-item <?= (in_array($_GET["action"], $dashboardPages)) ? 'active' : '' ?>">
+                        <li class="nav-item <?= ($page == "dashboard") ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=home">Accueil</a>
                         </li>
-                        <li class="nav-item <?= (in_array($_GET["action"], $shiftPages)) ? 'active' : '' ?>">
+                        <li class="nav-item <?= ($page == "shift") ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=shiftList">Gardes</a>
                         </li>
-                        <li class="nav-item <?= (in_array($_GET["action"], $todoPages)) ? 'active' : '' ?>">
+                        <li class="nav-item <?= ($page == "todo") ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=listtodo">Tâches</a>
                         </li>
-                        <li class="nav-item <?= (in_array($_GET["action"], $stupPages)) ? 'active' : '' ?>">
+                        <li class="nav-item <?= ($page == "stup") ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=listDrugSheets">Stupéfiants</a>
                         </li>
                         <?php if ($_SESSION["user"]["admin"] == 1): ?>
-                            <li class="nav-item <?= (in_array($_GET["action"], $adminPages)) ? 'active' : '' ?>">
+                            <li class="nav-item <?= ($page == "admin") ? 'active' : '' ?>">
                                 <a class="nav-link" href="?action=adminHome">Administration</a>
                             </li>
                         <?php endif; ?>
@@ -71,6 +91,7 @@
         <?php endif; ?>
     </header>
 </div>
+
 
 <div class="container mainContent">
     <div id="flashMessage">
