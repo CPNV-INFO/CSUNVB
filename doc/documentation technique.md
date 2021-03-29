@@ -9,6 +9,8 @@ Il sera utile aux ambulanciers afin de faciliter leurs tâches administratives q
 
 Ce site fonctionnera en interne c'est à dire qu'uniquement les membres agréés auront la possibilité d'utiliser le site internet CSUNB. Par membre agréés,s'entend les secouristes.
 
+Il y aura deux grands types d'utilisations du site. 
+
 ### Dans quel contexte (technique) fonctionne ce site ?
 
 Le site sera hébérgé par un hébérgeur qui est encore à définir. Une connexion internet sera donc nécessaire pour accèder au site. Celui-ci sera accessible avec un pc ou une tablette, car le site, a terme, devra être entierement responsive.
