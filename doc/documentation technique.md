@@ -39,9 +39,9 @@ Ce site internet est lié à une base de données qui contient toutes les donné
 - L’administration
 -- Permet l’administration du site (utilisateurs, stocks, …)
 
-#### Bases de données
+#### Données
 
-Les tables z z z..
+Les différentes tables et données peuvent être retrouvées dans les MCD des différentes parties (DOC\SQL)
 
 
 ### De quels composants le site est-il fait ? 
@@ -73,19 +73,27 @@ Résumé:
 ### Qu'est-ce que je dois installer sur mon poste de travail pour pouvoir commencer à bosser sur ce site ?
 Les logiciels suivant sont ceux que nous avaons utiliser pour travailler. Des alternatives sont possible mais attention à la compatibilité.
 
+Il faut posséder :
 
 - Un environnement de développement: PhpStorm 2019.3.x https://www.jetbrains.com/fr-fr/phpstorm/
 - PHP version 7.4.x
 - Serveur de base de données: MySQL Community Server 8.0.23 https://dev.mysql.com/downloads/mysql/
 - Client de base de données: MySQL Workbench (distribué avec MySQL serveur), Heidi SQL v11.2 https://www.heidisql.com/
 - une adresse gmail servant pour l'envoi de mail
+- drawio pour consulter ou éditer certains fichiers comme les MCD de base de donnée
+- balsamiq pour créer ou éditer les maquettes
 
-- créer le fichier .const.php dans le dossier model, et y ajouter les bons paramètres en se référrant à .const.example.php dans le même dossier
-- créer le fichier .mailconf.php dans le dossier PHPMAILER, et y ajouter les bons paramètres en se référrant à .mailconfexemple.php dans le même dossier
-- désactiver la double authentification sur le compte gmail utilisé pour l'envois de mail et activer l'accès mois sécursié des applications (dans sécurité)
+créer le fichier .const.php dans le dossier model, et y ajouter les bons paramètres en se référrant à .const.example.php dans le même dossier
 
-- Exécuter les script mysql (du dossier DOC\SQL) dans l'odre suivant structure > data init puis finalement data test pour le développement ou data_prod pour la version sur swisscenter.
-- Utiliser le dossier public comme dossier root du serveur
+créer le fichier .mailconf.php dans le dossier PHPMAILER, et y ajouter les bons paramètres en se référrant à .mailconfexemple.php dans le même dossier
+
+désactiver la double authentification sur le compte gmail utilisé pour l'envois de mail et activer l'accès mois sécursié des applications (dans sécurité)
+
+Exécuter les script mysql (du dossier DOC\SQL) dans l'odre suivant structure > data init puis finalement data test pour le développement ou data_prod pour la version sur swisscenter.
+
+Utiliser le dossier public comme dossier root du serveur
+
+Démarrer le serveur
 
 ### Est-ce qu'on a des conventions de codage ?
 
