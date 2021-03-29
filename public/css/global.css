@@ -1,3 +1,33 @@
+/* ------------------------------------------------------------
+* CSS for elements that can be used anywhere on the website
+ -------------------------------------------------------------- */
+
+/* Fonds de couleur correspondant aux différents slugs */
+.slugOpen{
+    background-color: #d5e8d4;
+}
+.slugBlank{
+    background-color: #dae8fc;
+}
+.slugClose{
+    background-color: #eeeeee;
+}
+.slugReopen{
+    background-color: #fff2cc;
+}
+.slugArchive{
+    background-color: #f5f5f5;
+}
+
+
+.slugListTitle{
+     display: flex;
+     padding: 8px 15px;
+     align-items: center;
+     border-radius: 10px 10px 0 0;
+ }
+
+
 .banner {
     background-color: lightblue;
     width: 100%;
@@ -83,30 +113,6 @@ div .batchListZone{
     margin-bottom: 1px;
 }
 
-/* ------------------------------------------------------------
-* Fonds de couleur correspondant aux différents slugs
- -------------------------------------------------------------- */
-.slugListTitle{
-    display: flex;
-    padding: 8px 15px;
-    align-items: center;
-    border-radius: 10px 10px 0 0;
-}
-.slugOpen{
-    background-color: #d5e8d4;
-}
-.slugBlank{
-    background-color: #dae8fc;
-}
-.slugClose{
-    background-color: #eeeeee;
-}
-.slugReopen{
-    background-color: #fff2cc;
-}
-.slugArchive{
-    background-color: #f5f5f5;
-}
 
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour l'affichage de la vue dashboard

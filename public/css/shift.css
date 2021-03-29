@@ -1,17 +1,8 @@
-/**
- * Shift.php : all funtion pertaining to database request -> for shift
- * Auteur: Gogniat Michael / Paola Costa
- * Date: Decembre 2020
- **/
+/* ------------------------------------------------------------
+* CSS used for elements on stup pages
+* SH means styles are only used for Shift
+ -------------------------------------------------------------- */
 
-/** SH means styles are only used for Shift **/
-
-
-/** update button for Info in the page showshift (at the top) **/
-#SH_updateInfoBtn{
-    top: 50px;
-    display: none;
-}
 
 /** title for sections in the page showshift **/
 .SH_sectionName{
@@ -32,8 +23,12 @@
     word-break: break-all;
 }
 
+.addShiftCommentBtn{
+    width:200px;
+    color: white;
+}
 
-/** carryOn button for shiftcomment **/
+/* carryOn button for shiftcomment */
 .carry .carried {
     display: inline;
 }
