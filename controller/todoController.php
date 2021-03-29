@@ -235,9 +235,9 @@ function newTodoTask(){
     }else{
         $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
         if($_POST["day"]==1){
-            $time = "jour";
+            $time = "Jour";
         }else{
-            $time = "nuit";
+            $time = "Nuit";
         }
         $exist = getTodoTaskByName($_POST["name"],$_POST["time"]);
         if(!$exist){
@@ -245,14 +245,14 @@ function newTodoTask(){
             $res = addTodoForSheet($_POST["sheetID"],$newID,$_POST["day"]);
             if($res){
                 $message = "Tâche <strong>".$_POST["name"]. "</strong> crée et ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
-                writeLog("TODO",$_POST["sheetID"],"Tâche ".$_POST["name"] ."ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time);
+                writeLog("TODO",$_POST["sheetID"],"Tâche ".$_POST["name"] ." ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )");
             }
         }else{
             if(!alreadyOnTodoSheet($_POST["sheetID"],$exist["id"],$_POST["day"])){
                 $res = addTodoForSheet($_POST["sheetID"],$exist["id"],$_POST["day"]);
                 if($res){
                     $message = "Tâche <strong>".$_POST["name"]. "</strong> ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )";
-                    writeLog("TODO",$_POST["sheetID"],"Tâche ".$_POST["name"]." ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time);
+                    writeLog("TODO",$_POST["sheetID"],"Tâche ".$_POST["name"]." ajoutée pour le rapport ( ".$days[$_POST["day"]]." ".$time." )");
                 }
             }else{
                 $message = "Echec : La tâche : <strong>".$_POST["name"]."</strong> est déjà présente pour le jour en question";

@@ -232,7 +232,24 @@ function shiftSheetSwitchState()
         setFlashMessage("Une erreur est survenue. Impossible de changer l'état du rapport de garde.");
     } else {
         setFlashMessage("L'état du rapport de garde a été correctement modifié.");
-        writeLog("SHIFT",$_POST["id"],"Changement d'état : ".$_POST["newSlug"]);
+        switch ($_POST["newSlug"]) {
+            case "open":
+                $name = "ouvert";
+                break;
+            case "close":
+                $name = "fermé";
+                break;
+            case "reopen":
+                $name = "ré-ouvert";
+                break;
+            case "archive":
+                $name = "archivé";
+                break;
+            default:
+                $name = "";
+                break;
+        }
+        writeLog("SHIFT",$_POST["id"],"Changement d'état : ".$name);
     }
     redirect("shiftList", getBaseIDForShift($_POST["id"]));
 }
