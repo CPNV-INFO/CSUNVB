@@ -1,3 +1,31 @@
 /* ------------------------------------------------------------
 * CSS used for elements on todos pages
  -------------------------------------------------------------- */
+.week {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.todoTable{
+    border-style: solid;
+}
+.delTodoTask{
+    color: red;
+    float: left;
+    margin: 5px 5px 0 0;
+}
+.addTaskBtn , .removeTaskBtn{
+    width: 100%;
+    margin-bottom: 10px;
+}
+.taskCol{
+    padding: 4px;
+    vertical-align: top;
+    width: 14.286%;
+}
+@media print{
+    .todoTaskBtn{
+        margin: 0px;
+        padding: 0px;
+    }
+}

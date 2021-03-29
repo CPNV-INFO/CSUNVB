@@ -19,39 +19,21 @@
     background-color: #f5f5f5;
 }
 
-
 .slugListTitle{
-     display: flex;
-     padding: 8px 15px;
-     align-items: center;
-     border-radius: 10px 10px 0 0;
- }
-
-
-.banner {
-    background-color: lightblue;
-    width: 100%;
-    border-bottom: 1px solid darkgrey;
+    display: flex;
+    padding: 8px 15px;
+    align-items: center;
+    border-radius: 10px 10px 0 0;
+    justify-content: space-between;
 }
 
 textarea{
     font-size: 13px;
 }
 
-.logo {
-    width: 152px;
-    height: 81px;
-}
-
 @font-face {
     font-family: comfortaa;
     src: url('../assets/Comfortaa/Comfortaa-VariableFont_wght.ttf');
-}
-
-.title {
-    font-family: comfortaa;
-    font-size: 40px;
-    font-weight: bolder;
 }
 
 .bigfont {
@@ -80,15 +62,7 @@ table.table-bordered > thead > tr > th{
 table.table-bordered > tbody > tr > td{
     border:1px solid  #454d55;
 }
-.slugBlank,
-.slugOpen,
-.slugClose,
-.slugReopen,
-.slugArchive{
-    padding: 5px;
-    display: flex;
-    justify-content: space-between;
-}
+
 .actions{
     width: 300px;
     text-align: center;
@@ -113,32 +87,6 @@ div .batchListZone{
     margin-bottom: 1px;
 }
 
-
-/* ------------------------------------------------------------
-* Styles CSS utilisés pour l'affichage de la vue dashboard
- -------------------------------------------------------------- */
-
-.dashboardElem{
-    width: 100%;
-    min-height: 80px;
-    border-radius: 5px;
-    margin: 20px 0 20px 0;
-    padding: 5px 10px 5px 10px;
-    cursor: pointer;
-}
-
-/* ------------------------------------------------------------
-* Styles CSS utilisés pour l'affichage de la vue des tâches hebdomadaires
- -------------------------------------------------------------- */
-
-.week {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-.todoTable{
-    border-style: solid;
-}
 /* ------------------------------------------------------------
 * Styles CSS utilisés pour le formulaire de modification de rapport
  -------------------------------------------------------------- */
@@ -177,34 +125,6 @@ div .batchListZone{
     min-width: 100px;
 }
 
-/* ------------------------------------------------------------
-* Styles CSS utilisés pour l'affichage de la vue admin secouriste
- -------------------------------------------------------------- */
-
-.updateMail,.updateTel{
-    display: none;
-}
-
-tr .modify {
-    display: none;
-}
-tr:hover .modify {
-    display: inline;
-}
-.mail, .tel{
-    display: inline;
-}
-
-.saveIcon{
-    color: #218838;
-    margin-left: 5px;
-}
-.cancelIcon{
-    color: #a71d2a;
-    margin-left: 5px;
-}
-
-/* -------------------------------------*/
 
 .logIcon{
     display: inline;
@@ -227,69 +147,13 @@ tr:hover .modify {
     background-color: salmon;
 }
 
-.delTodoTask{
-    color: red;
-    float: left;
-    margin: 5px 5px 0 0;
-}
-
-.addTaskBtn , .removeTaskBtn{
-    width: 100%;
-    margin-bottom: 10px;
-}
-.taskCol{
-    padding: 4px;
-    vertical-align: top;
-    width: 14.286%;
-}
-
 .navZone{
     margin:auto;
 }
 
 
-@media print{
-    .todoTaskBtn{
-        margin: 0px;
-        padding: 0px;
-    }
-}
-
 .inactivForm .maskIfInactiv{
     display : none;
-}
-
-.navbar li {
-    display: table-cell;
-    position: relative;
-    padding: 5px;
-    margin: 10px;
-}
-.navbar ul a {
-    color: #fff;
-    padding: 5px 0 5px 0;
-    position: relative;
-}
-.navbar ul a:after {
-    background: none repeat scroll 0 0 transparent;
-    bottom: 0;
-    content: "";
-    display: block;
-    height: 2px;
-    left: 50%;
-    position: absolute;
-    background: #fff;
-    transition: width 0.3s ease 0s, left 0.3s ease 0s;
-    width: 0;
-}
-.navbar ul a:hover:after {
-    width: 100%;
-    left: 0;
-}
-
-.navbar ul .active a:after {
-    width: 100%;
-    left: 0;
 }
 
 .mainContent{
@@ -298,19 +162,6 @@ tr:hover .modify {
 }
 table tr:last-child td:first-child {
     border-bottom-left-radius: 10px;
-}
-
-.selectForDay{
-    background-color: lightblue;
-    padding: 5px 10px;
-    margin-left: 10px;
-}
-
-.selectForNight{
-    background-color: #343a40;
-    color: white;
-    padding: 5px 10px;
-    margin-left: 10px;
 }
 
 .selectForDay.first, .selectForNight.first{
@@ -322,24 +173,3 @@ table tr:last-child td:first-child {
     border-radius: 0 0 10px 10px;
     padding-bottom: 10px;
 }
-
-
-
-.SH_dropdownInfo {
-    width: 80px;
-}
-
-@media screen and (max-width: 1000px) {
-    .navbar li {
-        margin: 0;
-    }
-}
-
-@media screen and (min-width: 1000px) {
-    .navbar ul a {
-        text-transform: uppercase;
-        text-decoration: none;
-        letter-spacing: 0.15em;
-    }
-}
-

@@ -1,0 +1,74 @@
+/* ------------------------------------------------------------
+* CSS used for main elements on the site ( navbar, banner, ect )
+ -------------------------------------------------------------- */
+.banner {
+    background-color: lightblue;
+    width: 100%;
+    border-bottom: 1px solid darkgrey;
+}
+
+.logo {
+    width: 152px;
+    height: 81px;
+}
+
+.title {
+    font-family: comfortaa;
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+.dashboardElem{
+    width: 100%;
+    min-height: 80px;
+    border-radius: 5px;
+    margin: 20px 0 20px 0;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+}
+
+.navbar li {
+    display: table-cell;
+    position: relative;
+    padding: 5px;
+    margin: 10px;
+}
+.navbar ul a {
+    color: #fff;
+    padding: 5px 0 5px 0;
+    position: relative;
+}
+.navbar ul a:after {
+    background: none repeat scroll 0 0 transparent;
+    bottom: 0;
+    content: "";
+    display: block;
+    height: 2px;
+    left: 50%;
+    position: absolute;
+    background: #fff;
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    width: 0;
+}
+.navbar ul a:hover:after {
+    width: 100%;
+    left: 0;
+}
+
+.navbar ul .active a:after {
+    width: 100%;
+    left: 0;
+}
+@media screen and (max-width: 1000px) {
+    .navbar li {
+        margin: 0;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .navbar ul a {
+        text-transform: uppercase;
+        text-decoration: none;
+        letter-spacing: 0.15em;
+    }
+}
