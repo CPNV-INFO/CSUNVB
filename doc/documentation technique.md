@@ -11,7 +11,10 @@ Ce site fonctionnera en interne c'est à dire qu'uniquement les membres agréés
 
 ### Dans quel contexte (technique) fonctionne ce site ?
 
-Le site sera hébérgé par un hébérgeur qui est encore à définir. Une connexion internet sera donc nécessaire pour accèder au site. Celui-ci sera accessible avec un pc ou une tablette, car le site, a terme, devra être entierement responsive.
+Le site sera hébérgé chez swisscenter. Une connexion internet sera donc nécessaire pour accèder au site.
+A cause de la durée écourtée du du la documentation de déploiement sera mise à jour après la fin de pré-tpi, la semaine du 3 au 7 mai.
+
+Celui-ci sera accessible et utilisable avec un pc ou une tablette, car le site, a terme, devra être entierement responsive.
 
 ### Qu'est-ce que je dois faire pour pouvoir essayer ce site ?
 
@@ -27,7 +30,7 @@ Ce site internet est lié à une base de données qui contient toutes les donné
 
 
 - Les remises de garde : 
--- Permet la gestion des gardes à bord des ambulances (matériel, équipage, remarques pour la garde ...)
+-- Permet la gestion des gardes à bord des ambulances (matériel, équipage, tâches, remarques pour la garde ...)
 
 
 - Les stups
@@ -36,14 +39,19 @@ Ce site internet est lié à une base de données qui contient toutes les donné
 - L’administration
 -- Permet l’administration du site (utilisateurs, stocks, …)
 
+#### Bases de données
+
+Les tables z z z..
+
 
 ### De quels composants le site est-il fait ? 
 
-Le site est basé sur la méthode MVC (Model, vue, controleur).
+Le site est basé sur la méthode MVC (Model, vue, controleur), pour chaque partie du site ( garde, tâches hebdomadaire, ect ) un fichier de chaque type est créé dans le dossier associé.
 - Il y as un dossier Doc contenant la documentation
-- Il y as un dossier public qui contient l'index, le js, le CSS et les assets.
-- A la racine on trouve les fichiers globalhelpers.php (les fonctions communes a toutes les parties), path.php (les chemins), policies.php (les politiques d'accès)
+- Il y as un dossier public qui contient l'index, le js, le CSS et les assets, ce dossier sera utilisé comme root du serveur web afin que le reste du site ne soit pas accessible en tappant l'url
+- A la racine on trouve les fichiers globalhelpers.php (les fonctions communes a toutes les parties), path.php (les chemins), policies.php (les politiques d'accès), pageList (les différentes paramètre $_GET['action'] possible pour chaque page)
 - Dans le dossier Vue on retrouve le gabarit et le fichier helpers.php (fonction général d'affichage)
+- Le dossier PHPMailer packet utilisé pour envoyer de mail
 
 ### Quelles technologies est-ce que je dois connaître pour pouvoir développer ce site ? 
 
@@ -62,8 +70,6 @@ Résumé:
 -html, css , bootstrap
 
 
-
-
 ### Qu'est-ce que je dois installer sur mon poste de travail pour pouvoir commencer à bosser sur ce site ?
 Les logiciels suivant sont ceux que nous avaons utiliser pour travailler. Des alternatives sont possible mais attention à la compatibilité.
 
@@ -77,6 +83,9 @@ Les logiciels suivant sont ceux que nous avaons utiliser pour travailler. Des al
 - créer le fichier .const.php dans le dossier model, et y ajouter les bons paramètres en se référrant à .const.example.php dans le même dossier
 - créer le fichier .mailconf.php dans le dossier PHPMAILER, et y ajouter les bons paramètres en se référrant à .mailconfexemple.php dans le même dossier
 - désactiver la double authentification sur le compte gmail utilisé pour l'envois de mail et activer l'accès mois sécursié des applications (dans sécurité)
+
+- Exécuter les script mysql (du dossier DOC\SQL) dans l'odre suivant structure > data init puis finalement data test pour le développement ou data_prod pour la version sur swisscenter.
+- Utiliser le dossier public comme dossier root du serveur
 
 ### Est-ce qu'on a des conventions de codage ?
 
@@ -95,6 +104,8 @@ Les fonctions sont précédées d'un bloc de commentaire qui a la forme suivante
 * return : ce que ça renvoie
 **/
 ```
+
+Les nom de fonction appelée depuis le javascript en ajax se termine par _ajax() pour les différencier
 
 ## M'enfin ... ?
 
@@ -170,10 +181,18 @@ Pour chaque onglet de la navbar si le paramètre $_Get['action'] est présent da
 
 Pour éditer un rapport un icone crayon est présent, et pour sortir de ce mode il faut fermer le formulaire d'édition
 
-Les listes déroulentes jour est créneau possèdent un champ vide avec comme paramètre "selected disabled hidden" afin d'avoir une option par défaut non-sélectionnable
+Les listes déroulentes jour et créneau possèdent un champ vide avec comme paramètre "selected disabled hidden" afin d'avoir une option par défaut non-sélectionnable
 
-à faire ...
+Si les champs jour et créneau sont renseignés, deux champs permettent d'ajouter des action existante ou d'en crée une nouvelle.
 
-### Envois de formulaire automatique en javascript
+### Envois de formulaire en javascript
 
-à faire ...
+La fonction javascript post() permet de créer et d'envoyer direcement un formulaire en post sans avoir à le créer dans le code html
+
+Il faut lui fournir les paramètres path et un tableau des paramètres comme ceci :
+
+```
+const param = { param1: 1, param2: 2 };
+post("?action=exemple", param )
+```
+
