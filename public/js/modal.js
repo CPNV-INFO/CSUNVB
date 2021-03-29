@@ -18,6 +18,10 @@ function setSubmitModal(content) {
     $("#mainModalSubmit").html(content);
 }
 
+function setCancelModal(content) {
+    $("#mainModalCancel").html(content);
+}
+
 
 var addShiftCommentBtns = document.querySelectorAll('.addShiftCommentBtn');
 addShiftCommentBtns.forEach((item) => {
@@ -68,7 +72,8 @@ unCheckShiftBtns.forEach((item) => {
         addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + $(this).parent().parent().attr("value") + '>');
         addBodyModal('<input type="hidden" name="sheetID" id="todoSheetID" value=' + $("#sheetID").val() + '>');
         addBodyModal('<input type = "hidden" name="D/N" id="D/N" value="' + day + '">');
-        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Valider">');
+        setCancelModal('<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>');
+        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Annuler">');
         showModal();
     }, false);
 })
@@ -175,6 +180,7 @@ removeTaskBtns.forEach((item) => {
         setBodyModal("Annuler : " + $(this).html().replace('<br>', ''));
         addBodyModal('<input type="hidden" name="todoID" id="todoID" value=' + $(this).attr("data-id") + '>');
         addBodyModal('<input type="hidden" name="todoSheetID" id="todoSheetID" value=' + $("#sheetID").attr("value") + '>');
+        setCancelModal('<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>');
         setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Annuler">');
         showModal();
     }, false);

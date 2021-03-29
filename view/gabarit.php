@@ -92,7 +92,9 @@
                     <div class="modal-body" id="mainModalBody">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <div id="mainModalCancel">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                        </div>
                         <div id="mainModalSubmit">
                         </div>
                     </div>
