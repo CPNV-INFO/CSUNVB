@@ -11,15 +11,19 @@ use PHPMailer\PHPMailer\SMTP;
 
 function home()
 {
-    $openShifts = getShiftBySlutWithUser("open",$_SESSION["user"]["id"]);
+    $openShifts = getShiftBySlugWithUser("open",$_SESSION["user"]["id"]);
     foreach ($openShifts as &$openShift){
         $openShift["roles"] = getShiftRole($openShift["id"],$_SESSION["user"]["id"]);
+        $nbMissing = getUncheckActionForShift($openShift["id"]);
+        $nbTot = getNbShiftTask($openShift["id"]);
+        $openShift["nbDone"] = $nbTot - $nbMissing;
+        $openShift["nbTasks"] = $nbTot;
     }
-    $blankShifts = getShiftBySlutWithUser("blank",$_SESSION["user"]["id"]);
+    $blankShifts = getShiftBySlugWithUser("blank",$_SESSION["user"]["id"]);
     foreach ($blankShifts as &$blankShift){
         $blankShift["roles"] = getShiftRole($blankShift["id"],$_SESSION["user"]["id"]);
     }
-    $reOpenShifts = getShiftBySlutWithUser("reopen",$_SESSION["user"]["id"]);
+    $reOpenShifts = getShiftBySlugWithUser("reopen",$_SESSION["user"]["id"]);
     foreach ($reOpenShifts as &$reOpenShift){
         $reOpenShift["roles"] = getShiftRole($reOpenShift["id"],$_SESSION["user"]["id"]);
     }

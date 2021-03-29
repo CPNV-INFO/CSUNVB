@@ -14,7 +14,6 @@ $title = "CSU-NVB - Accueil";
             <?php foreach ($todoSheets as $todoSheet): ?>
                 <div class="slugOpen dashboardElem" onclick="location.href='?action=showtodo&id=<?= $todoSheet["id"] ?>';">
                     Semaine : <?= $todoSheet["week"] ?>
-                    <br>Tâches effectuées : X / X
                 </div>
             <?php endforeach; ?>
             <h3>Stupéfiants</h3>
@@ -33,8 +32,8 @@ $title = "CSU-NVB - Accueil";
                     <?php foreach ($openShift["roles"] as $role): ?>
                         <?= $role["name"] ?>
                     <?php endforeach; ?>
+                    <br>Tâches effectuées : <?= $openShift["nbDone"] ?> / <?= $openShift["nbTasks"] ?>
                     <br>Status : Actif
-                    <br>Tâches effectuées : X / X
                 </div>
             <?php endforeach; ?>
             <?php foreach ($blankShifts as $blankShift): ?>

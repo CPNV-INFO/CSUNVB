@@ -356,7 +356,7 @@ ON shiftactions.id = shiftchecks.shiftaction_id
 WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]));
 }
 
-function getShiftBySlutWithUser($slug,$userID){
+function getShiftBySlugWithUser($slug,$userID){
     return selectMany("SELECT date, shiftsheets.id AS id FROM shiftsheets
 JOIN status ON shiftsheets.status_id = status.id
 WHERE status.slug = :slug
@@ -368,4 +368,8 @@ function getShiftRole($sheetID,$userID){
 UNION SELECT 'Responsable Nuit' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.nightboss_id = :userID
 UNION SELECT 'Equipier Jour' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.dayteammate_id = :userID
 UNION SELECT 'Equipier Nuit' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.nightteammate_id = :userID",["sheetID" => $sheetID, "userID" => $userID]);
+}
+
+function getNbShiftTask($sheetID){
+    return 2 * count(selectMany("SELECT shiftaction_id FROM shiftmodel_has_shiftaction WHERE shiftmodel_id = (SELECT shiftmodel_id FROM shiftsheets WHERE shiftsheets.id = :sheetID)",["sheetID" => $sheetID]));
 }
