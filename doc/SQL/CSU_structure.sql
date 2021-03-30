@@ -13,8 +13,8 @@
 
 
 -- Listage de la structure de la base pour csunvb_csu
-DROP DATABASE IF EXISTS `csunvb_csu`;
-CREATE DATABASE IF NOT EXISTS `csunvb_csu` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+-- DROP DATABASE IF EXISTS `csunvb_csu`;
+-- CREATE DATABASE IF NOT EXISTS `csunvb_csu` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `csunvb_csu`;
 
 -- Listage de la structure de la table csunvb_csu. bases
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `bases` (
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. batches
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `batches` (
   KEY `fk_batches_bases1_idx` (`base_id`),
   CONSTRAINT `fk_batches_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
   CONSTRAINT `fk_batches_drugs` FOREIGN KEY (`drug_id`) REFERENCES `drugs` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. drugs
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `drugs` (
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. drugsheets
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `drugsheets` (
   KEY `fk_drugsheets_status1` (`status_id`),
   CONSTRAINT `fk_drugsheets_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
   CONSTRAINT `fk_drugsheets_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. drugsheet_use_batch
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `drugsheet_use_batch` (
   KEY `fk_drugsheet_use_batch_batches1_idx` (`batch_id`),
   CONSTRAINT `fk_drugsheet_use_batch_batches1` FOREIGN KEY (`batch_id`) REFERENCES `batches` (`id`),
   CONSTRAINT `fk_drugsheet_use_batch_drugsheets1` FOREIGN KEY (`drugsheet_id`) REFERENCES `drugsheets` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. drugsheet_use_nova
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `drugsheet_use_nova` (
   KEY `fk_drugsheet_use_nova_novas1_idx` (`nova_id`),
   CONSTRAINT `fk_drugsheet_use_nova_drugsheets1` FOREIGN KEY (`drugsheet_id`) REFERENCES `drugsheets` (`id`),
   CONSTRAINT `fk_drugsheet_use_nova_novas1` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. drugsignatures
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `novas` (
   `number` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `number_UNIQUE` (`number`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. pharmachecks
@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `shiftactions` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_shift_lines_shift_sections1_idx` (`shiftsection_id`),
   CONSTRAINT `fk_shift_lines_shift_sections1` FOREIGN KEY (`shiftsection_id`) REFERENCES `shiftsections` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. shiftchecks
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `shiftchecks` (
   CONSTRAINT `fk_shiftChecks_shiftActions1` FOREIGN KEY (`shiftaction_id`) REFERENCES `shiftactions` (`id`),
   CONSTRAINT `fk_shiftChecks_shiftSheets1` FOREIGN KEY (`shiftsheet_id`) REFERENCES `shiftsheets` (`id`),
   CONSTRAINT `fk_shiftChecks_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. shiftcomments
@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `shiftcomments` (
   CONSTRAINT `fk_comments_shiftActions1` FOREIGN KEY (`shiftaction_id`) REFERENCES `shiftactions` (`id`),
   CONSTRAINT `fk_comments_shiftSheets1` FOREIGN KEY (`shiftsheet_id`) REFERENCES `shiftsheets` (`id`),
   CONSTRAINT `fk_comments_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. shiftmodels
@@ -274,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `shiftmodels` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idshiftmodels_UNIQUE` (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. shiftmodel_has_shiftaction
@@ -290,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `shiftmodel_has_shiftaction` (
   KEY `fk_shiftactions_has_shiftmodels_shiftactions1_idx` (`shiftaction_id`),
   CONSTRAINT `fk_shiftactions_has_shiftmodels_shiftactions1` FOREIGN KEY (`shiftaction_id`) REFERENCES `shiftactions` (`id`),
   CONSTRAINT `fk_shiftactions_has_shiftmodels_shiftmodels1` FOREIGN KEY (`shiftmodel_id`) REFERENCES `shiftmodels` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. shiftsections
@@ -301,7 +301,7 @@ CREATE TABLE IF NOT EXISTS `shiftsections` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `title_UNIQUE` (`title`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. shiftsheets
@@ -354,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `status` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. todos
@@ -374,7 +374,7 @@ CREATE TABLE IF NOT EXISTS `todos` (
   CONSTRAINT `fk_todoitems_todosheets1` FOREIGN KEY (`todosheet_id`) REFERENCES `todosheets` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_todoitems_todotexts1` FOREIGN KEY (`todothing_id`) REFERENCES `todothings` (`id`),
   CONSTRAINT `fk_todoitems_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. todosheets
@@ -394,7 +394,7 @@ CREATE TABLE IF NOT EXISTS `todosheets` (
   CONSTRAINT `fk_todosheets_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
   CONSTRAINT `fk_todosheets_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
   CONSTRAINT `fk_todosheets_user1` FOREIGN KEY (`closeBy`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. todothings
@@ -407,7 +407,7 @@ CREATE TABLE IF NOT EXISTS `todothings` (
   `display_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `text_UNIQUE` (`description`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. tokens
@@ -439,7 +439,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `mobileNumber` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `initials_UNIQUE` (`initials`)
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4;
 
 -- Les données exportées n'étaient pas sélectionnées.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
