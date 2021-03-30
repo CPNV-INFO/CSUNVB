@@ -1,22 +1,8 @@
-/**
- * Shift.php : all funtion pertaining to database request -> for shift
- * Auteur: Gogniat Michael / Paola Costa
- * Date: Decembre 2020
- **/
+/* ------------------------------------------------------------
+* CSS used for elements on stup pages
+* SH means styles are only used for Shift
+ -------------------------------------------------------------- */
 
-/** SH means styles are only used for Shift **/
-
-/** dropdowns for Info in the page showshift (at the top) **/
-.SH_dropdownInfo {
-    width: 80px;
-    margin: 3px 10px 3px 10px;
-}
-
-/** update button for Info in the page showshift (at the top) **/
-#SH_updateInfoBtn{
-    top: 50px;
-    display: none;
-}
 
 /** title for sections in the page showshift **/
 .SH_sectionName{
@@ -25,21 +11,24 @@
     display: block;/** used for good display in the pdf **/
 }
 
-/** title for actions in the page showshift **/
-.SH_actionName{
-    display: inline;
-}
-
 .SH_actionCase{
-    width: 300px;
+    width: 170px;
 }
 
 .SH_checkCase{
     width: 110px;
 }
 
+.SH_comment{
+    word-break: break-all;
+}
 
-/** carryOn button for shiftcomment **/
+.addShiftCommentBtn{
+    width:200px;
+    color: white;
+}
+
+/* carryOn button for shiftcomment */
 .carry .carried {
     display: inline;
 }
@@ -57,4 +46,25 @@
 }
 .notCarry:hover .addCarry {
     display: inline;
+}
+
+.SH_table{
+    margin: 20px 0 40px 0;
+}
+
+.selectForDay{
+    background-color: lightblue;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+
+.selectForNight{
+    background-color: #343a40;
+    color: white;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+
+.SH_dropdownInfo {
+    width: 80px;
 }

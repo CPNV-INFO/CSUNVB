@@ -13,20 +13,20 @@ $title = "CSU-NVB - Tâches hebdomadaires";
 <div>
     <form><!-- Liste déroulante pour le choix de la base -->
         <input type="hidden" name="action" value="listtodoforbase">
-        <div class="row">
-            <h1 class="mr-3">Tâches hebdomadaires à </h1>
-            <select onchange="this.form.submit()" name="id" size="1" class="bigfont mb-3">
-                <?php foreach ($baseList as $base) : ?>
-                    <option value="<?= $base['id'] ?>" <?= ($baseID == $base['id']) ? 'selected' : '' ?>
-                            name="base"><?= $base['name'] ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+        <h1 class="mr-3 d-inline">Tâches hebdomadaires à </h1>
+        <select onchange="this.form.submit()" name="id" size="1" class="bigfont mb-3">
+            <?php foreach ($baseList as $base) : ?>
+                <option value="<?= $base['id'] ?>" <?= ($baseID == $base['id']) ? 'selected' : '' ?>
+                        name="base"><?= $base['name'] ?></option>
+            <?php endforeach; ?>
+        </select>
     </form>
-    <div class="newSheetZone"> <!-- Liste déroulante pour le choix du modèle et bouton de nouvelle semaine -->
-        <?php if (ican('createsheet') && ($_SESSION['base']['id'] == $baseID)) : ?>
-            <form method="POST" action="?action=addWeek" class="float-right">
-                <select name="selectModel">
+
+    <?php if (ican('createsheet') && ($_SESSION['base']['id'] == $baseID)) : ?>
+        <div class="sheetForm newSheet">
+            <form method="POST" action="?action=addWeek">
+                Modèle :
+                <select name="selectModel" id="selectTodoModel" class="choseModel">
                     <?php if (isset($lastClosedWeek['id'])): ?>
                         <option value='lastValue' selected=selected>Dernier rapport clôturé</option>
                     <?php endif; ?>
@@ -34,17 +34,14 @@ $title = "CSU-NVB - Tâches hebdomadaires";
                         <option value='<?= $template['template_name'] ?>'><?= $template['template_name'] ?></option>
                     <?php endforeach; ?>
                 </select>
-                <?php if(!isset($lastClosedWeek['id']) && !isset($template[0]['template_name']) ): ?>
-                    <button type="submit" class="btn btn-primary m-1 pull-right" disabled>Nouvelle semaine</button>
-                <?php else: ?>
-                    <button type="submit" class="btn btn-primary m-1 pull-right">Nouvelle semaine</button>
-                <?php endif; ?>
+                <button type="submit" class="btn blueBtn m-1" id="newTodoBtn" disabled>Nouveau Rapport</i></button>
             </form>
-        <?php endif; ?>
-    </div>
+        </div>
+    <?php endif; ?>
 </div>
-<?= listSheet("todo", $sheets)?>
 
+<?= listSheet("todo", $sheets) ?>
+<script src="js/todo.js"></script>
 <?php
 $content = ob_get_clean();
 require GABARIT;

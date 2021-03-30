@@ -18,48 +18,65 @@ function setSubmitModal(content) {
     $("#mainModalSubmit").html(content);
 }
 
-function shiftCommentModal(date, action, actionID, sheetID) {
-    $("#mainModalForm").attr('action', '?action=commentShift');
-    setTitleModal("Remise de Garde du : " + date);
-    setBodyModal("Ajouter un commentaire à " + action);
-    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value=' + sheetID + '>');
-    addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + actionID + '>');
-    addBodyModal('<input type="text" name="comment" id="comment" style="margin:10px 0px 0px 0px; width:400px;">');
-    setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Ajouter">');
-    showModal();
+function setCancelModal(content) {
+    $("#mainModalCancel").html(content);
 }
 
-function shiftCheckModal(date, action, actionID, sheetID, day) {
-    $("#mainModalForm").attr('action', '?action=checkShift');
-    if (day == 1) {
-        var time = "jour";
-    } else {
-        var time = "nuit";
-    }
-    setTitleModal("Remise de Garde du : " + date);
-    setBodyModal("Valider : " + action + " " + time);
-    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value=' + sheetID + '>');
-    addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + actionID + '>');
-    addBodyModal('<input type = "hidden" name="D/N" id="D/N" value="' + day + '">');
-    setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Valider">');
-    showModal();
-}
 
-function shiftUnCheckModal(date, action, actionID, sheetID, day) {
-    $("#mainModalForm").attr('action', '?action=unCheckShift');
-    if (day == 1) {
-        var time = "jour";
-    } else {
-        var time = "nuit";
-    }
-    setTitleModal("Remise de Garde du : " + date);
-    setBodyModal("Retirer : " + action + " " + time);
-    addBodyModal('<input type="hidden" name="sheetID" id="sheetID" value=' + sheetID + '>');
-    addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + actionID + '>');
-    addBodyModal('<input type = "hidden" name="D/N" id="D/N" value="' + day + '">');
-    setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Retirer">');
-    showModal();
-}
+var addShiftCommentBtns = document.querySelectorAll('.addShiftCommentBtn');
+addShiftCommentBtns.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        $("#mainModalForm").attr('action', '?action=commentShift');
+        setTitleModal("Remise de Garde du : " + $("#shiftDate").val());
+        setBodyModal("Ajouter un commentaire à  : " + $(this).parent().parent().find('.SH_actionName').html() + "<br>");
+        addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + $(this).parent().parent().attr("value") + '>');
+        addBodyModal('<input type="hidden" name="sheetID" id="todoSheetID" value=' + $("#sheetID").val() + '>');
+        addBodyModal('<textarea rows="3" name="comment" id="comment" style="margin:10px 0 0 0; width:400px;"></textarea>');
+        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Valider">');
+        showModal();
+    }, false);
+})
+
+var checkShiftBtns = document.querySelectorAll('.checkShiftBtn');
+checkShiftBtns.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        $("#mainModalForm").attr('action', '?action=checkShift');
+        var day = $(this).parent().attr("value");
+        if (day == 1) {
+            var time = "Jour";
+        } else {
+            var time = "Nuit";
+        }
+        setTitleModal("Remise de Garde du : " + $("#shiftDate").val());
+        setBodyModal("Valider  : " + $(this).parent().parent().find('.SH_actionName').html() + " (" + time + ")<br>");
+        addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + $(this).parent().parent().attr("value") + '>');
+        addBodyModal('<input type="hidden" name="sheetID" id="todoSheetID" value=' + $("#sheetID").val() + '>');
+        addBodyModal('<input type = "hidden" name="D/N" id="D/N" value="' + day + '">');
+        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Valider">');
+        showModal();
+    }, false);
+})
+
+var unCheckShiftBtns = document.querySelectorAll('.unCheckShiftBtn');
+unCheckShiftBtns.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        $("#mainModalForm").attr('action', '?action=unCheckShift');
+        var day = $(this).parent().attr("value");
+        if (day == 1) {
+            var time = "Jour";
+        } else {
+            var time = "Nuit";
+        }
+        setTitleModal("Remise de Garde du : " + $("#shiftDate").val());
+        setBodyModal("Retirer  : " + $(this).parent().parent().find('.SH_actionName').html() + " (" + time + ")<br>");
+        addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + $(this).parent().parent().attr("value") + '>');
+        addBodyModal('<input type="hidden" name="sheetID" id="todoSheetID" value=' + $("#sheetID").val() + '>');
+        addBodyModal('<input type = "hidden" name="D/N" id="D/N" value="' + day + '">');
+        setCancelModal('<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>');
+        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Annuler">');
+        showModal();
+    }, false);
+})
 
 function saveShiftModel(sheetID, modelID) {
     $("#mainModalForm").attr('action', '?action=addShiftModel');
@@ -163,6 +180,7 @@ removeTaskBtns.forEach((item) => {
         setBodyModal("Annuler : " + $(this).html().replace('<br>', ''));
         addBodyModal('<input type="hidden" name="todoID" id="todoID" value=' + $(this).attr("data-id") + '>');
         addBodyModal('<input type="hidden" name="todoSheetID" id="todoSheetID" value=' + $("#sheetID").attr("value") + '>');
+        setCancelModal('<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>');
         setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Annuler">');
         showModal();
     }, false);

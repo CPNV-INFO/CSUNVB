@@ -1,17 +1,28 @@
-var dropdownButtons = document.querySelectorAll('.dropdownButton');
-
-dropdownButtons.forEach((item) => {
+var showSheetsListBtn = document.querySelectorAll('.showSheetsList');
+showSheetsListBtn.forEach((item) => {
     item.addEventListener('click', function (event) {
         var state = event.target.dataset.list;
         var elements = document.getElementsByClassName(state+"Sheets");
-
         for (var i = 0; i < elements.length; i ++) {
-            if(elements[i].classList.contains('d-none')){
-                elements[i].classList.remove('d-none');
-            }else {
-                elements[i].classList.add('d-none');
-            }
+            elements[i].classList.remove('d-none');
         }
+        $("#show-"+state).addClass('d-none');
+        $("#hide-"+state).removeClass("d-none");
+        $(this).parent().css("border-radius","10px 10px 0 0");
+    }, false);
+})
+
+var hideSheetsListBtn = document.querySelectorAll('.hideSheetsList');
+hideSheetsListBtn.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        var state = event.target.dataset.list;
+        var elements = document.getElementsByClassName(state+"Sheets");
+        for (var i = 0; i < elements.length; i ++) {
+            elements[i].classList.add('d-none');
+        }
+        $("#hide-"+state).addClass('d-none');
+        $("#show-"+state).removeClass("d-none");
+        $(this).parent().css("border-radius","10px");
     }, false);
 })
 

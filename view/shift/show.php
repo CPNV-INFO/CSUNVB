@@ -2,139 +2,159 @@
 ob_start();
 $title = "CSU-NVB - Remise de garde";
 ?>
-<div>
-    <?= (ican("consultLog")) ? "<a href='?action=shiftLog&id=" . $shiftsheet['id'] . "'><i class='fas fa-history fa-2x logIcon'></i></a>" : "" ?>
-    <h1>Remise de Garde </h1>
-    <h2>Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?> - Base de <?= $shiftsheet['baseName'] ?>
-        [<?= $shiftsheet['displayname'] ?>]
-        <?= ($shiftsheet['status'] == 'close') ? ' par ' . $shiftsheet['closeBy'] : '' ?>
-    </h2>
-    <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
-    <div class='d-flex justify-content-end d-print-none'>
-        <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
-        <form method='POST'>
-            <input type='hidden' name='id' value='" . $sheet["id"] . "'>
-            <input type='hidden' name='newSlug' value='open'>
-            <button type='submit' class='btn btn-primary m-1' onclick="print_page()">Télécharger en PDF</button>
-        </form>
+<input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
+<input type="hidden" id="sheetID" value="<?= $shiftsheet['id'] ?>"><!-- used to get date in javascrpt -->
+<a href="?action=shiftList&id=<?= $shiftsheet["base_id"] ?>" class="text-dark d-print-none"><i class="fas fa-angle-left backIcon"></i>Retour</a>
+<h1>
+    Remise de Garde
+</h1>
+<div style="display: flex; justify-content: space-between;margin: 30px 0;">
+    <div>
+        <h6>
+            Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>
+        </h6>
+        <h6 style="margin: 15px 0;">
+            Base : <?= $shiftsheet['baseName'] ?> </h6>
+        <h6>
+            Status : <?= $shiftsheet['displayname'] ?> <?= ($shiftsheet['status'] == 'close') ? ' par ' . $shiftsheet['closeBy'] : '' ?>
+        </h6>
+    </div>
+    <div>
+        <form action="?action=updateShift&id=<?= $shiftsheet['id'] ?>" method="POST">
+            <input type=hidden name="id" value= <?= $shiftsheet['id'] ?>>
+            <div class="row">
+                <div class="col-auto">
+                    <table cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td><div class="text-center d-none"></div></td>
+                            <td>
+                                <div class="text-center d-none d-print-block">
+                                    <strong>Jour</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center d-none d-print-block">
+                                    <strong>Nuit</strong>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Novas</td>
+                            <td>
+                                <div class="text-center selectForDay first">
+                                <?php if ($enableshiftsheetUpdate) : ?>
 
-        <form>
-            <input type="hidden" name="action" value="shiftList">
-            <input type="hidden" name="id" value="<?= $shiftsheet["base_id"] ?>">
-            <button type="submit" class='btn btn-primary m-1 float-right'>Retour à la liste</button>
+                                    <select name="novaDay" class="SH_dropdownInfo" onchange="this.form.submit()">
+                                        <?= ($shiftsheet['novaDay'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
+                                        <?php foreach ($novas as $nova): ?>
+                                            <option value="<?= $nova['id'] ?>" <?= ($shiftsheet['novaDay'] == $nova['number']) ? 'selected' : '' ?>><?= $nova['number'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php else : ?>
+                                    <?= $shiftsheet['novaDay'] ?>
+                                <?php endif; ?>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center selectForNight first">
+                                <?php if ($enableshiftsheetUpdate) : ?>
+                                    <select name="novaNight" class="SH_dropdownInfo" onchange="this.form.submit()">
+                                        <?= ($shiftsheet['novaNight'] == NULL) ? '<option value="NULL" selected disabled>Nuit</option>' : '' ?>
+                                        <?php foreach ($novas as $nova): ?>
+                                            <option value="<?= $nova['id'] ?>" <?= ($shiftsheet['novaNight'] == $nova['number']) ? 'selected' : '' ?>><?= $nova['number'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php else : ?>
+                                    <?= $shiftsheet['novaNight'] ?>
+                                <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Responsable</td>
+                            <td>
+                                <div class="text-center selectForDay">
+                                <?php if ($enableshiftsheetUpdate) : ?>
+                                    <select name="bossDay" class="SH_dropdownInfo" onchange="this.form.submit()">
+                                        <?= ($shiftsheet['bossDay'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
+                                        <?php foreach ($users as $user): ?>
+                                            <option value="<?= $user['id'] ?>" <?= ($shiftsheet['bossDay'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php else : ?>
+                                    <?= $shiftsheet['bossDay'] ?>
+                                <?php endif; ?>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center selectForNight">
+                                <?php if ($enableshiftsheetUpdate) : ?>
+                                    <select name="bossNight" class="SH_dropdownInfo" onchange="this.form.submit()">
+                                        <?= ($shiftsheet['bossNight'] == NULL) ? '<option value="NULL" selected disabled>Nuit</option>' : '' ?>
+                                        <?php foreach ($users as $user): ?>
+                                            <option value="<?= $user['id'] ?>" <?= ($shiftsheet['bossNight'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php else : ?>
+                                    <?= $shiftsheet['bossNight'] ?>
+                                <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Équipier</td>
+                            <td>
+                                <div class="text-center selectForDay last">
+                                <?php if ($enableshiftsheetUpdate) : ?>
+                                    <select name="teammateDay" class="SH_dropdownInfo" onchange="this.form.submit()">
+                                        <?= ($shiftsheet['teammateDay'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
+                                        <?php foreach ($users as $user): ?>
+                                            <option value="<?= $user['id'] ?>" <?= ($shiftsheet['teammateDay'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php else : ?>
+                                    <?= $shiftsheet['teammateDay'] ?>
+                                <?php endif; ?>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center selectForNight last">
+                                <?php if ($enableshiftsheetUpdate) : ?>
+                                    <select name="teammateNight" class="SH_dropdownInfo" onchange="this.form.submit()">
+                                        <?= ($shiftsheet['teammateNight'] == NULL) ? '<option value="NULL" selected disabled>Nuit</option>' : '' ?>
+                                        <?php foreach ($users as $user): ?>
+                                            <option value="<?= $user['id'] ?>" <?= ($shiftsheet['teammateNight'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php else : ?>
+                                    <?= $shiftsheet['teammateNight'] ?>
+                                <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </form>
+    </div>
+    <div>
+        <div class="float-right d-print-none d-inline">
+            <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
+            <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i></button>
+            <form method="POST" class="d-inline" action='?action=shiftLog&id=<?=$shiftsheet['id']?>'><button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button></form>
+        </div>
     </div>
 </div>
 
-<div class="container">
-    <form action="?action=updateShift&id=<?= $shiftsheet['id'] ?>" method="POST">
-        <input type=hidden name="id" value= <?= $shiftsheet['id'] ?>>
-        <div class="row">
-            <div class="col-auto">
-                <table>
-                    <tr>
-                        <td class=""></td>
-                        <td class="text-center" style="width: 50px;"><strong>Jour</strong></td>
-                        <td class="text-center" style="width: 50px;"><strong>Nuit</strong></td>
-                    </tr>
-                    <tr>
-                        <td class=" text-right">Novas</td>
-                        <td class=" text-center">
-                            <?php if ($enableshiftsheetUpdate) : ?>
-                                <select name="novaDay" class="SH_dropdownInfo">
-                                    <?= ($shiftsheet['novaDay'] == NULL) ? '<option value="NULL" selected></option>' : '' ?>
-                                    <?php foreach ($novas as $nova): ?>
-                                        <option value="<?= $nova['id'] ?>" <?= ($shiftsheet['novaDay'] == $nova['number']) ? 'selected' : '' ?>><?= $nova['number'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php else : ?>
-                                <?= $shiftsheet['novaDay'] ?>
-                            <?php endif; ?>
-                        </td>
-                        <td class=" text-center">
-                            <?php if ($enableshiftsheetUpdate) : ?>
-                                <select name="novaNight" class="SH_dropdownInfo">
-                                    <?= ($shiftsheet['novaNight'] == NULL) ? '<option value="NULL" selected></option>' : '' ?>
-                                    <?php foreach ($novas as $nova): ?>
-                                        <option value="<?= $nova['id'] ?>" <?= ($shiftsheet['novaNight'] == $nova['number']) ? 'selected' : '' ?>><?= $nova['number'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php else : ?>
-                                <?= $shiftsheet['novaNight'] ?>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class=" text-right">Responsable</td>
-                        <td class="text-center">
-                            <?php if ($enableshiftsheetUpdate) : ?>
-                                <select name="bossDay" class="SH_dropdownInfo">
-                                    <?= ($shiftsheet['bossDay'] == NULL) ? '<option value="NULL" selected></option>' : '' ?>
-                                    <?php foreach ($users as $user): ?>
-                                        <option value="<?= $user['id'] ?>" <?= ($shiftsheet['bossDay'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php else : ?>
-                                <?= $shiftsheet['bossDay'] ?>
-                            <?php endif; ?>
-                        </td>
-                        <td class=" text-center">
-                            <?php if ($enableshiftsheetUpdate) : ?>
-                                <select name="bossNight" class="SH_dropdownInfo">
-                                    <?= ($shiftsheet['bossNight'] == NULL) ? '<option value="NULL" selected></option>' : '' ?>
-                                    <?php foreach ($users as $user): ?>
-                                        <option value="<?= $user['id'] ?>" <?= ($shiftsheet['bossNight'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php else : ?>
-                                <?= $shiftsheet['bossNight'] ?>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class=" text-right">Équipier</td>
-                        <td class=" text-center">
-                            <?php if ($enableshiftsheetUpdate) : ?>
-                                <select name="teammateDay" class="SH_dropdownInfo">
-                                    <?= ($shiftsheet['teammateDay'] == NULL) ? '<option value="NULL" selected></option>' : '' ?>
-                                    <?php foreach ($users as $user): ?>
-                                        <option value="<?= $user['id'] ?>" <?= ($shiftsheet['teammateDay'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php else : ?>
-                                <?= $shiftsheet['teammateDay'] ?>
-                            <?php endif; ?>
-                        </td>
-                        <td class=" text-center">
-                            <?php if ($enableshiftsheetUpdate) : ?>
-                                <select name="teammateNight" class="SH_dropdownInfo">
-                                    <?= ($shiftsheet['teammateNight'] == NULL) ? '<option value="NULL" selected></option>' : '' ?>
-                                    <?php foreach ($users as $user): ?>
-                                        <option value="<?= $user['id'] ?>" <?= ($shiftsheet['teammateNight'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php else : ?>
-                                <?= $shiftsheet['teammateNight'] ?>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col" id="SH_updateInfoBtn">
-                <button type="submit" class="btn btn-primary m-1 pull-right">Valider</button>
-            </div>
-        </div>
-    </form>
-</div>
-<div class="container">
+<div>
     <?php foreach ($sections as $section): ?>
-        <div class="row SH_sectionName"><?= $section["title"] ?></div>
-        <table class="table table-bordered float-left">
+        <div class="SH_sectionName"><?= $section["title"] ?></div>
+        <table class="table table-bordered SH_table">
             <thead class="thead-dark">
-            <th></th>
+            <th class="SH_actionCase"></th>
             <th class="SH_checkCase">Jour</th>
             <th class="SH_checkCase">Nuit</th>
-            <th>Remarques</th>
+            <th class="SH_comment">Remarques</th>
             </thead>
             <tbody>
             <?php
@@ -156,14 +176,11 @@ $title = "CSU-NVB - Remise de garde";
                     </td>
                     <?php if ($enableshiftsheetFilling): ?>
                         <!-- Check for the day -->
-                        <td class="SH_checkCase">
+                        <td class="SH_checkCase" value="1">
                             <?php if (count($action["checksDay"]) == 0): ?>
-                                <button onclick="shiftCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,1)"
-                                        class="btn btn-warning toggleShiftModal">A Valider
-                                </button>
+                                <button class="btn btn-secondary checkShiftBtn">A Valider</button>
                             <?php else: ?>
-                                <button onclick="shiftUnCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,1)"
-                                        class="btn btn-success toggleShiftModal">
+                                <button class="btn btn-success unCheckShiftBtn">
                                     Validé Par
                                     <div class="text-success bg-white rounded mt-1">
                                         <?php foreach ($action["checksDay"] as $check): ?>
@@ -174,14 +191,11 @@ $title = "CSU-NVB - Remise de garde";
                             <?php endif; ?>
                         </td>
                         <!-- Check for the night -->
-                        <td class="SH_checkCase">
+                        <td class="SH_checkCase" value="0">
                             <?php if (count($action["checksNight"]) == 0): ?>
-                                <button onclick="shiftCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,0)"
-                                        class="btn btn-warning toggleShiftModal">A Valider
-                                </button>
+                                <button class="btn btn-secondary checkShiftBtn">A Valider</button>
                             <?php else: ?>
-                                <button onclick="shiftUnCheckModal('<?= $shiftsheet['date'] ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>,0)"
-                                        class="btn btn-success toggleShiftModal">
+                                <button class="btn btn-success unCheckShiftBtn">
                                     Validé Par
                                     <div class="text-success bg-white rounded mt-1">
                                         <?php foreach ($action["checksNight"] as $check): ?>
@@ -192,31 +206,31 @@ $title = "CSU-NVB - Remise de garde";
                             <?php endif; ?>
                         </td>
                         <!-- Comments for the action -->
-                        <td>
-                            <div id="commentList<?= $action['id'] ?>">
+                        <td class="SH_comment">
+                            <div id="commentList<?= $action['id'] ?>" >
                                 <?php foreach ($action["comments"] as $comment): ?>
                                     <div class="<?= ($comment['carryOn'] == 1 and $comment['endOfCarryOn'] == null) ? 'carry' : 'notCarry' ?>"
                                          id="comment-<?= $comment['id'] ?>">
-                                        <!-- CarryOn button -->
-                                        <button class="removeCarryOnBtn carried" value=<?= $comment['id'] ?>>
-                                            <i class="fas fa-thumbtack fa-lg" style="color:#000000"></i>
-                                        </button>
-                                        <button class="addCarryOnBtn addCarry" value=<?= $comment['id'] ?>>
-                                            <i class="fas fa-thumbtack fa-rotate-90 fa-lg" style="color:#777777"></i>
-                                        </button>
+                                        <!-- title -->
+                                        <div style="height: 35px">
+                                            <button class="removeCarryOnBtn carried" value=<?= $comment['id'] ?>>
+                                                <i class="fas fa-thumbtack fa-lg" style="color:#000000"></i>
+                                            </button>
+                                            <button class="addCarryOnBtn addCarry" value=<?= $comment['id'] ?>>
+                                                <i class="fas fa-thumbtack fa-rotate-90 fa-lg" style="color:#777777"></i>
+                                            </button>
+                                            <strong>[ <?= $comment['initials'] ?>
+                                                - <?= date('H:i', strtotime($comment['time'])) ?> <?= ($comment['carryOn'] == 1) ? date('/  d.m.Y ', strtotime($comment['time'])) : "" ?>
+                                                ] :</strong>
+                                        </div>
+
                                         <!-- Comment -->
-                                        <strong>[ <?= $comment['initials'] ?>
-                                            - <?= date('H:i', strtotime($comment['time'])) ?> <?= ($comment['carryOn'] == 1) ? date('/  d.m.Y ', strtotime($comment['time'])) : "" ?>
-                                            ] :</strong>
                                         <?= $comment['message'] ?>
                                         <hr>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <button onclick="shiftCommentModal('<?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>','<?= $action['text'] ?>',<?= $action['id'] ?>,<?= $shiftsheet['id'] ?>)"
-                                    class="btn btn-secondary btn-block m-1 d-print-none addShiftComment"
-                                    style="width:200px;"> Nouveau commentaire
-                            </button>
+                            <button class="btn blueBtn btn-block m-1 d-print-none addShiftCommentBtn">Nouveau commentaire</button>
                         </td>
                     <?php else: ?>
                         <td <?= ($shiftsheet['status'] == 'close'and count($action["checksDay"]) == 0 ) ? 'class="incompleteTask"' : '' ?> >
@@ -282,19 +296,19 @@ $title = "CSU-NVB - Remise de garde";
         <div class="d-flex flex-row">
             <?php if ($model["suggested"] == 0) : ?>
                 <?php if ($model["name"] != "") : ?>
-                    <button class="btn btn-primary m-1"
+                    <button class="btn blueBtn m-1"
                             onclick="reAddShiftModel(<?= $shiftsheet["model"] ?>, '<?= $model["name"] ?>',<?= $shiftsheet['id'] ?>)">
                         Ré-activer le modèle
                     </button>
                 <?php else : ?>
-                    <button class="btn btn-primary m-1"
+                    <button class="btn blueBtn m-1"
                             onclick="saveShiftModel(<?= $shiftsheet['id'] ?>,<?= $shiftsheet["model"] ?>)">
                         Enregistrer comme modèle
                     </button>
                 <?php endif; ?>
             <?php else : ?>
                 <?php if ($model["name"] != "Vide") : ?>
-                    <button class="btn btn-primary m-1"
+                    <button class="btn blueBtn m-1"
                             onclick="disableShiftModel(<?= $shiftsheet["model"] ?>, <?= $model["name"] ?>,<?= $shiftsheet['id'] ?>)">
                         Oublier le modèle
                     </button>

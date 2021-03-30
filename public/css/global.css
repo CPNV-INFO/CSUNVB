@@ -1,0 +1,175 @@
+/* ------------------------------------------------------------
+* CSS for elements that can be used anywhere on the website
+ -------------------------------------------------------------- */
+
+/* Fonds de couleur correspondant aux différents slugs */
+.slugOpen{
+    background-color: #d5e8d4;
+}
+.slugBlank{
+    background-color: #dae8fc;
+}
+.slugClose{
+    background-color: #eeeeee;
+}
+.slugReopen{
+    background-color: #fff2cc;
+}
+.slugArchive{
+    background-color: #f5f5f5;
+}
+
+.slugListTitle{
+    display: flex;
+    padding: 8px 15px;
+    align-items: center;
+    border-radius: 10px 10px 0 0;
+    justify-content: space-between;
+}
+
+textarea{
+    font-size: 13px;
+}
+
+@font-face {
+    font-family: comfortaa;
+    src: url('../assets/Comfortaa/Comfortaa-VariableFont_wght.ttf');
+}
+
+.bigfont {
+    font-size: 36px;
+}
+
+.btn:disabled{
+    cursor: default;
+}
+
+.blueBtn, .blueBtn:hover{
+    background-color: #28527a;
+    color: ghostwhite;
+}
+
+/* ------------------------------------------------------------
+* Styles CSS utilisés pour l'affichage des listes des rapports
+ -------------------------------------------------------------- */
+table.table-bordered{
+    border:2px solid #454d55;
+    margin-top:20px;
+}
+table.table-bordered > thead > tr > th{
+    border:1px solid  #454d55;
+}
+table.table-bordered > tbody > tr > td{
+    border:1px solid  #454d55;
+}
+
+.actions{
+    width: 300px;
+    text-align: center;
+}
+
+.template{
+    margin: 5px;
+}
+
+.buttonsZone{
+    height: 50px;
+}
+
+div .batchListZone{
+    border: black 1px solid;
+}
+
+.edit-form{
+    border: 1px black solid;
+    padding: 5px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+/* ------------------------------------------------------------
+* Styles CSS utilisés pour le formulaire de modification de rapport
+ -------------------------------------------------------------- */
+.sheetForm{
+    margin: 15px 0 15px 0;
+    padding:10px;
+    background-color: lightblue;
+    border-radius:5px;"
+}
+.sheetForm .smallInput {
+    width: 100px;
+    height: 25px;
+}
+.sheetForm .bigInput{
+    width: 300px;
+    height: 25px;
+}
+.sheetForm .addBtn{
+    padding: 0 4px 0 4px;
+    margin-left: 5px;
+    border-radius:3px;
+}
+.marginLeft{
+    margin-left: 20px;
+}
+.marginTop{
+    margin-top: 10px;
+}
+
+.newSheet{
+    justify-content: flex-end;
+    display: flex
+}
+
+.choseModel{
+    min-width: 100px;
+}
+
+
+.logIcon{
+    display: inline;
+    float: right;
+}
+
+.backIcon{
+    color: black;
+    margin-right: 10px;
+}
+.backIcon:hover{
+    color: #6c757d;
+}
+
+.warning{
+    color: red;
+}
+
+.incompleteTask{
+    background-color: salmon;
+}
+
+.navZone{
+    margin:auto;
+}
+
+
+.inactivForm .maskIfInactiv{
+    display : none;
+}
+
+.mainContent{
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.selectForDay.first, .selectForNight.first{
+    border-radius: 10px 10px 0 0;
+    padding-top: 10px;
+}
+
+.selectForDay.last, .selectForNight.last{
+    border-radius: 0 0 10px 10px;
+    padding-bottom: 10px;
+}

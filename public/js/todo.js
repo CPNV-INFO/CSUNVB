@@ -4,8 +4,20 @@
  * Date: Janvier 2021
  **/
 
+window.onload = function ()
+{
+    showAddTodoBtn();
+};
 
+$( "#selectTodoModel").on( "change", function() {
+    showAddTodoBtn();
+});
 
+function showAddTodoBtn(){
+    if($("#selectTodoModel").val() !== 'undefined' && $("#selectTodoModel").val() !== null){
+        $('#newTodoBtn').prop('disabled', false);
+    }
+}
 
 $( "#selectDay").on( "change", function() {
     showAddTask();
@@ -71,3 +83,4 @@ delTodoBtn.forEach((item) => {
         post("?action=delTodoTask", param )
     }, false);
 })
+

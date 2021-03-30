@@ -1,0 +1,25 @@
+/* ------------------------------------------------------------
+* CSS used for elements on admin pages
+ -------------------------------------------------------------- */
+.updateMail,.updateTel{
+    display: none;
+}
+
+tr .modify {
+    display: none;
+}
+tr:hover .modify {
+    display: inline;
+}
+.mail, .tel{
+    display: inline;
+}
+
+.saveIcon{
+    color: #218838;
+    margin-left: 5px;
+}
+.cancelIcon{
+    color: #a71d2a;
+    margin-left: 5px;
+}

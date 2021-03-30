@@ -7,7 +7,7 @@ setlocale(LC_ALL, 'fr_CH'); // pour les format de dates
  */
 function getVersion()
 {
-    return "3.1";
+    return "4.0";
 }
 
 /**
