@@ -45,4 +45,7 @@ J'ai rencontré une difficulté durant le projet. Cette difficulté était que q
 ## Suites possibles pour le projet (évolutions & améliorations)
 Dans les suites possibles pour le projet, je pense qu'il est important d'améliorer l'aspect sécurité du site qui a des failles importantes. J'en ai décrit une dans [une story icescrum](https://icescrum.cpnv.ch/p/CSUNVBTGR/#/backlog/sandbox/story/2027).
 
-Je pense aussi qu'une amélioration graphique de la page des lots de stupéfiants et de l'affichage des rapports de stupéfiants éditables où la faite que nous avons enlevé les bordures des inputs les rendent plus difficilement différenciables d'un rapport fermé.   
+Je pense aussi qu'une amélioration graphique de la page des lots de stupéfiants et de l'affichage des rapports de stupéfiants éditables où la faite que nous avons enlevé les bordures des inputs les rendent plus difficilement différenciables d'un rapport fermé.
+
+## Journal de travail
+![journal](images/journal_de_travail_TGR.png)
