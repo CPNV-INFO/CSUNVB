@@ -103,6 +103,11 @@ Les fonctions sont précédées d'un bloc de commentaire qui a la forme suivante
 **/
 ```
 
+## Stratégie de test
+Il n'y a pas de tests unitaires implémentés dans le projet. 
+
+Pour effecturer les tests nous pouvons demander a plusieurs personnes de tester toute l'application dans plusieurs environnements. Il faut la tester sur plusieurs systèmes comme Windows, linux, mac pour les différentes particularités propres aux différents systèmes.
+
 ## M'enfin ... ?
 
 _(Là on arrive aux questions de détails quand Bob ne comprend pas comment ou pourquoi certaines choses sont faites dans le code.
