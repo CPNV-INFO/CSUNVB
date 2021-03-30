@@ -88,6 +88,9 @@ function drugSheetSwitchState() {
     redirect("listDrugSheets", $_SESSION["base"]["id"]);
 }
 
+/** This function is used to update the data of a drugsheet
+ *
+ */
 function updateDrugSheet() {
     $novaChecks = $_POST['novaChecks'];
     $pharmaChecks = $_POST['pharmachecks'];
@@ -139,8 +142,8 @@ function updateDrugSheet() {
 
 }
 
-/**
- *Function used to activate amd deactivate editing mode
+/** This function is used to activate and deactivate editing mode
+ * b
  */
 function drugSheetEditionMode()
 {
@@ -156,6 +159,10 @@ function drugSheetEditionMode()
     }
 }
 
+
+/**
+ * This function is used to add Batches to a drugsheet
+ */
 function addBatchesToDrugSheet(){
     $batchToAdd = $_POST['batchToAddList'];
     $drugSheetID = $_POST['drugSheetID'];
@@ -172,6 +179,9 @@ function addBatchesToDrugSheet(){
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
 
+/**
+ * This function is used to remove a batch from a drugsheet
+ */
 function removeBatchFromDrugSheet(){
     $batchToRemove = $_POST['batch'];
     $drugSheetID = $_POST['drugSheetID'];
@@ -189,6 +199,9 @@ function removeBatchFromDrugSheet(){
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
 
+/**
+ * This function is used to add a nova to a drugsheet
+ */
 function addNovasToDrugSheet(){
     $drugSheetID = $_POST['drugSheetID'];
     $novaToAdd = $_POST['novaToAddList'];
@@ -207,6 +220,10 @@ function addNovasToDrugSheet(){
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 
 }
+
+/**
+ * This function is used to remove a nova from a drugsheet
+ */
 function removeNovaFromDrugSheet(){
     $drugSheetID = $_POST['drugSheetID'];
     $novaToRemove = $_POST['nova'];
@@ -225,6 +242,9 @@ function removeNovaFromDrugSheet(){
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
 
+/**
+ * This function is used to sign a day in a drugsheet
+ */
 function signDrugSheetDay(){
     $drugSheetID = $_POST['drugSheetID'];
     $day = $_POST['day'];
@@ -244,6 +264,9 @@ function signDrugSheetDay(){
     header('Location: ?action=showDrugSheet&id=' . $drugSheetID);
 }
 
+/**
+ * This function is used to show the view "List of batches"
+ */
 function showBatchList()
 {
     $baseID = $_SESSION['base']['id'];
@@ -256,4 +279,18 @@ function showBatchList()
     }
 
     require_once VIEW . 'drugs/listOfbatches.php';
+}
+
+/**
+ * This function is used to create a new batch
+ */
+function createBatch(){
+    $res = insertBatchInBase($_POST['baseID'],$_POST['drugID'],$_POST['batch']);
+
+    if ($res == false || $res == null) {
+        setFlashMessage("Une erreur est survenue. Impossible d'ajouter le lot.");
+    } else {
+        setFlashMessage("Le lot à correctement été ajouté.");
+    }
+    header('Location: ?action=showBatchList');
 }

@@ -40,6 +40,10 @@ function getSlugs() {
     return selectMany("SELECT slug FROM status");
 }
 
+/** This function is used to get the list of the drugs used in a drugsheet
+ * @param $sheetID - The ID of the drugsheet
+ * @return array|mixed|null
+ */
 function getDrugsInDrugSheet($sheetID) {
     return selectMany("SELECT distinct drugs.name,drugs.id FROM drugsheet_use_batch
                              JOIN batches ON drugsheet_use_batch.batch_id=batches.id
@@ -61,10 +65,21 @@ function getNovasForSheet($drugSheetID) {
     return selectMany("SELECT novas.id as id, number FROM novas INNER JOIN drugsheet_use_nova ON nova_id = novas.id WHERE drugsheet_id =:drugsheet", ['drugsheet' => $drugSheetID]);
 }
 
+/**
+ * This function is used to insert in the database that a drugsheet use a nova
+ * @param $drugSheetID - The ID of the drugsheet
+ * @param $novaToAdd - The number of the nova (as displayed to the user, not the ID)
+ * @return string|null
+ */
 function insertNovaInSheet($drugSheetID,$novaToAdd){
     return insert("INSERT INTO drugsheet_use_nova (drugsheet_id,nova_id) VALUES (:drugSheetID,(SELECT novas.id from novas WHERE novas.number =:novaNumber));",['drugSheetID' =>$drugSheetID,'novaNumber' => $novaToAdd]);
 }
 
+/** This function is used to remove the usage of a nova by a drugsheet
+ * @param $drugSheetID - The ID of the drugsheet
+ * @param $novaToRemove - The number of the nova (as displayed to the user, not the ID)
+ * @return bool|null
+ */
 function removeNovaFromSheet($drugSheetID,$novaToRemove){
     return execute("DELETE FROM drugsheet_use_nova WHERE drugsheet_use_nova.drugsheet_id = :drugSheetID AND drugsheet_use_nova.nova_id = (SELECT novas.id from novas WHERE novas.number =:novaNumber)",['drugSheetID' =>$drugSheetID,'novaNumber' => $novaToRemove]);
 }
@@ -77,14 +92,38 @@ function getBatchesForSheet($drugSheetID) {
     return selectMany("SELECT batches.id AS id, number, drug_id FROM batches INNER JOIN drugsheet_use_batch ON batches.id = batch_id WHERE drugsheet_id=:drugsheet", ['drugsheet' => $drugSheetID ]);
 }
 
+/** This function is used to get the list the list of the batches in a base
+ * @param $baseID - The id of the base
+ * @return array|mixed|null
+ */
 function getBatchesForBase($baseID) {
-    return selectMany("SELECT batches.id AS id, number, drug_id FROM batches WHERE base_id=:baseID", ['baseID' => $baseID ]);
+    return selectMany("SELECT batches.id AS id, number, drug_id, state FROM batches WHERE base_id=:baseID", ['baseID' => $baseID ]);
 }
 
+/** This function is used to Insert a batch in a sheet
+ * @param $drugSheetID - The ID of the drugsheet
+ * @param $batchToAdd - The number of the batch (as displayed to the user, not the ID)
+ * @return string|null
+ */
 function insertBatchInSheet($drugSheetID,$batchToAdd){
 return insert("INSERT INTO drugsheet_use_batch (drugsheet_id,batch_id) VALUES (:drugSheetID,(SELECT batches.id from batches WHERE batches.number = :batchToAdd));",['drugSheetID' =>$drugSheetID,'batchToAdd' => $batchToAdd]);
 }
 
+/** This function is used to Insert a batch in a base
+ * @param $baseID - The ID of the base
+ * @param $drugID - The ID of the drug
+ * @param $batch - The number of the new batch
+ * @return string|null
+ */
+function insertBatchInBase($baseID,$drugID,$batch){
+return insert("INSERT INTO batches (base_id,drug_id,number) VALUES (:baseID,:drugID,:batch);",['baseID'=>$baseID,'drugID'=>$drugID,'batch'=>$batch]);
+}
+
+/** This function is used to remove a batch from a sheet
+ * @param $drugSheetID - The ID of the drugsheet
+ * @param $batchToRemove - The number of the batch (as displayed to the user, not the ID)
+ * @return bool|null
+ */
 function removeBatchFromSheet($drugSheetID,$batchToRemove){
     return execute("DELETE FROM drugsheet_use_batch WHERE drugsheet_use_batch.drugsheet_id = :drugSheetID AND drugsheet_use_batch.batch_id = (SELECT batches.id from batches WHERE batches.number =:batchToRemove)",['drugSheetID' =>$drugSheetID,'batchToRemove' => $batchToRemove]);
 }
@@ -98,6 +137,13 @@ function getPharmaCheckByDateAndBatch($date, $batch, $drugSheetID) {
     return selectOne("SELECT start,end FROM pharmachecks WHERE date=:batchdate AND batch_id=:batch AND drugsheet_id=:drugsheet", ['batchdate' => $date, 'batch' => $batch, 'drugsheet' => $drugSheetID]);
 }
 
+/** This function is used to insert or update a Pharmacheck
+ * @param $date - The date of the pharmacheck (The date of the day in the drugsheet)
+ * @param $batch - The values of the pharmacheck in an array.
+ * @param $batchID - The batch ID.
+ * @param $drugSheetID - The drugsheet ID
+ * @return string|null
+ */
 function insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID){
     return insert('INSERT INTO pharmachecks (date, start, end, batch_id, user_id, drugsheet_id) VALUES(:date,:batch_start,:batch_end,:batch_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :batch_start, END =:batch_end, user_id = :user_id;', ['date'=>$date,"batch_start"=>$batch['start'],"batch_end"=>$batch['end'],"batch_id"=>$batchID,"user_id"=>$_SESSION['user']['id'],'drugsheet_id'=>$drugSheetID]);
 }
@@ -109,6 +155,14 @@ function getNovaCheckByDateAndDrug($date, $drug, $nova, $drugSheetID) {
     return selectOne("SELECT start,end FROM novachecks WHERE date=:batchdate AND drug_id=:drug AND nova_id=:nova AND drugsheet_id=:drugsheet", ['batchdate' => $date, 'drug' => $drug, 'nova' => $nova, 'drugsheet' => $drugSheetID]);
 }
 
+/** This function is used to insert or update a novacheck
+ * @param $date - The date of the novacheck (The date of the day in the drugsheet)
+ * @param $drug - The value of the novacheck
+ * @param $drugID - The drug ID
+ * @param $novaID - The Nova ID
+ * @param $drugSheetID - The drugsheet ID
+ * @return string|null
+ */
 function inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID){
     return insert('INSERT INTO novachecks (date, start, end, drug_id, nova_id, user_id,drugsheet_id) VALUES(:date, :start, :end,:drug_id,:nova_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :start, END =:end, user_id = :user_id;', ['date' => $date,'start' => $drug["start"],'end'=>$drug["end"],'drug_id'=>$drugID,'nova_id'=>$novaID,'user_id'=>$_SESSION['user']['id'],'drugsheet_id'=>$drugSheetID]);
 }
@@ -121,6 +175,13 @@ function getRestockByDateAndDrug($date, $batch, $nova) {
     return $res ? $res['quantity'] : ''; // chaîne vide si pas de restock
 }
 
+/** This function is used to insert or update a restock
+ * @param $date - The date of the restock (The date of the day in the drugsheet)
+ * @param $batchID - The batch ID
+ * @param $novaID - The nova ID
+ * @param $restockamount - The amount of the restock
+ * @return string|null
+ */
 function inertOrUpdateRestock($date,$batchID,$novaID,$restockamount){
     return insert('INSERT INTO restocks (DATE, quantity, batch_id, nova_id, user_id) VALUES (:date,:restockamount,:batchID,:novaID,:userID) ON DUPLICATE KEY UPDATE quantity= :restockamount,user_id = :userID;',['date'=>$date, 'restockamount'=>$restockamount,'batchID'=>$batchID,'novaID'=>$novaID,'userID'=>$_SESSION['user']['id']]);
 }
@@ -177,18 +238,37 @@ function getStatusID($slug) {
 	return(selectOne("SELECT id FROM status WHERE slug =:slug", ['slug' => $slug])['id']);
 }
 
+/** This function is used to get the list of drugs that have at least 1 usable batch (who have not the state "used") for a specific base
+ * @param $baseID - The ID of the base
+ * @return array|mixed|null
+ */
 function getDrugsWithUsableBatches($baseID){
     return(selectMany("SELECT drugs.name AS name FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used' GROUP BY name;",['base_id' => $baseID]));
 }
 
+/** This function is used to get the list of the batches who are usable (That have not the state "used") for a specific base
+ * @param $baseID - The ID of the base
+ * @return array|mixed|null
+ */
 function getUsableBatches($baseID){
     return(selectMany("SELECT drugs.name as name,batches.drug_id as drug_id, batches.number as number, batches.state AS state FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
 }
 
+/** This function is used to get the list of the signatures for a drugsheet
+ * @param $sheetID - The ID of the drugsheet
+ * @return array|mixed|null
+ */
 function getDrugSignaturesForDrugSheet($sheetID){
     return selectMany("select date, day ,drugsheet_id,users.firstname,users.lastname,bases.name as basename from drugsignatures inner join users on drugsignatures.user_id = users.id inner join bases on drugsignatures.base = bases.id where drugsheet_id = :sheet_id;", ['sheet_id' => $sheetID]);
 }
 
+/** This function is used to insert the signature of a day of a drugsheet
+ * @param $drugSheetID - The ID of the drugsheet
+ * @param $day - The day of the drugsheet
+ * @param $userID - The ID of the user who sign the day
+ * @param $baseID - The ID of the base from where the user sign the day
+ * @return string|null
+ */
 function insertDrugSignatures($drugSheetID,$day,$userID,$baseID){
     return insert("INSERT INTO drugsignatures (day, drugsheet_id, user_id, base) values (:day,:drugSheetID,:userID,:baseID);",['drugSheetID' => $drugSheetID, 'day'=>$day,'userID'=>$userID,'baseID'=>$baseID]);
 }

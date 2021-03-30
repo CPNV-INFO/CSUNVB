@@ -9,6 +9,10 @@ Il sera utile aux ambulanciers afin de faciliter leurs tâches administratives q
 
 Ce site fonctionnera en interne c'est à dire qu'uniquement les membres agréés auront la possibilité d'utiliser le site internet CSUNB. Par membre agréés,s'entend les secouristes.
 
+Il y aura deux grands types d'utilisations du site. D'une part il y aura les utilisateurs simples qui ne peuvent que remplir les rapports et les signer et d'autres part il y aura les administrateurs qui sont les responsables qui créent, préparent et gèrent les rapports et la plateforme en général.
+
+Un utilisateur peut se connecter à toutes les bases mais certaines actions ne sont possibles que si l'utilisateur est connecté à la base auquel il veut modifier des données.  
+
 ### Dans quel contexte (technique) fonctionne ce site ?
 
 Le site sera hébérgé chez swisscenter. Une connexion internet sera donc nécessaire pour accèder au site.
@@ -35,6 +39,9 @@ Ce site internet est lié à une base de données qui contient toutes les donné
 
 - Les stups
 -- Permet la gestion des stocks de médicaments dans les ambulances et à la base
+
+   MLD:
+![flashMessage image](images/MLD_Drugs.png)
 
 - L’administration
 -- Permet l’administration du site (utilisateurs, stocks, …)
@@ -114,6 +121,11 @@ Les fonctions sont précédées d'un bloc de commentaire qui a la forme suivante
 ```
 
 Les nom de fonction appelée depuis le javascript en ajax se termine par _ajax() pour les différencier
+
+## Stratégie de test
+Il n'y a pas de tests unitaires implémentés dans le projet. 
+
+Pour effecturer les tests nous pouvons demander a plusieurs personnes de tester toute l'application dans plusieurs environnements. Il faut la tester sur plusieurs systèmes comme Windows, linux, mac pour les différentes particularités propres aux différents systèmes.
 
 ## M'enfin ... ?
 
@@ -204,3 +216,12 @@ const param = { param1: 1, param2: 2 };
 post("?action=exemple", param )
 ```
 
+### Comment fonctionne le formulaire de modification des données d'un rapport de stupéfiant ?
+
+Les données sont envoyées par méthode POST comme nous le ferions en général avec des formulaires HTML. 
+
+La subtilité de ce formulaire est que tous les champs qui ont des données à envoyer ont un attribut "name" qui est un index de tableau. Cela permet d'avoir du côté du Controller PHP une variable qui est un array que l'on peut parser efficacement avec un foreach.
+
+### Comment fonctionnent les boutons qui sont déjà à l'intérieur d'un autre formulaire dans la partie des rapports de stupéfiants ?
+La problématique est qu'il ne faut pas faire de formulaire dans un autre formulaire. Donc la solution suivante a été mise en place :
+Les boutons appellent une fonction javascript en lui donnant les données en paramètres et la fonction créent un formulaire caché qui est ajouté à la fin de la page et envoyés.  
