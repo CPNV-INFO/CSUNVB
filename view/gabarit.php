@@ -14,7 +14,7 @@ $page = getPage($_GET["action"]);
     <link rel="stylesheet" href="assets/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
 
     <script src="assets/jquery/dist/jquery.js"></script>
-    <script src="assets/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="assets/bootstrap/dist/js/bootstrap.bundle.js"></script>
 
     <link href="css/main.css" rel="stylesheet">
     <link href="css/global.css" rel="stylesheet">
