@@ -103,8 +103,8 @@ UNLOCK TABLES;
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES
-(1,'Admin','istrateur','ANN','$2y$10$QFeM.bl6VdZdGXJaPvSodeCKPRvFJZgmYeU/ZVnYt0p/LbZDNuvhy',1,1,'',''); -- Password initial = 'Pa$$w0rd'
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `initials`, `password`, `admin`, `firstconnect`, `email`, `mobileNumber`) VALUES
+(1,'Admin','istrateur','ANN','$2y$10$QFeM.bl6VdZdGXJaPvSodeCKPRvFJZgmYeU/ZVnYt0p/LbZDNuvhy',1,1,NULL,NULL); -- Password initial = 'Pa$$w0rd'
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `initials`, `password`, `admin`, `firstconnect`, `email`, `mobileNumber`) VALUES
 (100, 'Michelle', 'Dutoit', 'MDT', '$2y$10$i0cgyQlhtTl4Gp1eHX1GK.37umWwI9mqWsXHqTQLjFWIyt5e7J6nS', 0, 0, NULL, NULL),
 (101, 'Antonio', 'Casaburi', 'ACI', '$2y$10$NtDXutN9baamLrMugoAdAODxW5ot9.ImKn9NomZNMZocELkymDFvC', 1, 0, NULL, NULL),
