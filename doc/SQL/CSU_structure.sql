@@ -13,8 +13,8 @@
 
 
 -- Listage de la structure de la base pour csunvb_csu
--- DROP DATABASE IF EXISTS `csunvb_csu`;
--- CREATE DATABASE IF NOT EXISTS `csunvb_csu` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+DROP DATABASE IF EXISTS `csunvb_csu`;
+CREATE DATABASE IF NOT EXISTS `csunvb_csu` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `csunvb_csu`;
 
 -- Listage de la structure de la table csunvb_csu. bases

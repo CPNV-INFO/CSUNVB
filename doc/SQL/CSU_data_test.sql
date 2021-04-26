@@ -15,6 +15,9 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+set @todoweek = 2116;
+
 --
 -- Dumping data for table `batches`
 --
@@ -691,11 +694,11 @@ UNLOCK TABLES;
 LOCK TABLES `todosheets` WRITE;
 /*!40000 ALTER TABLE `todosheets` DISABLE KEYS */;
 INSERT INTO `todosheets` VALUES
-(22,2105,3,1,NULL,NULL),
-(23,2105,3,2,NULL,NULL),
-(24,2105,3,3,NULL,NULL),
-(25,2105,3,4,NULL,NULL),
-(26,2105,3,5,NULL,NULL);
+(22,@todoweek,3,1,NULL,NULL),
+(23,@todoweek,3,2,NULL,NULL),
+(24,@todoweek,3,3,NULL,NULL),
+(25,@todoweek,3,4,NULL,NULL),
+(26,@todoweek,3,5,NULL,NULL);
 /*!40000 ALTER TABLE `todosheets` ENABLE KEYS */;
 UNLOCK TABLES;
 
