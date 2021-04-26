@@ -174,6 +174,28 @@ INSERT INTO `drugsheets` VALUES
 /*!40000 ALTER TABLE `drugsheets` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+drop procedure if exists load_todo_test_data;
+
+delimiter #
+create procedure load_todo_test_data()
+begin
+
+declare v_max int unsigned default 110;
+declare v_counter int unsigned default 100;
+
+  start transaction;
+  while v_counter < v_max do
+	INSERT INTO `todosheets` VALUES (v_counter,@todoweek,3,1,NULL,NULL);
+    set v_counter=v_counter+1;
+  end while;
+  commit;
+end #
+
+delimiter ;
+
+call load_todo_test_data();
+
 --
 -- Dumping data for table `todos`
 --
