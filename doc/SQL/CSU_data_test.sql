@@ -181,15 +181,22 @@ delimiter #
 create procedure load_todo_test_data()
 begin
 
-declare v_max int unsigned default 110;
-declare v_counter int unsigned default 100;
+	declare maxweeks int unsigned default 5;
+	declare weekoffset int;
 
-  start transaction;
-  while v_counter < v_max do
-	INSERT INTO `todosheets` VALUES (v_counter,@todoweek,3,1,NULL,NULL);
-    set v_counter=v_counter+1;
-  end while;
-  commit;
+	declare baseid int default 1;
+    
+    while baseid <= 5 do
+		set weekoffset = 0;
+		start transaction;
+		while weekoffset < maxweeks do
+			INSERT INTO `todosheets` VALUES (maxweeks*(baseid-1)+weekoffset+1,@todoweek+weekoffset,3,baseid,NULL,NULL);
+			set weekoffset=weekoffset+1;
+		end while;
+		commit;
+        set baseid = baseid+1;
+	end while;
+    
 end #
 
 delimiter ;
@@ -707,23 +714,6 @@ INSERT INTO `todos` VALUES
 (488,33,26,NULL,NULL,NULL,7),
 (489,26,26,NULL,NULL,NULL,7);
 /*!40000 ALTER TABLE `todos` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `todosheets`
---
-
-LOCK TABLES `todosheets` WRITE;
-/*!40000 ALTER TABLE `todosheets` DISABLE KEYS */;
-INSERT INTO `todosheets` VALUES
-(22,@todoweek,3,1,NULL,NULL),
-(23,@todoweek,3,2,NULL,NULL),
-(24,@todoweek,3,3,NULL,NULL),
-(25,@todoweek,3,4,NULL,NULL),
-(26,@todoweek,3,5,NULL,NULL);
-/*!40000 ALTER TABLE `todosheets` ENABLE KEYS */;
-UNLOCK TABLES;
-
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
