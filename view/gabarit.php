@@ -69,7 +69,7 @@ $page = getPage($_GET["action"]);
                         <li class="nav-item <?= ($page == "todo") ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=listtodo">Tâches</a>
                         </li>
-                        <li class="nav-item <?= ($page == "stup") ? 'active' : '' ?>">
+                        <li class="nav-item <?= ($page == "drug") ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=listDrugSheets">Stupéfiants</a>
                         </li>
                         <?php if ($_SESSION["user"]["admin"] == 1): ?>
