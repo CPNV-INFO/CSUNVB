@@ -16,7 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-set @todoweek = 2116;
 
 --
 -- Dumping data for table `batches`
@@ -174,21 +173,31 @@ INSERT INTO `drugsheets` VALUES
 /*!40000 ALTER TABLE `drugsheets` ENABLE KEYS */;
 UNLOCK TABLES;
 
+set @todoweek = 2116; -- Current week after seeding
 
+-- Generate 5 todosheets per base: 3 closed, 1 current, 1 prep
 delimiter #
 create procedure load_todo_sheets()
 begin
 
 	declare maxweeks int unsigned default 5;
 	declare weekoffset int;
+    declare status int default 3; -- closed
 
 	declare baseid int default 1;
     
-    while baseid <= 5 do
+    while baseid <= 5 do -- TODO: use a cursor loop on table instead of hardcoded values
 		set weekoffset = 0;
+		set status = 3;
 		start transaction;
 		while weekoffset < maxweeks do
-			INSERT INTO `todosheets` VALUES (maxweeks*(baseid-1)+weekoffset+1,@todoweek+weekoffset,3,baseid,NULL,NULL);
+			IF weekoffset = 3 THEN 
+				set status = 2;
+			end if;
+			IF weekoffset > 3 THEN 
+				set status = 1;
+			end if;
+			INSERT INTO `todosheets` VALUES (maxweeks*(baseid-1)+weekoffset+1,@todoweek+weekoffset-3,status,baseid,NULL,NULL);
 			set weekoffset=weekoffset+1;
 		end while;
 		commit;
@@ -199,6 +208,7 @@ end #
 
 delimiter ;
 
+-- Fill those sheets
 call load_todo_sheets();
 drop procedure load_todo_sheets;
 
@@ -209,7 +219,7 @@ create procedure load_todo_things()
 begin
 
 	DECLARE id INTEGER DEFAULT 1;
-	while id <= 25 do
+	while id <= 25 do -- TODO: use a cursor loop on table instead of hardcoded values
 		INSERT INTO `todos` (todothing_id, todosheet_id, day_of_week) VALUES
 			(24,id,1),
 			(29,id,1),
@@ -318,6 +328,10 @@ delimiter ;
 
 call load_todo_things();
 drop procedure load_todo_things;
+
+-- Set a user at random on todos in closed reports
+update todos inner join todosheets on todosheet_id = todosheets.id set user_id = (SELECT id from users order by rand() limit 1) where todosheets.status_id = 3;
+
 
 /*!40000 ALTER TABLE `todos` ENABLE KEYS */;
 UNLOCK TABLES;
