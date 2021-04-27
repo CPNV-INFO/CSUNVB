@@ -208,26 +208,9 @@ delimiter #
 create procedure load_todo_things()
 begin
 
-	DECLARE finished INTEGER DEFAULT 0;
-	DECLARE id int DEFAULT 0;
-
-	-- declare cursor 
-	DEClARE cursheet
-		CURSOR FOR 
-			SELECT id FROM todosheets;
-
-	-- declare NOT FOUND handler
-	DECLARE CONTINUE HANDLER 
-        FOR NOT FOUND SET finished = 1;
-
-	OPEN cursheet;
-
-	getsheet: LOOP
-		FETCH cursheet INTO id;
-		IF finished = 1 THEN 
-			LEAVE getsheet;
-		END IF;
-        INSERT INTO `todos` (todothing_id, todosheet_id, day_of_week) VALUES
+	DECLARE id INTEGER DEFAULT 1;
+	while id <= 25 do
+		INSERT INTO `todos` (todothing_id, todosheet_id, day_of_week) VALUES
 			(24,id,1),
 			(29,id,1),
 			(32,id,1),
@@ -326,8 +309,8 @@ begin
 			(31,id,1),
 			(35,id,1),
 			(38,id,1);
-	END LOOP getsheet;
-	CLOSE cursheet;
+		set id=id+1;
+	end while;
 
 end #
 
