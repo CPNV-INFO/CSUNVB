@@ -60,9 +60,9 @@ function displayDate($date, $format)
 {
     switch ($format) {
         case 1:
-            return strftime('%A %e %b %Y', strtotime($date)); // Complet avec le jour
+            return utf8_encode(strftime('%A %e %b %Y', strtotime($date))); // Complet avec le jour
         default:
-            return strftime('%e %b %Y', strtotime($date)); // Complet sans le jour
+            return  utf8_encode(strftime('%e %b %Y', strtotime($date))); // Complet sans le jour
     }
 }
 
