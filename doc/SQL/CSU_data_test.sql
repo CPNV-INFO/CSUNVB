@@ -332,6 +332,30 @@ drop procedure load_todo_things;
 -- Set a user at random on todos in closed reports
 update todos inner join todosheets on todosheet_id = todosheets.id set user_id = (SELECT id from users order by rand() limit 1) where todosheets.status_id = 3;
 
+-- Set a few users at random on todos in current reports
+delimiter #
+create procedure set_users()
+begin
+
+	declare max int unsigned default 50;
+	declare i int default 0;
+    declare targetid int;
+    
+    update todos set user_id = null;
+    while i <= MAX do
+		set targetid = (select todos.id from todos inner join todosheets on todosheet_id = todosheets.id where todosheets.status_id = 2 order by rand() limit 1);
+		update todos set user_id = (SELECT id from users order by rand() limit 1) where id = targetid;
+        set i = i+1;
+	end while;
+    
+end #
+
+delimiter ;
+call set_users();
+drop procedure set_users;
+
+
+
 
 /*!40000 ALTER TABLE `todos` ENABLE KEYS */;
 UNLOCK TABLES;
