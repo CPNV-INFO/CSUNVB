@@ -231,7 +231,7 @@ function uncheckActionForTodo_AJAX($sheetID){
 
 function newTodoTask(){
     if(strlen($_POST["name"]) < 3){
-        $message = "Echec : le nom pour cette nouvelle tâche est trop !";
+        $message = "Echec : le nom pour cette nouvelle tâche est trop court!";
     }else{
         $days = [1 => "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
         if($_POST["day"]==1){
