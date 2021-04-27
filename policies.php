@@ -13,7 +13,6 @@ return [
     //action only for admin
     "1" => [
         //shift
-        "updateShift",
         "addActionForShift",
         "creatActionForShift",
         "removeActionForShift",

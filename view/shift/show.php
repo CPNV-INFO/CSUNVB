@@ -51,7 +51,7 @@ $title = "CSU-NVB - Remise de garde";
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else : ?>
-                                    <?= ($shiftsheet['novaDay'] == NULL) ? '-' : $shiftsheet['novaDay'] ?>
+                                    <?= $shiftsheet['novaDay'] ?>
                                 <?php endif; ?>
                                 </div>
                             </td>
@@ -65,7 +65,7 @@ $title = "CSU-NVB - Remise de garde";
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else : ?>
-                                    <?= ($shiftsheet['novaNight'] == NULL) ? '-' : $shiftsheet['novaNight'] ?>
+                                    <?= $shiftsheet['novaNight'] ?>
                                 <?php endif; ?>
                                 </div>
                             </td>
@@ -82,7 +82,7 @@ $title = "CSU-NVB - Remise de garde";
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else : ?>
-                                    <?= ($shiftsheet['bossDay'] == NULL) ? '-' : $shiftsheet['bossDay'] ?>
+                                    <?= $shiftsheet['bossDay'] ?>
                                 <?php endif; ?>
                                 </div>
                             </td>
@@ -96,7 +96,7 @@ $title = "CSU-NVB - Remise de garde";
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else : ?>
-                                    <?= ($shiftsheet['bossNight'] == NULL) ? '-' : $shiftsheet['bossNight'] ?>
+                                    <?= $shiftsheet['bossNight'] ?>
                                 <?php endif; ?>
                                 </div>
                             </td>
@@ -113,7 +113,7 @@ $title = "CSU-NVB - Remise de garde";
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else : ?>
-                                    <?= ($shiftsheet['teammateDay'] == NULL) ? '-' : $shiftsheet['teammateDay'] ?>
+                                    <?= $shiftsheet['teammateDay'] ?>
                                 <?php endif; ?>
                                 </div>
                             </td>
@@ -127,7 +127,7 @@ $title = "CSU-NVB - Remise de garde";
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else : ?>
-                                    <?= ($shiftsheet['teammateNight'] == NULL) ? '-' : $shiftsheet['teammateNight'] ?>
+                                    <?= $shiftsheet['teammateNight'] ?>
                                 <?php endif; ?>
                                 </div>
                             </td>
