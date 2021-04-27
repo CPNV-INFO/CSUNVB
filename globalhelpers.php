@@ -89,10 +89,24 @@ function showSheetState($id, $zone)
 /**
  * Tells if the current user (logged in) can perform a certain action according to the policy
  * @param $action : the action to check if it is doable
- * @return bool
+ * @return bool if the action is doable for the user or not
  */
 function ican($action)
 {
     $policies = require('policies.php');
-    return isset($policies[$_SESSION['user']['admin']][$action]);
+    //by default everybody can do it
+    $levelNeeded = 0;
+
+    //check if the actio need more permission
+    foreach ($policies as $i=>$policie) {
+        if(in_array($action, $policies[$i])){
+            $levelNeeded = $i;
+        }
+    }
+
+    if($levelNeeded > $_SESSION['user']['admin']){
+        return false;
+    }else{
+        return true;
+    }
 }

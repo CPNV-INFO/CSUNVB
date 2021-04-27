@@ -96,10 +96,15 @@ if (!isset($_SESSION['user'])) {
     }
 
     if (function_exists($action)) { // action parameter matches a known function name
-        if (isset($_GET['id'])) {
-            $action($_GET['id']); // call it with a value
-        } else {
-            $action();             // or not
+        if(ican($action)){
+            if (isset($_GET['id'])) {
+                $action($_GET['id']); // call it with a value
+            } else {
+                $action();             // or not
+            }
+        }else{
+            setFlashMessage("Action non-autorisée");
+            home();
         }
     } else {
         home();

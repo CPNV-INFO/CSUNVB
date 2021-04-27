@@ -3,30 +3,45 @@
  * File : policies.php
  * Author : X. Carrel
  * Created : 18.12.20
- * Modified last :
+ * Modified last : 27.04.21 MGT
  **/
 
-// the array is a whitelist of actions.
+// the array is a list of actions that need permissions to be execute
 // the user logged in has an 'admin' field, numeric:
-// 0: regular user
-// 1: admin
-// A user is allowed to perform 'action' if and only if $policies[admin][action] is set
 
 return [
-    "0" => [
-        "editsheet" => true,
-    ],
+    //action only for admin
     "1" => [
-        "editsheet" => true,
-        "closesheet" => true,
-        "opensheet" => true,
-        "archivesheet" => true,
-        "deletesheet" => true,
-        "createsheet" => true,
-        "createTemplate" => true,
-        "deleteTemplate" => true,
-        "modifySheet" => true,
-        "consultLog" => true,
-        "openBatchList" => true
+        //shift
+        "updateShift",
+        "addActionForShift",
+        "creatActionForShift",
+        "removeActionForShift",
+        //todos
+
+        //drugs
+
+        //admin
+        "adminHome",
+        "adminCrew",
+        "newUser",
+        "saveNewUser",
+        "changeUserAdmin",
+        "resetUserPassword",
+        "adminDrugs",
+        "newDrug",
+        "updateDrug",
+        "adminBases",
+        "newBase",
+        "editbase",
+        "updateBase",
+        "adminNovas",
+        "newNova",
+        "updateNova",
+        "changeEmail",
+        "changeTel"
+
+        //main
+
     ]
 ];
