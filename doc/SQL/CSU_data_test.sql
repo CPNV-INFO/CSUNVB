@@ -413,12 +413,8 @@ drop procedure creat_shiftModels;
 
 DELIMITER #
 
-CREATE PROCEDURE creat_shifts()
+CREATE PROCEDURE creat_shifts(IN nbClose INT, nbBlankFull INT, IN nbBlank INT)
 BEGIN
-    declare nbClose int default 7;
-    declare nbBlankFull int default 5;
-    declare nbBlank int default 7;
-    
     declare id int default 1;
     declare base int default 1;
 	declare nbMaxBase int default (SELECT count(id) FROM bases);
@@ -442,7 +438,7 @@ BEGIN
             set nbShift = nbShift + 1;
 		end while;
         while nbShift <= nbBlank do
-			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,null,null,null,null,null,1,2);
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,null,null,null,null,null,null,null);
 			set id = id + 1;
             set nbShift = nbShift + 1;
 		end while;
@@ -450,8 +446,81 @@ BEGIN
         set base = base + 1;
 	end while;
 END #
-
 DELIMITER ;
 
-call creat_shifts();
-drop procedure creat_shifts;
+DELIMITER #
+CREATE PROCEDURE random_user_id(OUT randomUser_id INT)
+BEGIN
+    SELECT id INTO randomUser_id FROM users ORDER BY RAND( ) LIMIT 1; 
+END #
+
+DELIMITER #
+CREATE PROCEDURE fill_A_Shift(IN shift_id int, IN percent float)
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+    DECLARE action_id INT;
+	DECLARE actionList CURSOR FOR 
+		SELECT shiftaction_id FROM shiftmodel_has_shiftaction
+		INNER JOIN shiftsheets
+		ON shiftsheets.shiftmodel_id = shiftmodel_has_shiftaction.shiftmodel_id
+		WHERE shiftsheets.id = shift_id;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+	OPEN actionList;
+    
+	fill: LOOP
+	   FETCH actionList INTO action_id;
+	   IF done THEN
+		  LEAVE fill;
+	   END IF;
+       IF (rand() < percent) THEN
+		CALL random_user_id(@user_id);
+			INSERT INTO shiftchecks (day,time,shiftsheet_id,user_id,shiftaction_id) VALUES (0,NOW(),shift_id,@user_id,action_id);
+		END IF;
+        IF (rand() < percent) THEN
+			CALL random_user_id(@user_id);
+			INSERT INTO shiftchecks (day,time,shiftsheet_id,user_id,shiftaction_id) VALUES (1,NOW(),shift_id,@user_id,action_id);
+		END IF;
+        IF (rand() < 0.1) THEN
+			CALL random_user_id(@user_id);
+			INSERT INTO shiftcomments (message,time,shiftsheet_id,user_id,shiftaction_id) VALUES ("Bonjour",NOW(),shift_id,@user_id,action_id);
+		END IF;
+	END LOOP fill;
+	CLOSE actionList;
+END #
+
+DELIMITER #
+CREATE PROCEDURE fill_shifts(IN pOpen float, IN pClose float)
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE shift_id int;
+    DECLARE closeShift CURSOR FOR
+		SELECT shiftsheets.id FROM shiftsheets INNER JOIN status ON status.id = shiftsheets.status_id WHERE slug = "close";
+	DECLARE openShift CURSOR FOR
+		SELECT shiftsheets.id FROM shiftsheets INNER JOIN status ON status.id = shiftsheets.status_id WHERE slug = "open";
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+	OPEN openShift;
+	fill: LOOP
+	   FETCH openShift INTO shift_id;
+	   IF done THEN
+		  LEAVE fill;
+	   END IF;
+       CALL fill_A_Shift(shift_id,pOpen);
+	END LOOP fill;
+	CLOSE openShift;
+    
+    set done = false;
+    
+    OPEN closeShift;
+	fillClose: LOOP
+	   FETCH closeShift INTO shift_id;
+	   IF done THEN
+		  LEAVE fillClose;
+	   END IF;
+       CALL fill_A_Shift(shift_id,pClose);
+	END LOOP fillClose;
+	CLOSE closeShift;
+END #
+
+CALL creat_shifts(7,5,7);
+CALL fill_shifts(0.50,0.99);
