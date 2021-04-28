@@ -371,10 +371,87 @@ UNLOCK TABLES;
 
 -- Dump completed on 2020-12-01  7:28:46
 
--- table shiftsheets
-INSERT INTO `shiftsheets` VALUES
-(1,'2021-02-01',2,1,3,103,104,115,116,null,1,2),
-(2,'2021-02-01',2,2,3,103,104,115,116,null,3,4),
-(3,'2021-02-01',2,3,3,103,104,115,116,null,5,8),
-(4,'2021-02-01',2,4,3,103,104,115,116,null,6,8),
-(5,'2021-02-01',2,5,3,103,104,115,116,null,7,10);
+
+DELIMITER #
+CREATE PROCEDURE creat_shiftModels()
+BEGIN
+declare id int default 1;
+declare nbMaxAction int default (SELECT count(id) FROM shiftactions);
+declare nbAction int default 1;
+declare model int default 1;
+declare nbMaxModel int default 5;
+
+INSERT INTO shiftmodels VALUES (model,'Vide',1);
+set model = model + 1;
+
+INSERT INTO shiftmodels VALUES (model,'Classique',1);
+while nbAction <= nbMaxAction do
+	INSERT INTO shiftmodel_has_shiftaction VALUES (id,nbAction,model);
+    set nbAction = nbAction + 1;
+    set id = id + 1;
+end while;
+set model = model + 1;
+
+while model <= nbMaxmodel do
+	INSERT INTO shiftmodels VALUES (model,CONCAT('Modèle de Test ', (model - 2)),1);
+    set nbAction = 1;
+    while nbAction <= nbMaxAction do
+		if (RAND() > 0.2) THEN
+			INSERT INTO shiftmodel_has_shiftaction VALUES (id,nbAction,model);
+            set id = id + 1;
+		end if;
+		set nbAction = nbAction + 1;
+	end while;
+    set model = model + 1;
+end while;
+
+END #
+DELIMITER ;
+
+call creat_shiftModels();
+drop procedure creat_shiftModels;
+
+DELIMITER #
+
+CREATE PROCEDURE creat_shifts()
+BEGIN
+    declare nbClose int default 7;
+    declare nbBlankFull int default 5;
+    declare nbBlank int default 7;
+    
+    declare id int default 1;
+    declare base int default 1;
+	declare nbMaxBase int default (SELECT count(id) FROM bases);
+    declare nbShift int default 1;
+    declare nbMaxUser int default (SELECT count(id) FROM users);
+    declare nbMaxNova int default (SELECT count(id) FROM novas);
+    while base <= nbMaxBase do
+		while nbShift <= nbClose do
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL -nbShift DAY)),2,base,3,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)));
+			set id = id + 1;
+            set nbShift = nbShift + 1;
+		end while;
+        set nbShift = 1;
+        
+        INSERT INTO `shiftsheets` VALUES (id,CURDATE(),2,base,2,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),null,(SELECT FLOOR(RAND()*(nbMaxNova)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)));
+        set id = id + 1;
+        
+        while nbShift <= nbBlankFull do
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),null,(SELECT FLOOR(RAND()*(nbMaxNova)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)));
+			set id = id + 1;
+            set nbShift = nbShift + 1;
+		end while;
+        while nbShift <= nbBlank do
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,null,null,null,null,null,1,2);
+			set id = id + 1;
+            set nbShift = nbShift + 1;
+		end while;
+        set nbShift = 1;
+        set base = base + 1;
+	end while;
+END #
+
+DELIMITER ;
+
+call creat_shifts();
+drop procedure creat_shifts;
