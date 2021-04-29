@@ -129,6 +129,25 @@ Pour effecturer les tests nous pouvons demander a plusieurs personnes de tester 
 
 ## Points techniques détaillés
 
+### Comment marche le système de routage entre les différentes page du site ?
+
+Le site utilise un modèle MVC et le fichier index.php et toujours appelé et il sert pour le routage, ( et aussi à définir les différents paramètres PHP et à appeler les autres fichiers utiles ).
+Le paramètre servant au routage est un GET "action" est utilisé dans toutes les url du site, il définit l'action que l'on cherche à effectuer, par exemple : http://localhost:8080/index.php?action=home
+si l'utilisateur n'est pas connecté il aura un choix d'action possible restreint par un switch un fonction de cette action,
+sinon si il est connecté et qu'une fonction d'un des contrôleur possède le même nom que le paramètre GET "action", celle-ci sera appelée,
+sinon la fonction home() sera appelée par défault
+
+### Comment marche le système de policies ?
+
+Avec le système de routage ci-dessus, si un utilisateur connait le nom de l'action, il pourra entrer l'url et effetuer l'action même si son rôle ne devrait pas le lui permettre,
+C'est pourquoi, il faut vérifier que l'utilisateur a bien les droits d'effectuer cette action :
+
+Le fichier policies.php liste les actions possible et leur niveau de droit nécéssaire
+
+Les actions possible par tout le monde (niveau 0) n'ont pas besoin d'être renseignées
+
+Lorsqu'on tente d'accèder un une page, la fonction ican("nom de l'action") est appelée (dans index.php) afin de savoir si l'utilisateur possède un niveau de privillège suffisant, si ce n'est pas le cas il est redirigé vers la page d'accueil.
+
 ### Qu'est-ce que c'est que ce champ 'slug' dans la table 'status' ?
 
 Un slug est un identifiant sous contrôle du code de l’application. Il se situe entre l’id de base de donnée dont on ne peut jamais présumer de la valeur dans le code et la valeur affichée. Exemple: status ‘Ouvert’, qui a un slug ‘open’ et un id 2. Si je veux sélectionner les rapports ouverts, je fait un select « where slug=‘open’ » . Si l’id de l’état ‘open’ est différent dans une autre db => ça marche, si un jour je veux changer le terme visible de « Ouvert » en « Actif » par exemple, je peux le faire en ne changeant que des données. 

@@ -12,7 +12,7 @@ session_start();
 header("Cache-Control: private, must-revalidate");
 header("Pragma: no-cache");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // A date in the past
-
+setlocale(LC_TIME, "fr_FR", "French");
 
 /**
  * Call definition file pour paths
@@ -96,10 +96,15 @@ if (!isset($_SESSION['user'])) {
     }
 
     if (function_exists($action)) { // action parameter matches a known function name
-        if (isset($_GET['id'])) {
-            $action($_GET['id']); // call it with a value
-        } else {
-            $action();             // or not
+        if(ican($action)){
+            if (isset($_GET['id'])) {
+                $action($_GET['id']); // call it with a value
+            } else {
+                $action();             // or not
+            }
+        }else{
+            setFlashMessage("Action non-autorisée");
+            home();
         }
     } else {
         home();
