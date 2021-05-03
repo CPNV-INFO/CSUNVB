@@ -123,9 +123,13 @@ Les fonctions sont précédées d'un bloc de commentaire qui a la forme suivante
 Les nom de fonction appelée depuis le javascript en ajax se termine par _ajax() pour les différencier
 
 ## Stratégie de test
-Il n'y a pas de tests unitaires implémentés dans le projet. 
 
-Pour effecturer les tests nous pouvons demander a plusieurs personnes de tester toute l'application dans plusieurs environnements. Il faut la tester sur plusieurs systèmes comme Windows, linux, mac pour les différentes particularités propres aux différents systèmes.
+Les testes se déroulent en 2 phases différentes :
+
+Dans un premier temps, le développeur crée les différents test pour chaque story sur Icescrum, ceux-ci seront validé lors de la reviews de sprint, s'ils sont refusés, ils seront vérifiés à nouveau lors de la prochaine review
+
+Dans un deuxième temps, le développeur ira sur place faire tester les fonctionnalités aux membres de Csunvb afin de savoir si elles conviennent bien à leurs attentes
+
 
 ## Points techniques détaillés
 
