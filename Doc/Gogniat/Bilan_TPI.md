@@ -48,3 +48,13 @@ Objetif(s) :
 
 La page administration > novas permet de voir l'utilisation des novas par les gardes
 Un administrateur peut réserver une nova pour indiquer qu'elle ne sera pas disponible
+
+## Analyse de risques
+
+## Objectif atteints/Non-atteints
+
+## Document Fournis
+
+## Conclusion
+
+## Sources / Aides
