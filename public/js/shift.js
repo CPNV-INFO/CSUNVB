@@ -70,6 +70,7 @@ $( ".SH_dropdownInfo" ).change(function() {
             if(data == "false"){
                 location.reload(true);
             }
+            checkIfReady();
         },
         error: function(xhr, status, error) {
             location.reload(true);
@@ -77,3 +78,22 @@ $( ".SH_dropdownInfo" ).change(function() {
     });
     $(this).blur();
 });
+
+function checkIfReady(){
+    $.ajax({
+        type: "POST",
+        url: "?action=checkIfShiftIsReady",
+        data: {
+            sheetID: $("#sheetID").val()
+        },
+        cache: false,
+        success: function(data) {
+            if(data == "true"){
+                location.reload(true);
+            }
+        },
+        error: function(xhr, status, error) {
+            location.reload(true);
+        }
+    });
+}

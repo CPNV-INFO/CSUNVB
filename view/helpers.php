@@ -427,9 +427,11 @@ function sheetIsReady($page, $id)
         case 'todo':
             return true;
         case 'shift':
-            $shiftsheet = getshiftsheetByID($id);
-            if (!empty($shiftsheet["teammateDay"]) and !empty($shiftsheet["teammateNight"]) and !empty($shiftsheet["novaNight"]) and !empty($shiftsheet["bossDay"]) and !empty($shiftsheet["bossNight"]) and !empty($shiftsheet["novaDay"])) return true;
-            return false;
+            if(nbEmptyTeams($id) == 0 ){
+                return true;
+            }else{
+                return false;
+            }
     }
 }
 

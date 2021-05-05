@@ -342,3 +342,11 @@ function removeTeamForShift($sheetID){
         redirect("shiftShow",$sheetID);
     }
 }
+
+function checkIfShiftIsReady(){
+    if(sheetIsReady("shift", $_POST["sheetID"])){
+        echo "true";
+    }else{
+        echo "false";
+    }
+}

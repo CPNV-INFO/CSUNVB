@@ -396,3 +396,7 @@ function removeTeamToModel($modelID,$day){
         default:
     }
 }
+
+function nbEmptyTeams($sheetID){
+    return count(selectMany("select * from shiftteams where shiftsheet_id = :sheetID and (boss_id is null or teammate_id is null or nova_id is null)",["sheetID" => $sheetID]));
+}
