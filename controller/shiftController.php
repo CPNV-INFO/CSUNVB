@@ -16,13 +16,19 @@ function newShiftSheet($baseID)
     } else {
         $modelID = $_POST["selectedModel"];
     }
-
     $result = addNewShiftSheet($baseID, $modelID, $_POST["date"]);
     if ($result == 0) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le rapport de garde.");
     } else {
         setFlashMessage("le rapport de garde a bien été créé !");
         writeLog("SHIFT",$result,"Rapport créé");
+    }
+    $model = getModelByID($modelID);
+    for ($i = 0; $i < $model["nbTeamD"]; $i++) {
+        addShiftTeam($result,1);
+    }
+    for ($i = 0; $i < $model["nbTeamN"]; $i++) {
+        addShiftTeam($result,0);
     }
     redirect("shiftList", $baseID);
 }
