@@ -4,7 +4,8 @@ $title = "CSU-NVB - Remise de garde";
 ?>
 <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
 <input type="hidden" id="sheetID" value="<?= $shiftsheet['id'] ?>"><!-- used to get date in javascrpt -->
-<a href="?action=shiftList&id=<?= $shiftsheet["base_id"] ?>" class="text-dark d-print-none"><i class="fas fa-angle-left backIcon"></i>Retour</a>
+<a href="?action=shiftList&id=<?= $shiftsheet["base_id"] ?>" class="text-dark d-print-none"><i
+            class="fas fa-angle-left backIcon"></i>Retour</a>
 <h1>
     Remise de Garde
 </h1>
@@ -16,54 +17,64 @@ $title = "CSU-NVB - Remise de garde";
         <h6 style="margin: 15px 0;">
             Base : <?= $shiftsheet['baseName'] ?> </h6>
         <h6>
-            Status : <?= $shiftsheet['displayname'] ?> <?= ($shiftsheet['status'] == 'close') ? ' par ' . $shiftsheet['closeBy'] : '' ?>
+            Status
+            : <?= $shiftsheet['displayname'] ?> <?= ($shiftsheet['status'] == 'close') ? ' par ' . $shiftsheet['closeBy'] : '' ?>
         </h6>
     </div>
     <div>
         <div class="row">
             <?php foreach ($shiftsheet['teamDay'] as $team): ?>
-            <div data-team="<?= $team["team_id"] ?>">
-                <div class="text-center selectForDay first">
-                    <?php if ($enableshiftsheetUpdate) : ?>
-                        <select name="nova" class="SH_dropdownInfo">
-                            <?= ($team['nova'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
-                            <?php foreach ($novas as $nova): ?>
-                                <option value="<?= $nova['id'] ?>" <?= ($team['nova'] == $nova['number']) ? 'selected' : '' ?>><?= $nova['number'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    <?php else : ?>
-                        <?= $team["nova"] ?>
-                    <?php endif; ?>
+                <div data-team="<?= $team["team_id"] ?>">
+                    <div class="text-center selectForDay first">
+                        <?php if ($enableshiftsheetUpdate) : ?>
+                            <select name="nova" class="SH_dropdownInfo">
+                                <?= ($team['nova'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
+                                <?php foreach ($novas as $nova): ?>
+                                    <option value="<?= $nova['id'] ?>" <?= ($team['nova'] == $nova['number']) ? 'selected' : '' ?>><?= $nova['number'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else : ?>
+                            <?= $team["nova"] ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="text-center selectForDay">
+                        <?php if ($enableshiftsheetUpdate) : ?>
+                            <select name="boss" class="SH_dropdownInfo">
+                                <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
+                                <?php foreach ($users as $user): ?>
+                                    <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else : ?>
+                            <?= $team['boss'] ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="text-center selectForDay last">
+                        <?php if ($enableshiftsheetUpdate) : ?>
+                            <select name="teammate" class="SH_dropdownInfo">
+                                <?= ($team['teammate'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
+                                <?php foreach ($users as $user): ?>
+                                    <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else : ?>
+                            <?= $team['teammate'] ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
-                <div class="text-center selectForDay">
-                    <?php if ($enableshiftsheetUpdate) : ?>
-                        <select name="boss" class="SH_dropdownInfo">
-                            <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
-                            <?php foreach ($users as $user): ?>
-                                <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    <?php else : ?>
-                        <?= $team['boss'] ?>
-                    <?php endif; ?>
-                </div>
-                <div class="text-center selectForDay last">
-                    <?php if ($enableshiftsheetUpdate) : ?>
-                        <select name="teammate" class="SH_dropdownInfo">
-                            <?= ($team['teammate'] == NULL) ? '<option value="NULL" selected disabled>Jour</option>' : '' ?>
-                            <?php foreach ($users as $user): ?>
-                                <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    <?php else : ?>
-                        <?= $team['teammate'] ?>
-                    <?php endif; ?>
-                </div>
-            </div>
             <?php endforeach; ?>
+            <?php if ($enableshiftsheetUpdate) : ?>
+                <form style="align-items: center;display: flex;margin-left: 5px" class="d-flex" method='POST'
+                      action='?action=addTeamForShift&id=<?= $shiftsheet['id'] ?>'>
+                    <input type="hidden" name="day" value="1">
+                    <button type="submit" class="btn" style="background-color: lightblue">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </form>
+            <?php endif; ?>
 
             <?php foreach ($shiftsheet['teamNight'] as $team): ?>
-                <div  data-team="<?= $team["team_id"] ?>">
+                <div data-team="<?= $team["team_id"] ?>">
                     <div class="text-center selectForNight first">
                         <?php if ($enableshiftsheetUpdate) : ?>
                             <select name="nova" class="SH_dropdownInfo">
@@ -102,13 +113,25 @@ $title = "CSU-NVB - Remise de garde";
                     </div>
                 </div>
             <?php endforeach; ?>
+            <?php if ($enableshiftsheetUpdate) : ?>
+                <form style="align-items: center;display: flex;margin-left: 5px" class="d-flex" method='POST'
+                      action='?action=addTeamForShift&id=<?= $shiftsheet['id'] ?>'>
+                    <input type="hidden" name="day" value="0">
+                    <button type="submit" class="btn btn-dark">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </form>
+            <?php endif; ?>
         </div>
     </div>
     <div>
         <div class="float-right d-print-none d-inline">
             <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
-            <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i></button>
-            <form method="POST" class="d-inline" action='?action=shiftLog&id=<?=$shiftsheet['id']?>'><button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button></form>
+            <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i>
+            </button>
+            <form method="POST" class="d-inline" action='?action=shiftLog&id=<?= $shiftsheet['id'] ?>'>
+                <button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button>
+            </form>
         </div>
     </div>
 </div>
@@ -174,7 +197,7 @@ $title = "CSU-NVB - Remise de garde";
                         </td>
                         <!-- Comments for the action -->
                         <td class="SH_comment">
-                            <div id="commentList<?= $action['id'] ?>" >
+                            <div id="commentList<?= $action['id'] ?>">
                                 <?php foreach ($action["comments"] as $comment): ?>
                                     <div class="<?= ($comment['carryOn'] == 1 and $comment['endOfCarryOn'] == null) ? 'carry' : 'notCarry' ?>"
                                          id="comment-<?= $comment['id'] ?>">
@@ -184,7 +207,8 @@ $title = "CSU-NVB - Remise de garde";
                                                 <i class="fas fa-thumbtack fa-lg" style="color:#000000"></i>
                                             </button>
                                             <button class="addCarryOnBtn addCarry" value=<?= $comment['id'] ?>>
-                                                <i class="fas fa-thumbtack fa-rotate-90 fa-lg" style="color:#777777"></i>
+                                                <i class="fas fa-thumbtack fa-rotate-90 fa-lg"
+                                                   style="color:#777777"></i>
                                             </button>
                                             <strong>[ <?= $comment['initials'] ?>
                                                 - <?= date('H:i', strtotime($comment['time'])) ?> <?= ($comment['carryOn'] == 1) ? date('/  d.m.Y ', strtotime($comment['time'])) : "" ?>
@@ -197,15 +221,17 @@ $title = "CSU-NVB - Remise de garde";
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <button class="btn blueBtn btn-block m-1 d-print-none addShiftCommentBtn">Nouveau commentaire</button>
+                            <button class="btn blueBtn btn-block m-1 d-print-none addShiftCommentBtn">Nouveau
+                                commentaire
+                            </button>
                         </td>
                     <?php else: ?>
-                        <td <?= ($shiftsheet['status'] == 'close'and count($action["checksDay"]) == 0 ) ? 'class="incompleteTask"' : '' ?> >
+                        <td <?= ($shiftsheet['status'] == 'close' and count($action["checksDay"]) == 0) ? 'class="incompleteTask"' : '' ?> >
                             <?php foreach ($action["checksDay"] as $check): ?>
                                 <?= $check["initials"] ?>
                             <?php endforeach; ?>
                         </td>
-                        <td <?= ($shiftsheet['status'] == 'close'and count($action["checksNight"]) == 0 ) ? 'class="incompleteTask"' : '' ?> >
+                        <td <?= ($shiftsheet['status'] == 'close' and count($action["checksNight"]) == 0) ? 'class="incompleteTask"' : '' ?> >
                             <?php foreach ($action["checksNight"] as $check): ?>
                                 <?= $check["initials"] ?>
                             <?php endforeach; ?>

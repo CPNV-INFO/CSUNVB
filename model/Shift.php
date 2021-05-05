@@ -367,3 +367,7 @@ LEFT JOIN users boss ON boss.id = shiftteams.boss_id
 LEFT JOIN users teammate ON teammate.id = shiftteams.teammate_id
 where shiftsheet_id = :sheetID and day = :day",["sheetID" => $sheetID, "day" => $day]);
 }
+
+function addShiftTeam($sheetID,$day){
+    return insert("INSERT INTO `shiftteams` (shiftsheet_id,day) VALUES (:sheetID,:day)",["sheetID"=> $sheetID, "day" => $day]);
+}

@@ -327,3 +327,8 @@ function shiftLog($sheetID){
 function uncheckActionForShift_AJAX($sheetID){
     echo getUncheckActionForShift($sheetID);
 }
+
+function addTeamForShift($sheetID){
+    addShiftTeam($sheetID,$_POST["day"]);
+    redirect("shiftShow",$sheetID);
+}
