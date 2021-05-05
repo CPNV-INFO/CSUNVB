@@ -60,15 +60,22 @@ Certaines bases possèdent plusieurs équipes de soucouriste pour le jour ou la 
 
 Même si 2 équipes sont présentes pour assurer la garde, un seul rapport sera gérer, car c'est actuellement leur méthode de travail sur papier.
 
-Un bouton + de la même couleur que le créneau (bleu/noir) est présent à côté de celui ci pour ajouter une équipe
+Un bouton + de la même couleur que le créneau (bleu/noir) devra présent à côté de celui ci pour ajouter une équipe
 
-Le boutons supprimer n'est présent que si il y a 2 équipes ou plus car il n'est pas possible de ne pas en avoir pour un créneau.
+Un boutons supprimer ne sera présent que si il y a 2 équipes ou plus car il n'est pas possible de ne pas en avoir pour un créneau.
 
 Le nombre d'équipes pour chaque créneaux doit être renseigné dans le modèle afin de pouvoir créer de nouveaux rapports identiques
 
-La manière de renseignr les informations pour les équipes supplémentaires resteront identiques à la première (listes déroulantes)
+La manière de renseigner les informations pour les équipes supplémentaires resteront identiques à la première (listes déroulantes)
 
 Pour activer un rapport toutes les informations de toutes les équipes doivent être enregistrées
+
+### Conception et Fonctionnement
+
+Aller voir les sections ? ? ? de de la documentation technique
+
+### Objectif atteints/Non-atteints
+
 
 ## Droits de modification (garde)
 
@@ -86,19 +93,35 @@ Pour la correction d'un rapport, il faut aussi que l'action soit possible que pa
 
 Si le rapport date de plus de 3 jours, un simple secouriste n'aura plus les droits de le corriger (souhait du CSU)
 
-### Risque
-
-Une seule tablette sera présente par base pour remplir les rapports, il y aura donc un seul utilisateur connecté, pourtant plusieurs d'entre eux travailleront en même temps, il se peut donc que certaines données soient validées par un autre secouriste que celui qu'y s'est connecté au début de la garde
-
-
-
 
 ## Analyse de risques
 
+Si le serveur prend du temps à répondre, il est possible de cliquer plusieur fois sur le même boutons ce qui execute l'ation plusieurs fois, il pourrait être intéressant à therme de désactivé le boutons lorsqu'il est cliqué
 
-## Objectif atteints/Non-atteints
+Comme la page n'est pas en permanence rechargée, si un secouriste charge la page et qu'un deuxième effectue des actions entre-deux, le premier ne vera pas les modifications.
+Une solution serait d'ajouter le champs date de dernière mofification sur les rapports ainsi qu'une fonction javascript (ajax), qui questionnerait le serveur afin de savoir si la page est à jour.
+Le problème reste actuellement minime car chaque base possédera qu'une tablette permettant de remplir son rapport.
+
+
+Une seule tablette sera présente par base pour remplir les rapports, il y aura donc un seul utilisateur connecté, pourtant plusieurs d'entre eux travailleront en même temps, il se peut donc que certaines données soient validées par un autre secouriste que celui qu'y s'est connecté au début de la garde
+Le problème est de type humain et rien qui serait simple à mettre en place pour résoudre ce soucis.
+
+
 
 ## Document Fournis
+
+Tous les documents peuvent être retrouvés sur le [GitHub](https://github.com/CPNV-INFO/CSUNVB/tree/MGT/Doc) public, sur la branche MGT, associée à mon TPI
+
+Le fichier "Doc\Mapping Dossier de projet.docx" contient les directives un peu particulères à ce projet de TPI, et où on peut retrouver les différents éléments demandés.
+
+Le fichier "Doc\documentation technique.md" explique le fonctionnement du site pour de potentiels futurs développeurs
+
+Le fichier Doc\Gogniat\Journal_de_Travail.pdf, exporter depuis Icescrum et tenu à jour deux fois par semaine (mardi et jeudi)
+
+Le fichier Doc\Gogniat\Journal_de_Test.pdf, exporter depuis Icescrum, il liste les différents test de validation, il est tenu à jour à chaque fin de sprint
+
+Document physique ? à discuter avec les experts
+
 
 ## Conclusion
 
