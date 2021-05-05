@@ -185,21 +185,43 @@ function listShiftSheet($slug, $shiftList, $zone)
         </thead>';
         $body = "";
         foreach ($shiftList as $shift) {
+            $shiftInfo = "<td>Jour : ";
+            foreach ($shift["teamDay"] as $teams){
+                $shiftInfo .= $teams["nova"] . " ";
+            }
+            $shiftInfo .= "<br>Nuit : ";
+            foreach ($shift["teamNight"] as $teams){
+                $shiftInfo .= $teams["nova"] . " ";
+            }
+            $shiftInfo .= "</td><td>Jour : ";
+            foreach ($shift["teamDay"] as $teams){
+                $shiftInfo .= $teams["boss"] . " ";
+            }
+            $shiftInfo .= "<br>Nuit : ";
+            foreach ($shift["teamNight"] as $teams){
+                $shiftInfo .= $teams["boss"] . " ";
+            }
+            $shiftInfo .= "</td><td>Jour : ";
+            foreach ($shift["teamDay"] as $teams){
+                $shiftInfo .= $teams["teammate"] . " ";
+            }
+            $shiftInfo .= "<br>Nuit : ";
+            foreach ($shift["teamNight"] as $teams){
+                $shiftInfo .= $teams["teammate"] . " ";
+            }
+            $shiftInfo .= "</td>";
             $body .= "<tr>
                 <td>" . date('d.m.Y', strtotime($shift['date']));
             if (isset($shift["modelImage"])) {
                 $body .= "<i class='fas fa-file-alt template' title='Modèle : " . $shift["modelImage"] . "'></i>";
             }
             $nbEmpty = getUncheckActionForShift($shift['id']);
-            if ($nbEmpty != 0 and $slug == 'close') $body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='" . $nbEmpty . " vide(s)" . "'><i class='fas fa-exclamation-triangle warning'></i></span>";
-            $body .= "</td>
-                <td>Jour : " . $shift['novaDay'] . "<br>Nuit : " . $shift['novaNight'] . "</td>
-                <td>Jour : " . $shift['bossDay'] . "<br>Nuit : " . $shift['bossNight'] . "</td>
-                <td>Jour : " . $shift['teammateDay'] . "<br>Nuit : " . $shift['teammateNight'] . "</td>";
+            if ($nbEmpty != 0 and $slug == 'close') $body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='" . $nbEmpty . " vide(s)" . "'><i class='fas fa-exclamation-triangle warning'></i></span></td>";
+            $body .= $shiftInfo;
             $body .= "<td><div class='d-flex justify-content-around'>";
             $body .= buttonForSheet("shift", $shift['id'], "Show&id=" . $shift['id'], "Détails");
             $body .= slugBtns("shift", $shift, $slug) . "</div></td>";
-            $body .= "</td></tr>";
+            $body .= "</tr>";
         }
         $foot = "</table>";
         $table = $head . $body . $foot;

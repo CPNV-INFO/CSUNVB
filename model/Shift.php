@@ -68,31 +68,19 @@ function getAllShiftForBase($baseID)
 
 function getShiftWithStatus($baseID, $slugID)
 {
-    return selectMany('SELECT shiftsheets.id, shiftsheets.date, shiftsheets.base_id, status.displayname AS status, status.slug AS statusslug,novaDay.number AS novaDay, novaNight.number AS novaNight, bossDay.initials AS bossDay, bossNight.initials AS bossNight,teammateDay.initials AS teammateDay, teammateNight.initials AS teammateNight, shiftmodels.name as model, shiftmodels.id as model_id 
+    return selectMany('SELECT shiftsheets.id, shiftsheets.date, shiftsheets.base_id, status.displayname AS status, status.slug AS statusslug, shiftmodels.name as model, shiftmodels.id as model_id 
 FROM shiftsheets
 INNER JOIN status ON status.id = shiftsheets.status_id
 INNER JOIN shiftmodels ON shiftmodels.id = shiftsheets.shiftmodel_id
-LEFT JOIN novas novaDay ON novaDay.id = shiftsheets.daynova_id
-LEFT JOIN novas novaNight ON novaNight.id = shiftsheets.nightnova_id
-LEFT JOIN users bossDay ON bossDay.id = shiftsheets.dayboss_id
-LEFT JOIN users bossNight ON bossNight.id = shiftsheets.nightboss_id
-LEFT JOIN users teammateDay ON teammateDay.id = shiftsheets.dayteammate_id
-LEFT JOIN users teammateNight ON teammateNight.id = shiftsheets.nightteammate_id
 WHERE shiftsheets.base_id =:base_id and status.id =:slugID order by date DESC;', ["base_id" => $baseID, "slugID" => $slugID]);
 }
 
 function getshiftsheetByID($id)
 {
-    return selectOne('SELECT bases.name as baseName,bases.id as baseID, shiftsheets.id, shiftsheets.date, shiftsheets.base_id,shiftsheets.shiftmodel_id as model, status.slug AS status, status.displayname AS displayname, novaDay.number AS novaDay, novaNight.number AS novaNight, bossDay.initials AS bossDay, bossNight.initials AS bossNight,teammateDay.initials AS teammateDay, teammateNight.initials AS teammateNight , closeBy.initials AS closeBy
+    return selectOne('SELECT bases.name as baseName,bases.id as baseID, shiftsheets.id, shiftsheets.date, shiftsheets.base_id,shiftsheets.shiftmodel_id as model, status.slug AS status, status.displayname AS displayname, closeBy.initials AS closeBy
 FROM shiftsheets
 INNER JOIN bases ON bases.id = shiftsheets.base_id
 INNER JOIN status ON status.id = shiftsheets.status_id
-LEFT JOIN novas novaDay ON novaDay.id = shiftsheets.daynova_id
-LEFT JOIN novas novaNight ON novaNight.id = shiftsheets.nightnova_id
-LEFT JOIN users bossDay ON bossDay.id = shiftsheets.dayboss_id
-LEFT JOIN users bossNight ON bossNight.id = shiftsheets.nightboss_id
-LEFT JOIN users teammateDay ON teammateDay.id = shiftsheets.dayteammate_id
-LEFT JOIN users teammateNight ON teammateNight.id = shiftsheets.nightteammate_id
 LEFT JOIN users closeBy ON closeBy.id = shiftsheets.closeBy
 WHERE shiftsheets.id =:id;', ["id" => $id]);
 }
@@ -313,26 +301,24 @@ WHERE shiftmodel_id = :model_id ', ['model_id' => $modelID]);
     return $newID;
 }
 
-/**
- * updateDataShift : update the informations for the shiftsheet
- * @param int $id : id of the shiftsheet
- * @param int $novaDay : id of the nova used for the day
- * @param int $novaNight : id of the nova used for the night
- * @param int $bossDay : id of the person for the day boss
- * @param int $bossNight : id of the person for the night boss
- * @param int $teammateDay : id of the person for the day teammate
- * @param int $teammateNight : id of the person for the night teammate
- * @return bool : true = ok / false = fail
- */
-function updateDataShift($id, $novaDay, $novaNight, $bossDay, $bossNight, $teammateDay, $teammateNight)
+function updateShiftTeams()
 {
-    if ($novaDay == "NULL") $novaDay = null;
-    if ($novaNight == "NULL") $novaNight = null;
-    if ($bossDay == "NULL") $bossDay = null;
-    if ($bossNight == "NULL") $bossNight = null;
-    if ($teammateDay == "NULL") $teammateDay = null;
-    if ($teammateNight == "NULL") $teammateNight = null;
-    return execute("update shiftsheets set daynova_id =:novaDay, nightnova_id =:novaNight, dayboss_id =:bossDay, nightboss_id =:bossNight, dayteammate_id =:teammateDay, nightteammate_id =:teammateNight WHERE id=:id", ["id" => $id, "novaDay" => $novaDay, "novaNight" => $novaNight, "bossDay" => $bossDay, "bossNight" => $bossNight, "teammateDay" => $teammateDay, "teammateNight" => $teammateNight]);
+    switch ($_POST["field"]) {
+        case "nova":
+            execute("UPDATE shiftteams SET nova_id = :novaID WHERE id = :id", [ "id" => $_POST["teamID"], "novaID" => $_POST["value"]]);
+            echo "true";
+            break;
+        case "boss":
+            execute("UPDATE shiftteams SET boss_id = :novaID WHERE id = :id", [ "id" => $_POST["teamID"], "novaID" => $_POST["value"]]);
+            echo "true";
+            break;
+        case "teammate":
+            execute("UPDATE shiftteams SET teammate_id = :novaID WHERE id = :id", [ "id" => $_POST["teamID"], "novaID" => $_POST["value"]]);
+            echo "true";
+            break;
+        default:
+            echo "false";
+    }
 }
 
 function getUncheckActionForShift($sheetID){
@@ -372,4 +358,12 @@ UNION SELECT 'Equipier Nuit' AS name FROM shiftsheets WHERE shiftsheets.id = :sh
 
 function getNbShiftTask($sheetID){
     return 2 * count(selectMany("SELECT shiftaction_id FROM shiftmodel_has_shiftaction WHERE shiftmodel_id = (SELECT shiftmodel_id FROM shiftsheets WHERE shiftsheets.id = :sheetID)",["sheetID" => $sheetID]));
+}
+
+function getShiftTeam($sheetID,$day){
+    return selectMany("select shiftteams.id as team_id, novas.number as nova, novas.id as nova_id, boss.initials as boss , boss.id as boss_id, teammate.initials as teammate , teammate.id as teammate_id from shiftteams
+LEFT join novas on nova_id = novas.id
+LEFT JOIN users boss ON boss.id = shiftteams.boss_id
+LEFT JOIN users teammate ON teammate.id = shiftteams.teammate_id
+where shiftsheet_id = :sheetID and day = :day",["sheetID" => $sheetID, "day" => $day]);
 }

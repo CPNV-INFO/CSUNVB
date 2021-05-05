@@ -57,5 +57,23 @@ removeCarryOnBtn.forEach((item) => {
 })
 
 $( ".SH_dropdownInfo" ).change(function() {
-    $( "#SH_updateInfoBtn").show();
+    $.ajax({
+        type: "POST",
+        url: "?action=updateShiftTeams",
+        data: {
+            field: this.name,
+            teamID: $(this).parent().parent().attr("data-team"),
+            value : $(this).find('option:selected').attr("value")
+        },
+        cache: false,
+        success: function(data) {
+            if(data == "false"){
+                location.reload(true);
+            }
+        },
+        error: function(xhr, status, error) {
+            location.reload(true);
+        }
+    });
+    $(this).blur();
 });

@@ -36,6 +36,13 @@ function shiftList($selectedBaseID = null)
     if ($selectedBaseID == null) $selectedBaseID = $_SESSION['base']['id'];
     $bases = getbases();
     $sheets = getAllShiftForBase($selectedBaseID);
+    foreach ($sheets as &$sheetBySlug){
+        foreach ($sheetBySlug as &$sheet){
+            $sheet["teamDay"] = getShiftTeam($sheet["id"],1);
+            $sheet["teamNight"] = getShiftTeam($sheet["id"],0);
+        }
+    }
+
     $models = getShiftModels();
     $suggestedModels = getSuggestedShiftModels();
     foreach ($models as $model){
@@ -61,6 +68,8 @@ function shiftList($selectedBaseID = null)
 function shiftShow($shiftid)
 {
     $shiftsheet = getshiftsheetByID($shiftid);
+    $shiftsheet["teamDay"] = getShiftTeam($shiftsheet["id"],1);
+    $shiftsheet["teamNight"] = getShiftTeam($shiftsheet["id"],0);
     $sections = getshiftsections($shiftid, $shiftsheet["baseID"]);
     $enableshiftsheetUpdate = ($shiftsheet['status'] == "blank");
     $enableshiftsheetFilling = ($shiftsheet['status'] == "open" || $shiftsheet['status'] == "reopen" && $_SESSION['user']['admin'] == true);
