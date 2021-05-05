@@ -373,6 +373,9 @@ function addShiftTeam($sheetID,$day){
     return insert("INSERT INTO `shiftteams` (shiftsheet_id,day) VALUES (:sheetID,:day)",["sheetID"=> $sheetID, "day" => $day]);
 }
 
+function removeLastTeamForShift($sheetID,$day){
+    return execute("DELETE FROM shiftteams where shiftsheet_id = :sheetID and day = :day ORDER BY id DESC LIMIT 1",["sheetID"=> $sheetID, "day" => $day]);
+}
 
 function addTeamToModel($modelID,$day){
     switch ($day) {
@@ -380,6 +383,16 @@ function addTeamToModel($modelID,$day){
             return execute("UPDATE shiftmodels SET nbTeamN = nbTeamN + 1 where id = :modelID",[ "modelID" => $modelID]);
         case 1:
             return execute("UPDATE shiftmodels SET nbTeamD = nbTeamD + 1 where id = :modelID",[ "modelID" => $modelID]);
+        default:
+    }
+}
+
+function removeTeamToModel($modelID,$day){
+    switch ($day) {
+        case 0:
+            return execute("UPDATE shiftmodels SET nbTeamN = nbTeamN - 1 where id = :modelID",[ "modelID" => $modelID]);
+        case 1:
+            return execute("UPDATE shiftmodels SET nbTeamD = nbTeamD - 1 where id = :modelID",[ "modelID" => $modelID]);
         default:
     }
 }

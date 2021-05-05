@@ -331,3 +331,14 @@ function addTeamForShift($sheetID){
     redirect("shiftShow",$sheetID);
 }
 
+function removeTeamForShift($sheetID){
+    if(count(getShiftTeam($sheetID,$_POST["day"]))>1){
+        $modelID = configureModel($sheetID, getshiftsheetByID($sheetID)["model"]);
+        removeTeamToModel($modelID,$_POST["day"]);
+        removeLastTeamForShift($sheetID,$_POST["day"]);
+        redirect("shiftShow",$sheetID);
+    }else{
+        setFlashMessage("Action impossible");
+        redirect("shiftShow",$sheetID);
+    }
+}
