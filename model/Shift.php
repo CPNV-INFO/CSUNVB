@@ -289,7 +289,8 @@ function updateModelID($shiftSheetID, $newModelID)
  */
 function copyModel($modelID)
 {
-    execute("INSERT INTO `shiftmodels` (NAME) VALUES (null)", []);
+    $model = getModelByID($modelID);
+    execute("INSERT INTO `shiftmodels` (NAME,nbTeamD,nbTeamN) VALUES (null,:nbTeamD,:nbTeamN)", ["nbTeamD" => $model["nbTeamD"], "nbTeamN" => $model["nbTeamN"]]);
     $newID = selectOne("SELECT MAX(id) AS max FROM shiftmodels", [])["max"];
     $actionToCopy = selectMany('SELECT shiftactions.id FROM shiftmodel_has_shiftaction
 INNER JOIN shiftactions
@@ -370,4 +371,15 @@ where shiftsheet_id = :sheetID and day = :day",["sheetID" => $sheetID, "day" => 
 
 function addShiftTeam($sheetID,$day){
     return insert("INSERT INTO `shiftteams` (shiftsheet_id,day) VALUES (:sheetID,:day)",["sheetID"=> $sheetID, "day" => $day]);
+}
+
+
+function addTeamToModel($modelID,$day){
+    switch ($day) {
+        case 0:
+            return execute("UPDATE shiftmodels SET nbTeamN = nbTeamN + 1 where id = :modelID",[ "modelID" => $modelID]);
+        case 1:
+            return execute("UPDATE shiftmodels SET nbTeamD = nbTeamD + 1 where id = :modelID",[ "modelID" => $modelID]);
+        default:
+    }
 }

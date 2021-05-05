@@ -220,13 +220,9 @@ function removeActionForShift($sheetID)
  */
 function configureModel($sheetID, $modelID)
 {
-    //If the model does not have a name it is not being used. no need to copy it
-    if (getModelBYID($modelID)["name"] != "") {
-        $newID = copyModel($modelID);
-        updateModelID($sheetID, $newID);
-        return $newID;
-    }
-    return $modelID;
+    $newID = copyModel($modelID);
+    updateModelID($sheetID, $newID);
+    return $newID;
 }
 
 /**
@@ -329,6 +325,9 @@ function uncheckActionForShift_AJAX($sheetID){
 }
 
 function addTeamForShift($sheetID){
+    $modelID = configureModel($sheetID, getshiftsheetByID($sheetID)["model"]);
+    addTeamToModel($modelID,$_POST["day"]);
     addShiftTeam($sheetID,$_POST["day"]);
     redirect("shiftShow",$sheetID);
 }
+
