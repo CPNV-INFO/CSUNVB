@@ -178,8 +178,8 @@ function listShiftSheet($slug, $shiftList, $zone)
         $head = '<table class="table table-bordered ' . $slug . 'Sheets" style="margin-top:0px; text-align: center">
         <thead class="thead-dark">
         <th>Date</th>
-        <th>Véhicule</th>
-        <th>Responsable</th>
+        <th>Véhicules</th>
+        <th>Responsables</th>
         <th>Équipage</th>
         <th class="actions">Action</th>
         </thead>';
