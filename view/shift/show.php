@@ -9,8 +9,8 @@ $title = "CSU-NVB - Remise de garde";
 <h1>
     Remise de Garde
 </h1>
-<div style="display: flex; justify-content: space-between;margin: 30px 0;">
-    <div>
+<div style="display: flex;margin: 30px 0;">
+    <div style="min-width: 200px;">
         <h6>
             Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>
         </h6>
@@ -20,11 +20,22 @@ $title = "CSU-NVB - Remise de garde";
             Status
             : <?= $shiftsheet['displayname'] ?> <?= ($shiftsheet['status'] == 'close') ? ' par ' . $shiftsheet['closeBy'] : '' ?>
         </h6>
+        <div>
+            <div class="d-print-none d-inline">
+                <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
+                <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i>
+                </button>
+                <form method="POST" class="d-inline" action='?action=shiftLog&id=<?= $shiftsheet['id'] ?>'>
+                    <button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div>
-        <div class="row">
+
+    <div class="row" >
+        <div class="row align-items-center">
             <?php foreach ($shiftsheet['teamDay'] as $team): ?>
-                <div data-team="<?= $team["team_id"] ?>">
+                <div data-team="<?= $team["team_id"] ?>" style="margin-bottom: 5px">
                     <div class="text-center selectForDay first">
                         <?php if ($enableshiftsheetUpdate) : ?>
                             <select name="nova" class="SH_dropdownInfo">
@@ -64,7 +75,7 @@ $title = "CSU-NVB - Remise de garde";
                 </div>
             <?php endforeach; ?>
             <?php if ($enableshiftsheetUpdate) : ?>
-                <div style="align-items: center;display: flex" class="d-flex">
+                <div style="align-items: center; margin-bottom: 5px" class="d-flex">
                     <div class="flex-container column" style="margin: 5px;align-items: center; -webkit-align-items: center; ">
                         <div class="flex-item" style="margin-bottom: 5px">
                             <form method='POST' class="flex-item"
@@ -91,9 +102,10 @@ $title = "CSU-NVB - Remise de garde";
                     </div>
                 </div>
             <?php endif; ?>
-
+        </div>
+        <div class="row align-items-center">
             <?php foreach ($shiftsheet['teamNight'] as $team): ?>
-                <div data-team="<?= $team["team_id"] ?>">
+                <div data-team="<?= $team["team_id"] ?>" style="margin-bottom: 5px">
                     <div class="text-center selectForNight first">
                         <?php if ($enableshiftsheetUpdate) : ?>
                             <select name="nova" class="SH_dropdownInfo">
@@ -133,7 +145,7 @@ $title = "CSU-NVB - Remise de garde";
                 </div>
             <?php endforeach; ?>
             <?php if ($enableshiftsheetUpdate) : ?>
-            <div style="align-items: center;display: flex" class="d-flex">
+            <div style="align-items: center;display: flex;margin-bottom: 5px" class="d-flex">
                 <div class="flex-container column" style="margin: 5px;align-items: center; -webkit-align-items: center; ">
                     <div class="flex-item" style="margin-bottom: 5px">
                         <form method='POST' class="flex-item"
@@ -162,18 +174,7 @@ $title = "CSU-NVB - Remise de garde";
             <?php endif; ?>
         </div>
     </div>
-    <div>
-        <div class="float-right d-print-none d-inline">
-            <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
-            <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i>
-            </button>
-            <form method="POST" class="d-inline" action='?action=shiftLog&id=<?= $shiftsheet['id'] ?>'>
-                <button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button>
-            </form>
-        </div>
-    </div>
 </div>
-
 <div>
     <?php foreach ($sections as $section): ?>
         <div class="SH_sectionName"><?= $section["title"] ?></div>
