@@ -344,17 +344,17 @@ WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]));
 }
 
 function getShiftBySlugWithUser($slug,$userID){
-    return selectMany("SELECT date, shiftsheets.id AS id FROM shiftsheets
-JOIN status ON shiftsheets.status_id = status.id
-WHERE status.slug = :slug
-AND ( dayboss_id = :userID OR nightboss_id = :userID OR dayteammate_id= :userID OR nightteammate_id = :userID)",["slug" => $slug, "userID" => $userID]);
+    return selectMany("SELECT DISTINCT date, shiftsheets.id AS id FROM shiftsheets
+inner JOIN status ON shiftsheets.status_id = status.id
+inner join shiftteams on shiftsheets.id = shiftteams.shiftsheet_id
+inner join users boss on boss.id = shiftteams.boss_id
+inner join users teammate on teammate.id = shiftteams.teammate_id
+WHERE status.slug = :slug and (boss.id = :userID or teammate.id = :userID) order by date ASC",["slug" => $slug, "userID" => $userID]);
 }
 
 function getShiftRole($sheetID,$userID){
-    return selectMany("SELECT 'Responsable Jour' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.dayboss_id = :userID
-UNION SELECT 'Responsable Nuit' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.nightboss_id = :userID
-UNION SELECT 'Equipier Jour' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.dayteammate_id = :userID
-UNION SELECT 'Equipier Nuit' AS name FROM shiftsheets WHERE shiftsheets.id = :sheetID AND shiftsheets.nightteammate_id = :userID",["sheetID" => $sheetID, "userID" => $userID]);
+    return selectMany("SELECT distinct day, 'Reponsable' as role FROM shiftteams where shiftsheet_id = :sheetID and boss_id = :userID
+UNION SELECT distinct day, 'Equipier' as role FROM shiftteams where shiftsheet_id = :sheetID and teammate_id = :userID",["sheetID" => $sheetID, "userID" => $userID]);
 }
 
 function getNbShiftTask($sheetID){
