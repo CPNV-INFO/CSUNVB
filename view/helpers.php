@@ -444,3 +444,38 @@ function getPage($action){
     if(in_array($action, $adminPages)) return "admin";
     return "undefined";
 }
+
+function newCalendar($date){
+    $selectedMonth = date_format(date_create($date.'-01'), 'n');
+    $selectedYear = date_format(date_create($date.'-01'), 'Y');
+
+    $dayByMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if ((is_int($selectedYear / 4) && !is_int($selectedYear / 100)) || is_int($selectedYear / 400)) {
+        $dayByMonth[1]= 29;
+    }
+    $firstDay = date_format(date_create($selectedYear."-".$selectedMonth."-1"),"N");
+    $lastDay = date_format(date_create($selectedYear."-".$selectedMonth."-".$dayByMonth[$selectedMonth-1]),"N");
+    $nbDayBefore = $firstDay - 1;
+    $nbDayAfter = 7 - $lastDay;
+    $calendar = array();
+    $week = 0;
+    $calendar[$week]= array();
+    $lastMonth = $selectedMonth -1;
+    if($lastMonth == 0){
+        $lastMonth = 12;
+    }
+    for ($i = 1; $i <= $nbDayBefore; $i++) {
+        array_push($calendar[$week], ["number" => $dayByMonth[$lastMonth-1] - $nbDayBefore + ($i), "cat" => "past"]);
+    }
+    for ($i = 1; $i <= $dayByMonth[$selectedMonth-1]; $i++) {
+        array_push($calendar[$week], ["number" => $i, "cat" => "normal"]);
+        if(count($calendar[$week])==7){
+            $week ++;
+            $calendar[$week]= array();
+        }
+    }
+    for ($i = 1; $i <= $nbDayAfter; $i++) {
+        array_push($calendar[$week], ["number" => $i, "cat" => "next"]);
+    }
+    return $calendar;
+}

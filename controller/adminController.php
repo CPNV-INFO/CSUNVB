@@ -58,14 +58,14 @@ function changeUserAdmin()
         $user['admin'] = 1;
     }
     $res = SaveUser($user);
-    if($res == true){
-        if($user['admin']){
+    if ($res == true) {
+        if ($user['admin']) {
             setFlashMessage($user['initials'] . " est désormais administrateur.");
-        }else{
+        } else {
             setFlashMessage($user['initials'] . " est désormais utilisateur.");
         }
-    }else{
-        setFlashMessage("Erreur de modification du rôle pour ".$user['initials']);
+    } else {
+        setFlashMessage("Erreur de modification du rôle pour " . $user['initials']);
     }
     redirect("adminCrew");
 }
@@ -222,4 +222,16 @@ function changeTel()
     $user = getUser($changeUser);
     $user['mobileNumber'] = $_POST['tel'];
     SaveUser($user);
+}
+
+function showNova()
+{
+    $dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+    if(isset($_POST["date"])){
+        $date = $_POST["date"];
+    }else{
+        $date = date("Y-m");
+    }
+    $calendar = newCalendar($date);
+    require_once VIEW . 'admin/showNova.php';
 }
