@@ -4,20 +4,6 @@
  * Date: Décembre 2020
  **/
 
-// formulaire de vérification pour shiftModal
-var buttons = document.querySelectorAll('.toggleShiftModal');
-
-buttons.forEach((item) => {
-    item.addEventListener('click', function (event) {
-        $("#shiftModal").modal("toggle");
-        $("#action_id").val( this.getAttribute("data-action_id"));
-        $("#day").val( this.getAttribute("data-day"));
-        $("#modal-content").html(this.getAttribute("data-content"));
-        $("#shiftSheetinfo").attr('action', this.getAttribute("data-action"));
-        $("#comment").prop("type",this.getAttribute("data-comment"));
-    }, false);
-})
-
 var addCarryOnBtn = document.querySelectorAll('.addCarryOnBtn');
 addCarryOnBtn.forEach((item) => {
     item.addEventListener('click', function (event) {
