@@ -68,13 +68,40 @@ Le nombre d'équipes pour chaque créneaux doit être renseigné dans le modèle
 
 La manière de renseigner les informations pour les équipes supplémentaires resteront identiques à la première (listes déroulantes)
 
-Pour activer un rapport toutes les informations de toutes les équipes doivent être enregistrées
+#### Point importants à effectuer :
+
+Modification de la base de donnée, ajout d'une table équipes ainsi que les attributs nombres d'équipes aux modèles selon le MCD suivant :
+
+![mcd_team](images/mcdTEeam.PNG)
+
+Pour activer un rapport il faut vérifier que toutes les informations de toutes les équipes doivent être enregistrées
+
+![ouverture_garde](images/activateGarde.PNG)
+
+Adapter le code php des page utilisant les informations des équipes :
+- dashboard
+- liste de rapport de garde
+- détail d'un rapport
+
+Pouvoir Ajouter/Supprimer une équipe et faire attention à ce que le header du rapport s'affiche correctement sur tablette même avec plusieurs équipes par créneau
+
+![ajouter_équipe](images/addTeam.PNG)
 
 ### Conception et Fonctionnement
 
-Aller voir les sections ? ? ? de de la documentation technique
 
-### Objectif atteints/Non-atteints
+
+Aller voir les sections "" de de la documentation technique (pas encore documenté)
+
+## Calendrier de nova
+
+### Analyse
+
+...
+
+#### Maquette
+
+![calendrier_nova](images/calNova.PNG)
 
 
 ## Droits de modification (garde)
@@ -93,6 +120,7 @@ Pour la correction d'un rapport, il faut aussi que l'action soit possible que pa
 
 Si le rapport date de plus de 3 jours, un simple secouriste n'aura plus les droits de le corriger (souhait du CSU)
 
+## Objectif atteints/Non-atteints
 
 ## Analyse de risques
 
@@ -126,3 +154,5 @@ Document physique ? à discuter avec les experts
 ## Conclusion
 
 ## Sources / Aides
+
+Besjan Sejrani (collègue), avis sur le design du site
