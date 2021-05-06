@@ -45,7 +45,7 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
-                            <?= $team["nova"] ?>
+                            <?= (isset($team["nova"])) ? $team["nova"] : '-' ?>
                         <?php endif; ?>
                     </div>
                     <div class="text-center selectForDay">
@@ -57,7 +57,7 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
-                            <?= $team['boss'] ?>
+                            <?= (isset($team['boss'])) ? $team['boss'] : '-' ?>
                         <?php endif; ?>
                     </div>
                     <div class="text-center selectForDay last">
@@ -69,7 +69,7 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
-                            <?= $team['teammate'] ?>
+                            <?= (isset($team['teammate'])) ? $team['teammate'] : '-' ?>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -115,7 +115,7 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
-                            <?= $team["nova"] ?>
+                            <?= (isset($team["nova"])) ? $team["nova"] : '-' ?>
                         <?php endif; ?>
                     </div>
                     <div class="text-center selectForNight">
@@ -127,7 +127,7 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
-                            <?= $team['boss'] ?>
+                            <?= (isset($team['boss'])) ? $team['boss'] : '-' ?>
                         <?php endif; ?>
                     </div>
                     <div class="text-center selectForNight last">
@@ -139,7 +139,7 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
-                            <?= $team['teammate'] ?>
+                            <?= (isset($team['teammate'])) ? $team['teammate'] : '-' ?>
                         <?php endif; ?>
                     </div>
                 </div>

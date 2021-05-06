@@ -77,7 +77,7 @@ function shiftShow($shiftid)
     $shiftsheet["teamDay"] = getShiftTeam($shiftsheet["id"],1);
     $shiftsheet["teamNight"] = getShiftTeam($shiftsheet["id"],0);
     $sections = getshiftsections($shiftid, $shiftsheet["baseID"]);
-    $enableshiftsheetUpdate = ($shiftsheet['status'] == "blank");
+    $enableshiftsheetUpdate = ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true);
     $enableshiftsheetFilling = ($shiftsheet['status'] == "open" || $shiftsheet['status'] == "reopen" && $_SESSION['user']['admin'] == true);
     $model = getModelByID($shiftsheet['model']);
     $novas = getNovas();
