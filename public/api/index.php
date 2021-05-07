@@ -24,22 +24,8 @@ require "../../globalhelpers.php";
  */
 require "../".CONTROLLER . "apiController.php";
 
-/**
- * Call database login details and functions
- */
-require "../".MODEL . ".const.php";
-require "../".MODEL . "db_crud.php";
 
-/**
- * Call all model files
- */
-require "../".MODEL . "Base.php";
-require "../".MODEL . "User.php";
-require "../".MODEL . "Drugs.php";
-require "../".MODEL . "Nova.php";
-require "../".MODEL . "Shift.php";
-require "../".MODEL . "Todo.php";
-require "../".MODEL . "Log.php";
+
 
 /**
  * Check if user logged in and perform requested action when true
@@ -49,6 +35,9 @@ require "../".MODEL . "Log.php";
 switch ($_GET['action']) {
     case "bases":
         basesList();
+        break;
+    case "gettoken":
+        tokenManager();
         break;
     default:
         notFound();
