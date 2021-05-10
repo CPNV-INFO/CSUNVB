@@ -192,22 +192,6 @@ function newNova()
     }
 }
 
-function updateNova()
-{
-    $idNova = $_GET['idNova'];
-    if (isset($_POST['updateNameNova'])) {
-        $res = updateNameNova($_POST['updateNameNova'], $idNova);
-        if ($res == false) {
-            setFlashMessage("Une erreur est survenue. Impossible de renommer la nova.");
-        } else {
-            setFlashMessage("La nova a été correctement renommée.");
-        }
-        adminNovas();
-    } else {
-        require_once VIEW . 'admin/updateNova.php';
-    }
-}
-
 function changeEmail()
 {
     $changeUser = $_POST['userID'];
@@ -224,14 +208,30 @@ function changeTel()
     SaveUser($user);
 }
 
-function showNova()
+function showNova($novaID)
 {
+    $nova = getANovaByID($novaID);
     $dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-    if(isset($_POST["date"])){
-        $date = $_POST["date"];
-    }else{
-        $date = date("Y-m");
+    $monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+    if (isset($_POST["month"]) and isset($_POST["year"])) {
+        $date = $_POST["year"]."-".$_POST["month"];
+    } else {
+        $date = date("Y-n");
     }
     $calendar = newCalendar($date);
+    $selectedMonth = date_format(date_create($date.'-01'), 'n');
+    $selectedYear = date_format(date_create($date.'-01'), 'Y');
     require_once VIEW . 'admin/showNova.php';
+}
+
+
+function updateNova($novaID)
+{
+    $res = updateNumberNova($_POST['updateNumberNova'], $novaID);
+    if ($res == false) {
+        setFlashMessage("Une erreur est survenue. Impossible de renommer la nova.");
+    } else {
+        setFlashMessage("La nova a été correctement renommée.");
+    }
+    showNova($novaID);
 }

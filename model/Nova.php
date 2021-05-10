@@ -10,7 +10,13 @@ function addNewNova($nameNova)
     return intval (insert("INSERT INTO novas (number) values (:nameNovas) ",['nameNovas'=>$nameNova] ));
 }
 
-function updateNameNova($updateNameNova, $idNova)
+function updateNumberNova($updateNumberNova, $idNova)
 {
-    return execute("UPDATE novas SET number= :number WHERE id= :id", ['number' => $updateNameNova, 'id' => $idNova]);
+    return execute("UPDATE novas SET number= :number WHERE id= :id", ['number' => $updateNumberNova, 'id' => $idNova]);
 }
+
+function getANovaByID($novaID){
+    return selectOne("select * from novas where id = :novaID",["novaID" => $novaID]);
+}
+
+

@@ -15,7 +15,7 @@ $title = "CSU-NVB - Administration - Novas";
     <tbody>
     <?php foreach ($novas as $nova) { ?>
         <tr>
-        <td><a href="?action=updateNova&idNova=<?= $nova['id'] ?>"><?= $nova['number'] ?></a></td>
+        <td><a href="?action=showNova&id=<?= $nova['id'] ?>"><?= $nova['number'] ?></a></td>
         </tr><?php } ?>
     </tbody>
 </table>
