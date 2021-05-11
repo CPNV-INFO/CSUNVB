@@ -11,14 +11,17 @@ Ce site fonctionnera en interne c'est à dire qu'uniquement les membres agréés
 
 Il y aura deux grands types d'utilisations du site. D'une part il y aura les utilisateurs simples qui ne peuvent que remplir les rapports et les signer et d'autres part il y aura les administrateurs qui sont les responsables qui créent, préparent et gèrent les rapports et la plateforme en général.
 
-Un utilisateur peut se connecter à toutes les bases mais certaines actions ne sont possibles que si l'utilisateur est connecté à la base auquel il veut modifier des données.  
+Un utilisateur peut se connecter à toutes les bases mais certaines actions ne sont possibles que si l'utilisateur est connecté à la base auquel il veut modifier des données.
+
+Il y aura également une API permettant a une application modile de consulter et modifier certaines données.
 
 ### Dans quel contexte (technique) fonctionne ce site ?
 
 Le site sera hébérgé chez swisscenter. Une connexion internet sera donc nécessaire pour accèder au site.
-A cause de la durée écourtée du du la documentation de déploiement sera mise à jour après la fin de pré-tpi, la semaine du 3 au 7 mai.
 
 Celui-ci sera accessible et utilisable avec un pc ou une tablette, car le site, a terme, devra être entierement responsive.
+
+Il aura également une API pour communiquer avec une application mobile.
 
 ### Qu'est-ce que je dois faire pour pouvoir essayer ce site ?
 
@@ -41,7 +44,7 @@ Ce site internet est lié à une base de données qui contient toutes les donné
 -- Permet la gestion des stocks de médicaments dans les ambulances et à la base
 
    MLD:
-![flashMessage image](images/MLD_Drugs.png)
+![flashMessage image](../images/MLD_Drugs.png)
 
 - L’administration
 -- Permet l’administration du site (utilisateurs, stocks, …)
@@ -127,7 +130,63 @@ Il n'y a pas de tests unitaires implémentés dans le projet.
 
 Pour effecturer les tests nous pouvons demander a plusieurs personnes de tester toute l'application dans plusieurs environnements. Il faut la tester sur plusieurs systèmes comme Windows, linux, mac pour les différentes particularités propres aux différents systèmes.
 
+Nous savons que les utilisateurs vont utiliser tant un ordinateur qu'une tablette. Il faudra donc effectuer les tests avec les deux.
+
+Pour l'API, nous utilisons le logiciel insomnia qui permet de faire des scénarios et tester les diverses fonctionnalités et vérifier les données qu'elle nous retourne. 
+
+![insomia.png](images/insomnia.png)
+
 ## Points techniques détaillés
+
+### Utilisation de l'API
+Toutes les actions avec l'API sont décrites ci-dessous.
+
+Les url disponibles pour effectuer des requètes à l'API sont les suviants:
+`https://[adresse du site]/api/index.php?action=[action]'
+| Action | Description |
+| --- | --- |
+| gettoken | L'API a un système d'authentification pour obtenir un token afin de pouvoir faire toutes les requêtes en nécéssitant un. <br><br> Voir chapitre "gettoken"|
+| bases | L'API permet de fournir la liste des bases sans fournir de token. <br><br>Voir chapitre "bases" |
+| reports | L'api permet d'avoir la liste des rapports de garde et de stupéfiants ou un utilisateur est référencé ou a effectué une action.<br><br> Voir chapitre 'reports'. 
+
+
+#### gettoken
+L'API a un système d'authentification pour obtenir un token afin de pouvoir faire toutes les requêtes en nécéssitant un.
+
+Un formulaire en POST est requis pour s'authentifier. Les champs doives être 'initials' et 'password' et comme l'indique le nom du champ, le champ 'initials' doit être rempli avec les initials de l'utilisateur.
+
+Si les identifiants sont corrects, l'API retourne un bearer token qui pourra être utilisé ensuite pour les requêtes demandant une authentification.
+
+Les erreurs sont retournées par des erreurs HTTP:
+| Code d'erreur | Raison |
+| --- | --- |
+| 400 - Bad Request | Le nom d'utilisateur ou/et le mot de passe n'ont pas été transmis correctement dans la requete POST |
+| 401 - Unauthorized |  Utilisateur ou/et mot de passe incorrect |
+| 500 - Internal Server Error | Un problème a été rencontré au niveau du serveur web |
+
+Les tokens n'ont pas de durée de validité mais sont écrasés et recréés après chaque authentification de l'utilisateur à l'API.
+
+#### bases
+L'API permet de fournir la liste des bases sans fournir de token.
+
+L'API retournera la liste des bases sous forme de JSON formaté de cette façon:
+![insomia.png](images/json-bases.png)
+
+### reports
+L'api permet d'avoir la liste des rapports de garde et de stupéfiants ou un utilisateur est référencé ou a effectué une action.
+
+L'utilisateur doit s'authentifié à l'aide d'un token bearer. Voir chapitre 'gettoken'
+
+L'API peut retourner des erreurs HTTP:
+| Code d'erreur | Raison |
+| --- | --- |
+| 400 - Bad Request | Aucun token n'a été transmis ou dans un format invalide |
+| 401 - Unauthorized |  Token non-valide |
+
+L'API retournera la liste des rapports en JSON formatés de cette façon:
+
+![insomia.png](images/json-reports.png)
+
 
 ### Comment marche le système de routage entre les différentes page du site ?
 
