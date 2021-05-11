@@ -45,7 +45,7 @@ function notFound()
  *
  * This function require a POST "initials" and a POST "password".
  *
- * This function can define a HTTP error code if there is a problem depending on the problem:
+ * This function can give an HTTP error code if there is a problem depending on the problem:
  *
  * HTTP error code 400 - Bad Request - user or password missing
  * HTTP error code 401 - Unauthorized - wrong user or password
@@ -88,4 +88,42 @@ function tokenManager()
     require_once '../../view/api/show.php';
 
 
+}
+
+/** This function is used to get the list of sheets where the user that provided the token has made an action.
+ *
+ *  This function can give an HTTP error code if there is a problem depending on the problem:
+ *
+ *  HTTP error code 400 - Bad Request - no token provided or wrong token method
+ *  HTTP error code 401 - Unauthorized - invalid token
+ */
+function SheetListForUser(){
+    if(isset($_SERVER['HTTP_AUTHORIZATION'] )) {
+        $httpAuthorization = $_SERVER['HTTP_AUTHORIZATION'];
+        if (substr($httpAuthorization, 0, 6) == "Bearer") {
+            $token = substr($httpAuthorization,7);
+
+            $user = getUserInfosByToken($token);
+
+            if($user != false){
+                $shiftSheets = getShiftSheetWhereUserActionOrCrew($user['id']);
+                $drugSheets = getDrugSheetWhereUserAction($user['id']);
+                $sheets = array("shift" => $shiftSheets,"drug" => $drugSheets);
+
+                $outText = json_encode($sheets);
+
+
+            }else{
+                $httpErrorCode = '401';
+            }
+            $test = "";
+
+        } else {
+            $httpErrorCode = '400';
+        }
+    }else{
+        $httpErrorCode = '400';
+    }
+
+    require_once '../../view/api/show.php';
 }

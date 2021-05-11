@@ -39,6 +39,9 @@ switch ($_GET['action']) {
     case "gettoken":
         tokenManager();
         break;
+    case "reports":
+        sheetListForUser();
+        break;
     default:
         notFound();
 }
