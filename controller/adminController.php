@@ -219,8 +219,18 @@ function showNova($novaID)
         $date = date("Y-n");
     }
     $calendar = newCalendar($date);
+
+    foreach ($calendar as &$week){
+        foreach ($week as &$day){
+            $day["shifts"] = getShiftUsingNova($novaID,date_format($day["date"],"Y-m-d"));
+            if(date_format($day["date"],"Y-m-d") == date("Y-m-d")){
+                $day["color"] = "#FFD239";
+            }
+        }
+    }
     $selectedMonth = date_format(date_create($date.'-01'), 'n');
     $selectedYear = date_format(date_create($date.'-01'), 'Y');
+
     require_once VIEW . 'admin/showNova.php';
 }
 

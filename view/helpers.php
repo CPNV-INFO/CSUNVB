@@ -461,21 +461,29 @@ function newCalendar($date){
     $week = 0;
     $calendar[$week]= array();
     $lastMonth = $selectedMonth -1;
+    $nextMonth = $selectedMonth +1;
+    $lastMonthYear = $selectedYear;
+    $nextMonthYear = $selectedYear;
     if($lastMonth == 0){
         $lastMonth = 12;
+        $lastMonthYear --;
+    }
+    if ($nextMonth == 13){
+        $nextMonth = 1;
+        $nextMonthYear++;
     }
     for ($i = 1; $i <= $nbDayBefore; $i++) {
-        array_push($calendar[$week], ["number" => $dayByMonth[$lastMonth-1] - $nbDayBefore + ($i), "cat" => "past"]);
+        array_push($calendar[$week], ["date" => date_create($lastMonthYear."-".$lastMonth."-".($dayByMonth[$lastMonth-1] - $nbDayBefore + ($i))) , "color" => "lightgray"]);
     }
     for ($i = 1; $i <= $dayByMonth[$selectedMonth-1]; $i++) {
-        array_push($calendar[$week], ["number" => $i, "cat" => "normal"]);
+        array_push($calendar[$week], ["date" => date_create($selectedYear."-".$selectedMonth."-". $i), "color" => "lightblue"]);
         if(count($calendar[$week])==7){
             $week ++;
             $calendar[$week]= array();
         }
     }
     for ($i = 1; $i <= $nbDayAfter; $i++) {
-        array_push($calendar[$week], ["number" => $i, "cat" => "next"]);
+        array_push($calendar[$week], ["date" => date_create($nextMonthYear."-".$nextMonth."-". $i), "color" => "lightgray"]);
     }
     return $calendar;
 }

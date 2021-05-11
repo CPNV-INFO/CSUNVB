@@ -400,3 +400,11 @@ function removeTeamToModel($modelID,$day){
 function nbEmptyTeams($sheetID){
     return count(selectMany("select * from shiftteams where shiftsheet_id = :sheetID and (boss_id is null or teammate_id is null or nova_id is null)",["sheetID" => $sheetID]));
 }
+
+function getShiftUsingNova($novaID,$date){
+    return selectMany("select shiftsheets.date , bases.name as base, shiftteams.day, users.initials as boss from shiftteams
+inner join shiftsheets on shiftteams.shiftsheet_id = shiftsheets.id
+inner join bases on shiftsheets.base_id = bases.id
+inner join users on shiftteams.boss_id = users.id
+where nova_id = :novaID  and shiftsheets.date = :date order by day ASC",["novaID" => $novaID,"date" => $date]);
+}

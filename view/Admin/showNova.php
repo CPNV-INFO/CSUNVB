@@ -25,12 +25,12 @@ $title = "CSU-NVB - Administration - Nova";
     <form action="?action=showNova&id=<?= $nova["id"] ?>" method="POST">
         <input type="hidden" name="month" value="<?= ($selectedMonth == 1) ? "12" : $selectedMonth-1 ?>">
         <input type="hidden" name="year" value="<?= ($selectedMonth == 1) ? $selectedYear-1 : $selectedYear ?>">
-        <button type="submit"><i class="fas fa-chevron-left"></i></button>
+        <button type="submit" style="background-color: white;"><i class="fas fa-chevron-left"></i></button>
     </form>
     <form action="?action=showNova&id=<?= $nova["id"] ?>" method="POST">
         <input type="hidden" name="month" value="<?= ($selectedMonth == 12) ? "1" : $selectedMonth+1 ?>">
         <input type="hidden" name="year" value="<?= ($selectedMonth == 12) ? $selectedYear+1 : $selectedYear ?>">
-        <button type="submit"><i class="fas fa-chevron-right"></i></i></button>
+        <button type="submit" style="background-color: white;"><i class="fas fa-chevron-right"></i></i></button>
     </form>
     <h4 style="margin-left: 5px"> <?= $monthNames[$selectedMonth-1]." ".$selectedYear ?></h4>
 </div>
@@ -41,14 +41,13 @@ $title = "CSU-NVB - Administration - Nova";
             <th style="width: = 14.2857%"><?= $day ?></th>
         <?php endforeach; ?>
     </tr>
-    <?php foreach ($calendar as $week): ?>
+    <?php foreach ($calendar as &$week): ?>
         <tr>
-            <?php foreach ($week as $day): ?>
-                <td style="width: 14.286%;height: 100%" class="taskCol">
-                    <div style="min-height: 120px;background-color: <?= ($day['cat'] == "normal") ? 'lightblue' : 'lightgray' ?>; border-radius: 10px;padding: 10px">
-
+            <?php foreach ($week as &$day): ?>
+                <td style="width: 14.286%;padding: 2px" class="taskCol">
+                    <div style="min-height: 130px;background-color: <?= $day['color'] ?>; border-radius: 10px;padding: 10px">
                         <div class="row" style="margin: 0 !important; width: 100%">
-                            <?= $day["number"] ?>
+                            <?= date_format($day["date"],"j") ?>
                             <div style="position: relative;left: 10px;display: none">
                                 <div style="position: absolute">
                                     <i class="fas fa-sun" style="background-color: red;padding: 3px; border-radius: 3px"></i>
@@ -66,21 +65,13 @@ $title = "CSU-NVB - Administration - Nova";
                                 </div>
                             </div>
                         </div>
-
-                        <?php if (rand(0,100)<50) : ?>
-                        <div style="font-size: 12px">
-                            Garde XCL
-                            <br>
-                            Ste-Croix Jour
-                        </div>
-                        <?php endif; ?>
-                        <?php if (rand(0,100)<50) : ?>
-                            <div style="font-size: 12px">
-                                Garde MGT
+                        <?php foreach ($day["shifts"] as $shift): ?>
+                            <div style="font-size: 12px;margin-top: 7px;">
+                                Garde <?= $shift["boss"] ?>
                                 <br>
-                                Ste-Croix Nuit
+                                <?= $shift["base"] ?> <i class="fas fa-<?= ($shift["day"] == 1) ? 'sun' : 'moon' ?> fa-lg"></i>
                             </div>
-                        <?php endif; ?>
+                        <?php endforeach; ?>
                     </div>
                 </td>
             <?php endforeach; ?>
