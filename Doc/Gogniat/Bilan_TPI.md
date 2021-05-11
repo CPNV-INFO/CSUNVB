@@ -54,7 +54,6 @@ Un administrateur peut réserver une nova pour indiquer qu'elle ne sera pas disp
 
 ## Multi-équipe(garde)
 
-### Analyse
 
 Certaines bases possèdent plusieurs équipes de soucouriste pour le jour ou la nuit, il est donc important de pouvoir les incricre sur le rapport.
 
@@ -90,18 +89,36 @@ Pouvoir Ajouter/Supprimer une équipe et faire attention à ce que le header du 
 ### Conception et Fonctionnement
 
 
-
 Aller voir les sections "" de de la documentation technique (pas encore documenté)
 
 ## Calendrier de nova
 
-### Analyse
 
-...
+### Maquette
 
-#### Maquette
+Pour la sélection du mois, la première idée était d'ajouter un input de type "mois"
+
+![calendrier_nova](images/inputMonth.PNG)
+
+Mais finalement après discution avec M. Carrel, cette idée ne serait pas compatible avec certains navigateurs, l'idée retenue est donc 
+
+Première version
 
 ![calendrier_nova](images/calNova.PNG)
+
+Après reflexion lors du développement, les modifications suivantes ont été effectuées :
+- Le jour actuel est affiché en jaune
+- Utilisation d'une icone pour l'indication Jour/Nuit, plus visible par l'utilisateur
+
+![calendrier_nova](images/newCalNova.PNG)
+
+### Risque
+
+Le formulaire de modification du nom de la nova déjà existant peut passer un champs qui sélectionne la nova dont on veut voir le calendrier si le secouriste n'est pas attentif.
+
+![calendrier_nova](images/renameNova1.PNG)
+
+Cette option ne sera que très peut utilisée car elle implique de nombreux changements (numéros iinscrits sur les novas, etc.), elle n'a donc pas besoin d'être affichée sur toute les pages de nova
 
 
 ## Droits de modification (garde)
@@ -155,4 +172,14 @@ Document physique ? à discuter avec les experts
 
 ## Sources / Aides
 
+Xavier Carrel, chef de projet et conseils
+
 Besjan Sejrani (collègue), avis sur le design du site
+
+[Behance](https://www.behance.net/) : Recherche d'idée graphique
+
+[W3schools](https://www.w3schools.com/css/) : Aide et rappel CSS
+
+[PHP.net](https://www.php.net/) : Manuel PHP
+
+
