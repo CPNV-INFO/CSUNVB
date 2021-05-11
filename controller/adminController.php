@@ -227,7 +227,9 @@ function showNova($novaID)
                 $day["color"] = "#FFD239";
             }
         }
+        unset($day);
     }
+    unset($week);
     $selectedMonth = date_format(date_create($date.'-01'), 'n');
     $selectedYear = date_format(date_create($date.'-01'), 'Y');
 
@@ -243,5 +245,5 @@ function updateNova($novaID)
     } else {
         setFlashMessage("La nova a été correctement renommée.");
     }
-    showNova($novaID);
+    redirect("showNova",$novaID);
 }
