@@ -97,6 +97,8 @@ Le but du calendrier est de facilité aux utilisateurs le suivit de novas et de 
 
 Pour l'affichage de ce calendrier, un format classique par mois à été choisis pour une bonne vision de l'utilisation de la nova.
 
+La structure du calendrier se fait grâce à un helper, elle pourra donc être réutilisée pour le planning des secouristes si besoin
+
 Les jours du mois seront en bleu clair (couleur principale du site), les jours du mois précédant et du mois suivant seront en gris
 
 Les informations inportantes des gardes utilisant les novas sont affichées, à savoir :
@@ -107,21 +109,21 @@ Les informations inportantes des gardes utilisant les novas sont affichées, à 
 
 Maquette (première version)
 
-![calendrier_nova](images/calNova.PNG)
+![calNova](images/calNova.PNG)
 
 Après reflexion lors du développement, les modifications suivantes ont été effectuées :
 - Le jour actuel est affiché en jaune
 - Utilisation d'une icone pour l'indication Jour/Nuit, plus visible par l'utilisateur
 
-![calendrier_nova](images/newCalNova.PNG)
+![newCalNova](images/newCalNova.PNG)
 
 Pour la sélection du mois, la première idée était d'ajouter un input de type "mois"
 
-![calendrier_nova](images/inputMonth.PNG)
+![inputMonth](images/inputMonth.PNG)
 
 Mais finalement après discution avec M. Carrel, cette idée ne serait pas compatible avec certains navigateurs, l'idée retenue est donc de simples boutons flèches directionnelles pour afficher le mois précédant/suivant
 
-![calendrier_nova](images/selectMonth.PNG)
+![selectMonth](images/selectMonth.PNG)
 
 Cette solution est simple à mettre en place et suffisante car les utilisateurs devraient se concentrer seulement sur "plusieurs jours ou semaines en avances" (Cahier de charges)
 
@@ -129,11 +131,34 @@ Cette solution est simple à mettre en place et suffisante car les utilisateurs 
 
 Le formulaire de modification du nom de la nova déjà existant peut passer un champs qui sélectionne la nova dont on veut voir le calendrier si le secouriste n'est pas attentif.
 
-![calendrier_nova](images/renameNova1.PNG)
+![renameNova1](images/renameNova1.PNG)
 
 Cette option ne sera que très peut utilisée car elle implique de nombreux changements (numéros iinscrits sur les novas, etc.), elle n'a donc pas besoin d'être affichée sur toute les pages de nova
 
 Il serait intéressant de supprimer ce formaulaire et d'ajouter un icone "crayon" ouvrant un formulaire dans un popup afin de modifier le numéro d'une nova.
+
+## Indiponibilté de nova
+
+La calendrier des novas a pour but de plannifier l'utilisation de novas, et de voir d'éventuels problèmes (une même nova utilisée par 2 équipes au même moment par exemple),
+elle sont en général toujours disponible mais faut pouvoir indiquer leur indisponibilités (comme un rendez-vous au garage)
+
+Deux gardes se déroulent par journée, il faut donc savoir si la nova sera indisponible durant la nuit, le jour ou toute la journée
+
+Après analyse, discution avec M. Carrel et quelques test, l'idée retenue pour cette fonctionnalité est la suivante :
+
+Au survol de chaque jour du calendrier, des boutons soleil/lune (pour les créneaux jour/nuit) deviennent visible afin d'indiquer que la nova sera indisponible
+
+![addIndispo](images/addIndispo.PNG)
+
+Avec ensuite un formulaire permettant d'indiquer le créneau et une éventuelle remarque
+
+![formIndispo](images/formIndispo.PNG)
+
+L'icone devient rouge et aux survol il est possible de savoir pour quel raison la nova est indisponible et qui l'a indiqué
+
+![indispo](images/indispo.PNG)
+
+En cliquant à nouveau sur cette icône, il doit être possible de la modifier ou de l'annnuler.
 
 
 ## Droits de modification (garde)
