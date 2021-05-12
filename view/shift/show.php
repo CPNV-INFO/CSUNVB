@@ -3,7 +3,7 @@ ob_start();
 $title = "CSU-NVB - Remise de garde";
 ?>
 <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
-<input type="hidden" id="sheetID" value="<?= $shiftsheet['id'] ?>"><!-- used to get date in javascrpt -->
+<input type="hidden" id="sheetID" value="<?= $shiftsheet['id'] ?>"><!-- used to get id in javascrpt -->
 <a href="?action=shiftList&id=<?= $shiftsheet["base_id"] ?>" class="text-dark d-print-none"><i
             class="fas fa-angle-left backIcon"></i>Retour</a>
 <h1>
