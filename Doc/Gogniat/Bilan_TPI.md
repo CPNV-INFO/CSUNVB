@@ -144,6 +144,10 @@ elle sont en général toujours disponible mais faut pouvoir indiquer leur indis
 
 Deux gardes se déroulent par journée, il faut donc savoir si la nova sera indisponible durant la nuit, le jour ou toute la journée
 
+La base de donnée doit être mofifiée afin d'y ajouter la table indiponibilité, la base de donnée est prévue pour pouvoir avoir plusieurs entrée par jour et par créneaux mais actuelement, il est possible d'avoir d'en inscrire une seule dans le calendrier
+
+![mcdNova](images/mcdNova.PNG)
+
 Après analyse, discution avec M. Carrel et quelques test, l'idée retenue pour cette fonctionnalité est la suivante :
 
 Au survol de chaque jour du calendrier, des boutons soleil/lune (pour les créneaux jour/nuit) deviennent visible afin d'indiquer que la nova sera indisponible
@@ -159,6 +163,7 @@ L'icone devient rouge et aux survol il est possible de savoir pour quel raison l
 ![indispo](images/indispo.PNG)
 
 En cliquant à nouveau sur cette icône, il doit être possible de la modifier ou de l'annnuler.
+
 
 
 ## Droits de modification (garde)
