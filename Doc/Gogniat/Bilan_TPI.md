@@ -15,7 +15,7 @@ Objetif(s) :
 
 Il est possible d'ajouter/supprimer une équipe (composée d'un responsable, d'un équipier et d'une nova) sur un rapport de garde afin d'un avoir plusieurs pour le même créneau.
 
-### Sprint 2 : Planning des secouristes
+### Sprint 2 : Planning des secouristes (-> sprint 3)
 
 Date : 10/05/2021 - 18/05/2021
 
@@ -26,7 +26,7 @@ Objetif(s) :
 Importation du planning des secouriste depuis un fichier CSV. 
 Le Planning est visible par les administrateurs depuis la page Administration > secouriste
 
-### Sprint 3 : Gestion des secouristes sur les rapports de garde
+### Sprint 3 : Gestion des secouristes sur les rapports de garde (-> sprint 4)
 
 Date : 19/05/2021 - 25/05/2021
 
@@ -38,7 +38,7 @@ Seulement les secouristes présents sur la base pour le jour en question sont pr
 Les secouristes ne faisant pas partie d'une équipe ne peuvent plus remplir un rapport de garde.
 Seul les secouristes mentionnés sur le rapport si celui-ci est récent (3 jour) et les administrateurs peuvent corriger un rapport.
 
-### Sprint 4 : Gestion de l'utilisation des novas
+### Sprint 4 : Gestion de l'utilisation des novas (-> sprint 2)
 
 Date : 26/05/2021 - 02/06/2021
 
@@ -91,18 +91,21 @@ Pouvoir Ajouter/Supprimer une équipe et faire attention à ce que le header du 
 
 Aller voir les sections "" de de la documentation technique (pas encore documenté)
 
-## Calendrier de nova
+## Calendrier de nova (ambulance)
+
+Le but du calendrier est de facilité aux utilisateurs le suivit de novas et de connâitre leurs futures utilisations.
+
+Pour l'affichage de ce calendrier, un format classique par mois à été choisis pour une bonne vision de l'utilisation de la nova.
+
+Les jours du mois seront en bleu clair (couleur principale du site), les jours du mois précédant et du mois suivant seront en gris
+
+Les informations inportantes des gardes utilisant les novas sont affichées, à savoir :
+- la base sur laquelle sera utilisée la nova
+- Par qui elle sera utilisée
+- Quand elle sera utilisée (créneau de jour ou de nuit)
 
 
-### Maquette
-
-Pour la sélection du mois, la première idée était d'ajouter un input de type "mois"
-
-![calendrier_nova](images/inputMonth.PNG)
-
-Mais finalement après discution avec M. Carrel, cette idée ne serait pas compatible avec certains navigateurs, l'idée retenue est donc 
-
-Première version
+Maquette (première version)
 
 ![calendrier_nova](images/calNova.PNG)
 
@@ -112,6 +115,16 @@ Après reflexion lors du développement, les modifications suivantes ont été e
 
 ![calendrier_nova](images/newCalNova.PNG)
 
+Pour la sélection du mois, la première idée était d'ajouter un input de type "mois"
+
+![calendrier_nova](images/inputMonth.PNG)
+
+Mais finalement après discution avec M. Carrel, cette idée ne serait pas compatible avec certains navigateurs, l'idée retenue est donc de simples boutons flèches directionnelles pour afficher le mois précédant/suivant
+
+![calendrier_nova](images/selectMonth.PNG)
+
+Cette solution est simple à mettre en place et suffisante car les utilisateurs devraient se concentrer seulement sur "plusieurs jours ou semaines en avances" (Cahier de charges)
+
 ### Risque
 
 Le formulaire de modification du nom de la nova déjà existant peut passer un champs qui sélectionne la nova dont on veut voir le calendrier si le secouriste n'est pas attentif.
@@ -119,6 +132,8 @@ Le formulaire de modification du nom de la nova déjà existant peut passer un c
 ![calendrier_nova](images/renameNova1.PNG)
 
 Cette option ne sera que très peut utilisée car elle implique de nombreux changements (numéros iinscrits sur les novas, etc.), elle n'a donc pas besoin d'être affichée sur toute les pages de nova
+
+Il serait intéressant de supprimer ce formaulaire et d'ajouter un icone "crayon" ouvrant un formulaire dans un popup afin de modifier le numéro d'une nova.
 
 
 ## Droits de modification (garde)
@@ -155,7 +170,9 @@ Le problème est de type humain et rien qui serait simple à mettre en place pou
 
 ## Document Fournis
 
-Tous les documents peuvent être retrouvés sur le [GitHub](https://github.com/CPNV-INFO/CSUNVB/tree/MGT/Doc) public, sur la branche MGT, associée à mon TPI
+Ce fichier comprend les points importants par rappport au TPI (reflexion, déroulement, etc.) mais pas les points techniques importants au projet.
+
+Tous les autres documents peuvent être retrouvés sur le [GitHub](https://github.com/CPNV-INFO/CSUNVB/tree/MGT/Doc) public, sur la branche MGT, associée à mon TPI
 
 Le fichier "Doc\Mapping Dossier de projet.docx" contient les directives un peu particulères à ce projet de TPI, et où on peut retrouver les différents éléments demandés.
 
