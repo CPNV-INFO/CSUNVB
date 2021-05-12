@@ -11,6 +11,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+unlock tables;
 
 -- Listage de la structure de la base pour csunvb_csu
 DROP DATABASE IF EXISTS `csunvb_csu`;
@@ -167,6 +168,22 @@ CREATE TABLE IF NOT EXISTS `novas` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `number_UNIQUE` (`number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `novaUnavailabilites`;
+CREATE TABLE IF NOT EXISTS `novaUnavailabilites` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(45) NULL,
+  `date` date NOT NULL,
+  `day` tinyint(1) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `nova_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_novaUnavailabilites` (`date`,`day`,`nova_id`) USING BTREE,
+  KEY `fk_novaUnavailabilites_user_id` (`user_id`),
+  KEY `fk_novaUnavailabilites_nova_id` (`nova_id`),
+  CONSTRAINT `fk_novaUnavailabilites_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_novaUnavailabilites_nova_id` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2251 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. pharmachecks
