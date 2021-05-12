@@ -185,3 +185,19 @@ removeTaskBtns.forEach((item) => {
         showModal();
     }, false);
 })
+
+var novaAvailableBtns = document.querySelectorAll('.novaAvailableBtn');
+novaAvailableBtns.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        var date = $(this).parent().parent().parent().parent().parent().find('.completeDate').html();
+        $("#mainModalForm").attr('action', '?action=updateNovaAvailable&id='+$("#novaID").val());
+        setTitleModal("Indisponiblé du " + date);
+        setBodyModal('<input type="checkbox" name="day"> Jour<input type="checkbox" name="night" style="margin-left: 20px;"> Nuit');
+        addBodyModal('<input type="hidden" name="date" value='+date+'>');
+        addBodyModal('<div>Remarque : <textarea rows="2" name="comment" id="comment" style="margin:10px 0 0 0; width:400px;"></textarea></div>');
+        setCancelModal('<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>');
+        setSubmitModal('<input type="submit" class="btn blueBtn" value="Enregistrer">');
+        setTitleModal();
+        showModal();
+    }, false);
+})

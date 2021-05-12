@@ -223,6 +223,8 @@ function showNova($novaID)
     foreach ($calendar as &$week){
         foreach ($week as &$day){
             $day["shifts"] = getShiftUsingNova($novaID,date_format($day["date"],"Y-m-d"));
+            $day["unAvailableDay"] = getUnAvailableNova(date_format($day["date"],"Y-m-d"),1,$novaID);
+            $day["unAvailableNight"] = getUnAvailableNova(date_format($day["date"],"Y-m-d"),0,$novaID);
             if(date_format($day["date"],"Y-m-d") == date("Y-m-d")){
                 $day["color"] = "#FFD239";
             }
@@ -244,6 +246,16 @@ function updateNova($novaID)
         setFlashMessage("Une erreur est survenue. Impossible de renommer la nova.");
     } else {
         setFlashMessage("La nova a été correctement renommée.");
+    }
+    redirect("showNova",$novaID);
+}
+
+function updateNovaAvailable($novaID){
+    if(isset($_POST["day"])and($_POST["day"] == "on")){
+        addUnAvailableNova($_POST["comment"],$_POST["date"],1,$_SESSION["user"]["id"],$novaID);
+    }
+    if(isset($_POST["night"])and($_POST["night"] == "on")){
+        addUnAvailableNova($_POST["comment"],$_POST["date"],0,$_SESSION["user"]["id"],$novaID);
     }
     redirect("showNova",$novaID);
 }
