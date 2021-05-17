@@ -30,7 +30,7 @@ $title = "CSU-NVB - Accueil";
                     <?= date('d.m.Y', strtotime($openShift["date"])) ?>
                     <br>Rôle :
                     <?php foreach ($openShift["roles"] as $role): ?>
-                        <?= $role["name"] ?>
+                        <?= $role["role"] ?> <?= ($role["day"] == 1) ? " Jour" : " Nuit" ?>
                     <?php endforeach; ?>
                     <br>Tâches effectuées : <?= $openShift["nbDone"] ?> / <?= $openShift["nbTasks"] ?>
                     <br>Status : Actif
@@ -41,7 +41,7 @@ $title = "CSU-NVB - Accueil";
                     <?= date('d.m.Y', strtotime($blankShift["date"]))?>
                     <br>Rôle :
                     <?php foreach ($blankShift["roles"] as $role): ?>
-                        <?= $role["name"] ?>
+                        <?= $role["role"] ?> <?= ($role["day"] == 1) ? " Jour" : " Nuit" ?>
                     <?php endforeach; ?>
                     <br>Status : En Préparation
                 </div>
@@ -51,7 +51,7 @@ $title = "CSU-NVB - Accueil";
                     <?= date('d.m.Y', strtotime($reOpenShift["date"])) ?>
                     <br>Rôle :
                     <?php foreach ($reOpenShift["roles"] as $role): ?>
-                        <?= $role["name"] ?>
+                        <?= $role["role"] ?> <?= ($role["day"] == 1) ? " Jour" : " Nuit" ?>
                     <?php endforeach; ?>
                     <br>Status : En Correction
                 </div>

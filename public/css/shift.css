@@ -65,6 +65,21 @@
     margin-left: 10px;
 }
 
+.selectForDay.first, .selectForNight.first{
+    border-radius: 10px 10px 0 0;
+    padding-top: 10px;
+}
+
+.selectForDay.last, .selectForNight.last{
+    border-radius: 0 0 10px 10px;
+    padding-bottom: 10px;
+}
+
 .SH_dropdownInfo {
     width: 80px;
+}
+
+.row{
+    margin-right: 0 !important;
+    margin-left: 0 !important;
 }

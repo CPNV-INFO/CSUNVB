@@ -381,10 +381,10 @@ declare nbAction int default 1;
 declare model int default 1;
 declare nbMaxModel int default 5;
 
-INSERT INTO shiftmodels VALUES (model,'Vide',1);
+INSERT INTO shiftmodels VALUES (model,'Vide',1,1,1);
 set model = model + 1;
 
-INSERT INTO shiftmodels VALUES (model,'Classique',1);
+INSERT INTO shiftmodels VALUES (model,'Classique',1,1,1);
 while nbAction <= nbMaxAction do
 	INSERT INTO shiftmodel_has_shiftaction VALUES (id,nbAction,model);
     set nbAction = nbAction + 1;
@@ -393,7 +393,7 @@ end while;
 set model = model + 1;
 
 while model <= nbMaxmodel do
-	INSERT INTO shiftmodels VALUES (model,CONCAT('Modèle de Test ', (model - 2)),1);
+	INSERT INTO shiftmodels VALUES (model,CONCAT('Modèle de Test ', (model - 2)),1,1,1);
     set nbAction = 1;
     while nbAction <= nbMaxAction do
 		if (RAND() > 0.2) THEN
@@ -416,6 +416,7 @@ DELIMITER #
 CREATE PROCEDURE creat_shifts(IN nbClose INT, nbBlankFull INT, IN nbBlank INT)
 BEGIN
     declare id int default 1;
+    declare team_id int default 1;
     declare base int default 1;
 	declare nbMaxBase int default (SELECT count(id) FROM bases);
     declare nbShift int default 1;
@@ -423,22 +424,40 @@ BEGIN
     declare nbMaxNova int default (SELECT count(id) FROM novas);
     while base <= nbMaxBase do
 		while nbShift <= nbClose do
-			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL -nbShift DAY)),2,base,3,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)));
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL -nbShift DAY)),2,base,3,(SELECT FLOOR(RAND()*(nbMaxUser)+1)));
+            INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),0);
+            set team_id = team_id + 1;
+            INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),1);
+            set team_id = team_id + 1;
 			set id = id + 1;
             set nbShift = nbShift + 1;
 		end while;
         set nbShift = 1;
         
-        INSERT INTO `shiftsheets` VALUES (id,CURDATE(),2,base,2,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),null,(SELECT FLOOR(RAND()*(nbMaxNova)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)));
+        INSERT INTO `shiftsheets` VALUES (id,CURDATE(),2,base,2,null);
+        INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),0);
+        set team_id = team_id + 1;
+        INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),1);
+        set team_id = team_id + 1;
+        INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),1);
+        set team_id = team_id + 1;
         set id = id + 1;
         
         while nbShift <= nbBlankFull do
-			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),null,(SELECT FLOOR(RAND()*(nbMaxNova)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)));
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,null);
+            INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),0);
+            set team_id = team_id + 1;
+            INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),1);
+            set team_id = team_id + 1;
 			set id = id + 1;
             set nbShift = nbShift + 1;
 		end while;
         while nbShift <= nbBlank do
-			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,null,null,null,null,null,null,null);
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,null);
+            INSERT INTO `shiftteams` VALUES (team_id,id,null,null,null,0);
+            set team_id = team_id + 1;
+            INSERT INTO `shiftteams` VALUES (team_id,id,null,null,null,1);
+            set team_id = team_id + 1;
 			set id = id + 1;
             set nbShift = nbShift + 1;
 		end while;

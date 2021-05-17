@@ -58,14 +58,14 @@ function changeUserAdmin()
         $user['admin'] = 1;
     }
     $res = SaveUser($user);
-    if($res == true){
-        if($user['admin']){
+    if ($res == true) {
+        if ($user['admin']) {
             setFlashMessage($user['initials'] . " est désormais administrateur.");
-        }else{
+        } else {
             setFlashMessage($user['initials'] . " est désormais utilisateur.");
         }
-    }else{
-        setFlashMessage("Erreur de modification du rôle pour ".$user['initials']);
+    } else {
+        setFlashMessage("Erreur de modification du rôle pour " . $user['initials']);
     }
     redirect("adminCrew");
 }
@@ -192,22 +192,6 @@ function newNova()
     }
 }
 
-function updateNova()
-{
-    $idNova = $_GET['idNova'];
-    if (isset($_POST['updateNameNova'])) {
-        $res = updateNameNova($_POST['updateNameNova'], $idNova);
-        if ($res == false) {
-            setFlashMessage("Une erreur est survenue. Impossible de renommer la nova.");
-        } else {
-            setFlashMessage("La nova a été correctement renommée.");
-        }
-        adminNovas();
-    } else {
-        require_once VIEW . 'admin/updateNova.php';
-    }
-}
-
 function changeEmail()
 {
     $changeUser = $_POST['userID'];
@@ -222,4 +206,57 @@ function changeTel()
     $user = getUser($changeUser);
     $user['mobileNumber'] = $_POST['tel'];
     SaveUser($user);
+}
+
+function showNova($novaID)
+{
+    $nova = getANovaByID($novaID);
+    $dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+    $monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+    if (isset($_POST["month"]) and isset($_POST["year"])) {
+        $date = $_POST["year"]."-".$_POST["month"];
+    } else {
+        $date = date("Y-n");
+    }
+    $calendar = newCalendar($date);
+
+    foreach ($calendar as &$week){
+        foreach ($week as &$day){
+            $day["shifts"] = getShiftUsingNova($novaID,date_format($day["date"],"Y-m-d"));
+            $day["unAvailableDay"] = getUnAvailableNova(date_format($day["date"],"Y-m-d"),1,$novaID);
+            $day["unAvailableNight"] = getUnAvailableNova(date_format($day["date"],"Y-m-d"),0,$novaID);
+            if(date_format($day["date"],"Y-m-d") == date("Y-m-d")){
+                $day["color"] = "#FFD239";
+            }
+        }
+        unset($day);
+    }
+    unset($week);
+    $selectedMonth = date_format(date_create($date.'-01'), 'n');
+    $selectedYear = date_format(date_create($date.'-01'), 'Y');
+
+    require_once VIEW . 'admin/showNova.php';
+}
+
+
+function updateNova($novaID)
+{
+    $res = updateNumberNova($_POST['updateNumberNova'], $novaID);
+    if ($res == false) {
+        setFlashMessage("Une erreur est survenue. Impossible de renommer la nova.");
+    } else {
+        setFlashMessage("La nova a été correctement renommée.");
+    }
+    redirect("showNova",$novaID);
+}
+
+function updateNovaAvailable($novaID){
+    delUnAvailableNova($_POST["date"],$novaID);
+    if(isset($_POST["day"])and($_POST["day"] == "on")){
+        addUnAvailableNova($_POST["comment"],$_POST["date"],1,$_SESSION["user"]["id"],$novaID);
+    }
+    if(isset($_POST["night"])and($_POST["night"] == "on")){
+        addUnAvailableNova($_POST["comment"],$_POST["date"],0,$_SESSION["user"]["id"],$novaID);
+    }
+    redirect("showNova",$novaID);
 }
