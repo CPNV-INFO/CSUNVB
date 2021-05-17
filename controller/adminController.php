@@ -251,6 +251,7 @@ function updateNova($novaID)
 }
 
 function updateNovaAvailable($novaID){
+    delUnAvailableNova($_POST["date"],$novaID);
     if(isset($_POST["day"])and($_POST["day"] == "on")){
         addUnAvailableNova($_POST["comment"],$_POST["date"],1,$_SESSION["user"]["id"],$novaID);
     }

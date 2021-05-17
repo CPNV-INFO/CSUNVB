@@ -190,14 +190,61 @@ var novaAvailableBtns = document.querySelectorAll('.novaAvailableBtn');
 novaAvailableBtns.forEach((item) => {
     item.addEventListener('click', function (event) {
         var date = $(this).parent().parent().parent().parent().parent().find('.completeDate').html();
-        $("#mainModalForm").attr('action', '?action=updateNovaAvailable&id='+$("#novaID").val());
-        setTitleModal("Indisponiblé du " + date);
-        setBodyModal('<input type="checkbox" name="day"> Jour<input type="checkbox" name="night" style="margin-left: 20px;"> Nuit');
-        addBodyModal('<input type="hidden" name="date" value='+date+'>');
-        addBodyModal('<div>Remarque : <textarea rows="2" name="comment" id="comment" style="margin:10px 0 0 0; width:400px;"></textarea></div>');
-        setCancelModal('<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>');
-        setSubmitModal('<input type="submit" class="btn blueBtn" value="Enregistrer">');
-        setTitleModal();
-        showModal();
+        if($(this).parent().parent().parent().parent().find(".unAvailable").length > 0){
+            editNovaAUnavailable($(this),date);
+        }else{
+            var day = $(this).parent().parent().parent().find(".fa-sun").length;
+            newNovaAUnavailable(day,date);
+        }
     }, false);
 })
+
+function editNovaAUnavailable(novaBtn,date) {
+    var parent = novaBtn.parent().parent().parent().parent();
+    var day = parent.find(".fa-sun").parent().parent().hasClass("unAvailable");
+    var night = parent.find(".fa-moon").parent().parent().hasClass("unAvailable");
+    var comment = "";
+    $("#mainModalForm").attr('action', '?action=updateNovaAvailable&id='+$("#novaID").val());
+    setTitleModal("Indisponiblé du " + date);
+    if(day==1){
+        setBodyModal('<input type="checkbox" name="day" checked="checked"> Jour');
+        comment = parent.find(".fa-sun").parent();
+        comment.each(function() {
+            $.each(this.attributes, function() {
+                // this.attributes is not a plain object, but an array
+                // of attribute nodes, which contain both the name and value
+                if(this.specified) {
+                    console.log(this.name, this.value);
+                }
+            });
+        });
+        comment = parent.find(".glyphicon").attr("data-original-title").substring(4);
+    }else{
+        setBodyModal('<input type="checkbox" name="day"> Jour');
+    }
+    if(night==1){
+        addBodyModal('<input type="checkbox" name="night" checked="checked" style="margin-left: 20px;"> Nuit');
+    }else{
+        addBodyModal('<input type="checkbox" name="night" style="margin-left: 20px;"> Nuit');
+    }
+    addBodyModal('<input type="hidden" name="date" value='+date+'>');
+    addBodyModal('<div>Remarque : <textarea rows="2" name="comment" id="comment" style="margin:10px 0 0 0; width:400px;">'+comment+'</textarea></div>');
+    setCancelModal('<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>');
+    setSubmitModal('<input type="submit" class="btn blueBtn" value="Modifier">');
+    showModal();
+}
+
+function newNovaAUnavailable(day,date){
+    $("#mainModalForm").attr('action', '?action=updateNovaAvailable&id='+$("#novaID").val());
+    setTitleModal("Indisponiblé du " + date);
+    if(day == 1){
+        setBodyModal('<input type="checkbox" name="day" checked="checked"> Jour<input type="checkbox" name="night" style="margin-left: 20px;"> Nuit');
+    }else{
+        setBodyModal('<input type="checkbox" name="day"> Jour<input type="checkbox" name="night" checked="checked" style="margin-left: 20px;"> Nuit');
+    }
+    addBodyModal('<input type="hidden" name="date" value='+date+'>');
+    addBodyModal('<div>Remarque : <textarea rows="2" name="comment" id="comment" style="margin:10px 0 0 0; width:400px;"></textarea></div>');
+    setCancelModal('<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>');
+    setSubmitModal('<input type="submit" class="btn blueBtn" value="Enregistrer">');
+    showModal();
+}
