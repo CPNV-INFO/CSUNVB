@@ -122,7 +122,7 @@ function updateDrugSheet() {
             foreach ($batches as $batchID => $novas){
                 foreach ($novas as $novaID => $restockamount){
                     if($restockamount != ""){
-                        $res = inertOrUpdateRestock($date,$batchID,$novaID,$restockamount);
+                        $res = inertOrUpdateRestock($date,$batchID,$novaID,$restockamount,$drugSheetID);
                         if($res == null || $res === false) $errors = true;
                     }
 

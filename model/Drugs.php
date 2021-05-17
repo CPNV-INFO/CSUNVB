@@ -182,8 +182,8 @@ function getRestockByDateAndDrug($date, $batch, $nova) {
  * @param $restockamount - The amount of the restock
  * @return string|null
  */
-function inertOrUpdateRestock($date,$batchID,$novaID,$restockamount){
-    return insert('INSERT INTO restocks (DATE, quantity, batch_id, nova_id, user_id) VALUES (:date,:restockamount,:batchID,:novaID,:userID) ON DUPLICATE KEY UPDATE quantity= :restockamount,user_id = :userID;',['date'=>$date, 'restockamount'=>$restockamount,'batchID'=>$batchID,'novaID'=>$novaID,'userID'=>$_SESSION['user']['id']]);
+function inertOrUpdateRestock($date,$batchID,$novaID,$restockamount,$sheetID){
+    return insert('INSERT INTO restocks (DATE, quantity, batch_id, nova_id, user_id, drugsheet_id) VALUES (:date,:restockamount,:batchID,:novaID,:userID,:sheetID) ON DUPLICATE KEY UPDATE quantity= :restockamount,user_id = :userID;',['date'=>$date, 'restockamount'=>$restockamount,'batchID'=>$batchID,'novaID'=>$novaID,'userID'=>$_SESSION['user']['id'],'sheetID'=>$sheetID]);
 }
 
 function getLatestDrugSheetWeekNb($base_id) {
