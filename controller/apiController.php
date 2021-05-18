@@ -28,7 +28,9 @@ require "../" . MODEL . "api.php";
 function basesList()
 {
     $outText = json_encode(getbases());
-    require_once '../../view/api/show.php';
+    $httpErrorCode = null;
+
+    sendJson($httpErrorCode,$outText);
 }
 
 /**
@@ -37,7 +39,8 @@ function basesList()
 function notFound()
 {
     $httpErrorCode = '404';
-    require_once '../../view/api/show.php';
+    $outText=null;
+    sendJson($httpErrorCode,$outText);
 }
 
 /** This function is used to check the credentials given by the user and if it's correct generating a token,
@@ -55,11 +58,15 @@ function notFound()
  */
 function tokenManager()
 {
+    $outText = null;
+    $httpErrorCode = null;
+
     if (isset($_POST['initials']) && isset($_POST['password'])) {
         $initials = $_POST['initials'];
         $password = $_POST['password'];
 
         $user = getUserByInitials($initials);
+
 
 
         if (password_verify($password, $user['password'])) {
@@ -85,9 +92,28 @@ function tokenManager()
         $httpErrorCode = '400';
     }
 
-    require_once '../../view/api/show.php';
+    sendJson($httpErrorCode,$outText);
 
 
+}
+
+function checkApiToken()
+{
+
+    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $httpAuthorization = $_SERVER['HTTP_AUTHORIZATION'];
+        if (substr($httpAuthorization, 0, 6) == "Bearer") {
+            $token = substr($httpAuthorization, 7);
+
+            $return = getUserInfosByToken($token);
+
+        } else {
+            $return = "error400";
+        }
+    } else {
+        $return = "error400";
+    }
+    return $return;
 }
 
 /** This function is used to get the list of sheets where the user that provided the token has made an action.
@@ -97,33 +123,61 @@ function tokenManager()
  *  HTTP error code 400 - Bad Request - no token provided or wrong token method
  *  HTTP error code 401 - Unauthorized - invalid token
  */
-function SheetListForUser(){
-    if(isset($_SERVER['HTTP_AUTHORIZATION'] )) {
-        $httpAuthorization = $_SERVER['HTTP_AUTHORIZATION'];
-        if (substr($httpAuthorization, 0, 6) == "Bearer") {
-            $token = substr($httpAuthorization,7);
+function SheetListForUser()
+{
 
-            $user = getUserInfosByToken($token);
+    $user = checkApiToken();
+    $outText = null;
+    $httpErrorCode = null;
 
-            if($user != false){
-                $shiftSheets = getShiftSheetWhereUserActionOrCrew($user['id']);
-                $drugSheets = getDrugSheetWhereUserAction($user['id']);
-                $sheets = array("shift" => $shiftSheets,"drug" => $drugSheets);
+    if (isset($user['id'])) {
+        $shiftSheets = getShiftSheetWhereUserActionOrCrew($user['id']);
+        $drugSheets = getDrugSheetWhereUserAction($user['id']);
+        $sheets = array("shift" => $shiftSheets, "drug" => $drugSheets);
 
-                $outText = json_encode($sheets);
-
-
-            }else{
-                $httpErrorCode = '401';
-            }
-            $test = "";
-
-        } else {
-            $httpErrorCode = '400';
-        }
-    }else{
+        $outText = json_encode($sheets);
+    } elseif ($user == "error400") {
         $httpErrorCode = '400';
+    } else {
+        $httpErrorCode = '401';
     }
 
-    require_once '../../view/api/show.php';
+
+    sendJson($httpErrorCode,$outText);
+}
+
+function sheetUserAction(){
+
+    $outText = null;
+    $httpErrorCode = null;
+
+    if(isset($_POST['sheetId'])) {
+        $sheetId = $_POST['sheetId'];
+
+        $user = checkApiToken();
+
+
+        if (isset($user['id'])) {
+            $checks = array("data" => getShiftChecks($user['id'],$sheetId));
+            $outText = json_encode($checks);
+        } elseif ($user == "error400") {
+            $httpErrorCode = '400';
+        } else {
+            $httpErrorCode = '401';
+        }
+
+    }
+
+    sendJson($httpErrorCode,$outText);
+}
+
+function sendJson($httpErrorCode,$outText)
+{
+    if (!is_null($httpErrorCode)) {
+        http_response_code($httpErrorCode);
+    }
+
+    if (!is_null($outText)) {
+        echo $outText;
+    }
 }
