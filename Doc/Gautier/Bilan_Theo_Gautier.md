@@ -33,6 +33,9 @@ Ce journal est une copie du journal présent sur Icescrum. Il est ordré du plus
 
 | Personne et date | Entrée du journal |
 | --- | --- |
+| XCL 17.05.2021 | Envoi par mail à Théo des informations nécessaires à l’envoi de SMS |
+| TGR 17.05.2021 | Début du sprint 3. | 
+| TGR 11.05.2021 | Fin du Sprint 2 et sprint review. Tout les objectifs du sprint ont été atteints. |
 | TGR 06.05.2021 | Avec l'aval du chef de projet, j'ai clos le sprint 1 qui correspond au jour de lancement du TPI et ai démarré le sprint 2 sur lequel j'avais déjà travaillé en pratique. Il n'y avait rien à review pour le sprint 1. |
 | XCL 05.05.2021 | Ajout de la spécification détaillée de l'API dans le repository (doc/CSUNVB API.pdf) |
 | TGR 04.05.2021 | Après avoir fait une planification initiale et avoir pris connaissance de l'ampleur du travail à effectuer et des spécificités de chaque taches, j'ai le sentiment qu'effectuer le cahier des charges dans on entièreté sera difficile dans les 90 heures du TPI.<br><br> Pour cette raison, j'ai contacté mon chef de projet et nous avons eu une réunion rapide pour faire le point sur les questions que j'avais et le faite que je ne pense pas pouvoir finir tout le cahier des charges dans le temps imparti.<br><br> Nous avons donc décidé de revoir l'ordre dans lequel j'effectuerais les taches afin de faire le plus important d'abord. L'ordre dans lequel sera effectué les taches est donc:  l'API puis ensuite la sortie de stupéfiants de la pharmatie et pour finir les statistiques |
