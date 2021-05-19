@@ -171,11 +171,13 @@ Un bouton impoter
 
 ## Visualisation du plan de travail
 
-![indispo](images/userCalendarBtn.PNG)
+![indispo](images/mcdPlanning.PNG)
 
-![indispo](images/emptyCalendar.PNG)
+![userCalendarBtn](images/userCalendarBtn.PNG)
 
-![indispo](images/userCalendarInfo.PNG)
+![emptyCalendar](images/emptyCalendar.PNG)
+
+![userCalendarInfo](images/userCalendarInfo.PNG)
 
 ## Droits de modification (garde)
 
