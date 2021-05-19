@@ -272,3 +272,32 @@ function getDrugSignaturesForDrugSheet($sheetID){
 function insertDrugSignatures($drugSheetID,$day,$userID,$baseID){
     return insert("INSERT INTO drugsignatures (day, drugsheet_id, user_id, base) values (:day,:drugSheetID,:userID,:baseID);",['drugSheetID' => $drugSheetID, 'day'=>$day,'userID'=>$userID,'baseID'=>$baseID]);
 }
+
+/* ---- API ----- */
+
+/** This function is use to get the list of the drug sheets where a given user performed an action.
+ *  This is for the API.
+ * @param $userId - The ID of the user
+ * @return array|mixed|null
+ */
+function getDrugSheetWhereUserAction($userId){
+    return selectMany("(select drugsheets.id, drugsheets.week, bases.name base from drugsheets
+    join bases on bases.id = drugsheets.base_id
+    join drugsignatures on drugsheets.id = drugsignatures.drugsheet_id
+    where drugsignatures.user_id = :userId)
+    union
+    (select drugsheets.id, drugsheets.week, bases.name base from drugsheets
+    join bases on bases.id = drugsheets.base_id
+    join novachecks on drugsheets.id = novachecks.drugsheet_id
+    where novachecks.user_id = :userId)
+    union
+    (select drugsheets.id, drugsheets.week, bases.name base from drugsheets
+    join bases on bases.id = drugsheets.base_id
+    join pharmachecks on drugsheets.id = pharmachecks.drugsheet_id
+    where pharmachecks.user_id = :userId)
+    union
+    (select drugsheets.id, drugsheets.week, bases.name base from drugsheets
+    join bases on bases.id = drugsheets.base_id
+    join restocks on drugsheets.id = restocks.drugsheet_id
+    where restocks.user_id = :userId);", ["userId" => $userId]);
+}

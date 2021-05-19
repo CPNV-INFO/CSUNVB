@@ -408,3 +408,39 @@ inner join bases on shiftsheets.base_id = bases.id
 inner join users on shiftteams.boss_id = users.id
 where nova_id = :novaID  and shiftsheets.date = :date order by day ASC",["novaID" => $novaID,"date" => $date]);
 }
+
+/* ---- API ----- */
+
+/** This function is used to get the list of of shift sheets where a given user performed an action.
+ *  This is for the API.
+ * @param $userId - The ID of the user
+ * @return array|mixed|null
+ */
+function getShiftSheetWhereUserActionOrCrew($userId){
+    return selectMany("(select shiftsheets.id, shiftsheets.date, bases.name base from shiftsheets
+join bases on bases.id = shiftsheets.base_id
+where shiftsheets.dayboss_id = :userId or
+         shiftsheets.nightboss_id = :userId or
+         shiftsheets.dayteammate_id = :userId or
+         shiftsheets.nightteammate_id = :userId)
+
+    union
+
+    (select shiftsheets.id, shiftsheets.date, bases.name base from shiftsheets
+   join bases on bases.id = shiftsheets.base_id
+   join shiftchecks ON shiftchecks.shiftsheet_id = shiftsheets.id
+	where shiftchecks.user_id = :userId  )
+
+    union
+
+    (select shiftsheets.id, shiftsheets.date, bases.name base from shiftsheets
+   join bases on bases.id = shiftsheets.base_id
+   join shiftcomments ON shiftcomments.shiftsheet_id = shiftsheets.id
+	where shiftcomments.user_id = :userId );", ["userId" => $userId]);
+}
+
+function getShiftChecks($userId,$sheetId){
+    return selectMany("select shiftchecks.id, shiftchecks.time as at, shiftchecks.day, shiftactions.text from shiftchecks
+ join shiftactions on shiftchecks.shiftaction_id = shiftactions.id
+WHERE user_id = :user_ID and shiftchecks.shiftsheet_id = :sheet_ID;",["user_ID"=>$userId,"sheet_ID"=>$sheetId]);
+}

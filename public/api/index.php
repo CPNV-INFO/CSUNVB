@@ -31,6 +31,8 @@ require "../".CONTROLLER . "apiController.php";
  * Check if user logged in and perform requested action when true
  */
 
+header('Access-Control-Allow-Origin: *');
+
 
 switch ($_GET['action']) {
     case "bases":
@@ -41,6 +43,9 @@ switch ($_GET['action']) {
         break;
     case "reports":
         sheetListForUser();
+        break;
+    case "myactionsinshift":
+        sheetUserAction();
         break;
     default:
         notFound();
