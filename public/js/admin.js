@@ -78,3 +78,11 @@ function resetTel(id){
     $('#user-'+ id).find(".displayTel").show();
     $('#user-'+ id).find(".updateTel").hide();
 }
+
+document.getElementById("submitFileBtn").addEventListener("click", function(event){
+    event.preventDefault()
+});
+
+document.getElementById("selectedFile").addEventListener("change", function(event){
+    document.getElementById("selectedFile").form.submit();
+});

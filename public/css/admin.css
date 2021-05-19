@@ -8,6 +8,10 @@
 tr .modify {
     display: none;
 }
+
+.modify:hover{
+    cursor: pointer;
+}
 tr:hover .modify {
     display: inline;
 }
