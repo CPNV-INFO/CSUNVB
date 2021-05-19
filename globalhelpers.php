@@ -1,13 +1,13 @@
 <?php
 
 setlocale(LC_ALL, 'fr_CH'); // pour les format de dates
-
+error_reporting(0);
 /**
  * getVersion : show actual project version
  */
 function getVersion()
 {
-    return "Integration 1.0";
+    return "1.0";
 }
 
 /**
