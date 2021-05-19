@@ -260,3 +260,161 @@ function updateNovaAvailable($novaID){
     }
     redirect("showNova",$novaID);
 }
+
+function importPlanning(){
+    $users = getUsers();
+    $workTimes = getWorkTimes();
+    $bases = getbases();
+    $errors = array();
+
+    $selectedUserID = null;
+    $date = null;
+    $selectedWorkTimeID = null;
+
+    $row = 1;
+    if (($handle = fopen($_FILES['file']['tmp_name'], "r")) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+            if(is_numeric($data[0])){
+                $ok = true;
+                $selectedUserID = checkUserNumber($users,$data[0]);
+                if($selectedUserID == false){
+                    $selectedUserID = checkUserName($users,utf8_encode($data[1]),$data[0]);
+                    if($selectedUserID != false){
+                        $users = getUsers();
+                    }else{
+                        $newError = $data[0] . "/". utf8_encode($data[1]) ." : mauvais nom de secouriste, matricule ou secouriste non enregistré sur le site, ";
+                        if (!in_array($newError, $errors))
+                        {
+                            array_push($errors, $newError);
+                        }
+                        $ok = false;
+                    }
+                }
+                $date = date_create($data[2]);
+                $selectedWorkTimeID = checkWorkTime($workTimes,$data[5]);
+                if($selectedWorkTimeID == false){
+                    $selectedWorkTimeID = tryAddWorkTime($data[5],utf8_encode($data[6]),$bases);
+                    $workTimes = getWorkTimes();
+                }
+            }
+            $row++;
+        }
+        fclose($handle);
+    }
+    foreach ($errors as $error){
+        echo $error . "<br>";
+    }
+    //redirect("adminCrew");
+}
+
+function checkUserNumber($users,$userNumber){
+    foreach ($users as $user){
+        if($user["number"] == $userNumber){
+            return $user["id"];
+        }
+    }
+    return false;
+}
+
+function checkUserName($users,$userName,$userNumber){
+    $bestCorrelation = null;
+    $percent = 0;
+    foreach ($users as $user){
+        similar_text(($user["lastname"]. " " .$user["firstname"]),$userName,$res);
+        if($percent < $res){
+            $percent = $res;
+            $bestCorrelation = $user;
+        }
+        similar_text(($user["firstname"]. " " .$user["lastname"]),$userName,$res);
+        if($percent < $res){
+            $percent = $res;
+            $bestCorrelation = $user;
+        }
+    }
+    if($percent<90){
+        return false;
+    }else{
+        $users = getUsers();
+        return tryAddUserNumber($bestCorrelation,$userNumber);
+    }
+}
+
+function checkWorkTime($workTimes,$code){
+    foreach ($workTimes as $workTime){
+        if($workTime["code"] == $code){
+            return $workTime["id"];
+        }
+    }
+    return false;
+}
+
+function tryAddUserNumber($user,$userNumber){
+    if($user["number"] != null){
+        return false;
+    }else{
+        if(addUserNumber($user["id"],$userNumber)){
+            return $user["id"];
+        }else{
+            return false;
+        }
+    }
+}
+
+function tryAddWorkTime($code,$name,$bases){
+    $special = false;
+    $day = null;
+    $bestBaseID = null;
+
+    echo "<br>" . $name;
+
+    $tolowerName = strtolower($name);
+    $words = explode(" ", $tolowerName);
+
+    if(strpos($tolowerName, "horaire") === false){
+        $special = true;
+        echo strpos($tolowerName, "horaire") ;
+    }else{
+        $lookingForNumber = false;
+        $name = null;
+        foreach ($words as $key => $word){
+            if($lookingForNumber === true){
+                if(strlen($word) < 4){
+                    $name = strtoupper($word);
+                    unset($words[$key]);
+                }
+                $lookingForNumber = false;
+            }else{
+                switch ($word) {
+                    case "horaire":
+                        $lookingForNumber = true;
+                        unset($words[$key]);
+                        break;
+                    case "-":
+                        unset($words[$key]);
+                        break;
+                    case "jour":
+                        $day = 1;
+                        unset($words[$key]);
+                        break;
+                    case "nuit":
+                        $day = 0;
+                        unset($words[$key]);
+                        break;
+                    default:
+                }
+            }
+        }
+        $resultingString = implode(" ", $words);
+        echo " ". $resultingString;
+        $percent = 0;
+        foreach ($bases as $base){
+            similar_text($base["name"],$tolowerName,$res);
+            if($percent < $res and $res > 25){
+                $percent = $res;
+                $bestBaseID = $base["id"];
+            }
+        }
+        echo " " . $bestBaseID;
+    }
+    return addWorkTime($code,$name,$day,$bestBaseID);
+}

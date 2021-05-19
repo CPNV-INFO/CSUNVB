@@ -154,17 +154,30 @@ Au survol de chaque jour du calendrier, des boutons soleil/lune (pour les créne
 
 ![addIndispo](images/addIndispo.PNG)
 
-Avec ensuite un formulaire permettant d'indiquer le créneau et une éventuelle remarque
+Avec ensuite un formulaire permettant d'indiquer le créneau et une éventuelle remarque, le créneaux est sélectionné automatiquement en fonction de l'icône sur laquelle on a cliqué précédemment
 
 ![formIndispo](images/formIndispo.PNG)
+
 
 L'icone devient rouge et aux survol il est possible de savoir pour quel raison la nova est indisponible et qui l'a indiqué
 
 ![indispo](images/indispo.PNG)
 
-En cliquant à nouveau sur cette icône, il doit être possible de la modifier ou de l'annnuler.
+En cliquant à nouveau sur cette icône, il doit être possible de la modifier ou de l'annnuler des données enregistée
 
+## Importation du plan de travail
 
+Un bouton impoter
+
+## Visualisation du plan de travail
+
+![indispo](images/mcdPlanning.PNG)
+
+![userCalendarBtn](images/userCalendarBtn.PNG)
+
+![emptyCalendar](images/emptyCalendar.PNG)
+
+![userCalendarInfo](images/userCalendarInfo.PNG)
 
 ## Droits de modification (garde)
 

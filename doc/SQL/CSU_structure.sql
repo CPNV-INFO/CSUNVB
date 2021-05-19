@@ -475,9 +475,24 @@ CREATE TABLE IF NOT EXISTS `users` (
   `firstconnect` tinyint NOT NULL,
   `email` varchar(254) DEFAULT NULL,
   `mobileNumber` varchar(20) DEFAULT NULL,
+  `number` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `initials_UNIQUE` (`initials`)
 ) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `worktime`;
+CREATE TABLE IF NOT EXISTS `worktime` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(5) NOT NULL,
+  `type` int(11) NOT NULL,
+  `day` tinyint(1) NULL,
+  `base_id` int NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code_UNIQUE` (`code`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_base_id` (`base_id`),
+  CONSTRAINT `fk_base_id` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.
 
