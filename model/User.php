@@ -75,3 +75,15 @@ function newToken($token,$user_id)
 function checkToken($token){
     return selectOne("SELECT user_id FROM tokens where value=:token and validity > :now", ['token' => $token,'now' => date('Y-m-d H:i:s',time())])["user_id"];
 }
+
+function addUserNumber($userID,$userNumber){
+    return execute("UPDATE users SET number = :userNumber WHERE id= :userID", ['userID' => $userID, 'userNumber' => $userNumber]);
+}
+
+function getWorkTimes(){
+    return selectMany("select * from worktimes",[]);
+}
+
+function addWorkTime($code,$name,$day,$baseID){
+    return intval(insert("INSERT INTO worktimes (code, type, day, base_id) VALUES (:code, :name, :day, :base_id)",['code' => $code, 'name' => $name, 'day' => $day, 'base_id' => $baseID]));
+}
