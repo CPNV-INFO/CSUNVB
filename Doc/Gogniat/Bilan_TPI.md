@@ -167,17 +167,54 @@ En cliquant à nouveau sur cette icône, il doit être possible de la modifier o
 
 ## Importation du plan de travail
 
-Un bouton impoter
+Le CSU ayant déjà une base de donnée avec la planning des secouriste, celui-ci sera importer grâce à un fichier CSV, dans le but de pouvoir connaître les horaires de travails de sécouriste et de pouvoir ainsi plannifier plus facilement les équipes sur le rapport de garde.
 
-## Visualisation du plan de travail
+#### Fichier CSV
+
+![CSVPlanning](images/CSVPlanning.PNG)
+
+Ce fichier comprend pour chaque horaire de travail, le nom + prénom du secouriste ainsi que son matricule
+
+Le nom et le prénom peuvent être légérement différents ("ë" à la place de "e"), il faut donc vérifier si un utilistateur avec un nom/prénom très proche existe dans la base de donnée (cette recherche ce fait grâce à la fonction similar_text(), et demandant un correspondance à 90%). Si l'utilisateur existe, son matricule est ajouter à là base de donnée, celui-ci est unique et restera identique, rendant les prochaines recherche plus rapide
+
+La date, pouvant être directement traitée
+
+Le nom de service, inutile dans notre cas car il est toujours identique ("CSU")
+
+La fonction n'est pas traitée dans le cadre du TPI selon la demande de M. Carrel
+
+Le code PA et la désignation sont liés, ils seront tous deuxregistré dans une nouvelle table horaires, la désignation étant une string, il faut extraire les données importante à savoir :
+- un nom pour l'horaire
+- la base pour les horaires classique lorsqu'elle est renseignée
+- jour/nuit pour les horaires classique lorsqu'il est renseigné
 
 ![indispo](images/mcdPlanning.PNG)
 
+### Risque
+
+...
+
+## Visualisation du plan de travail
+
+Le planning, d'un secouriste est accessible depuis la section administration en cliquant sur l'icône calendrier visible au survol d'un secouriste
+
 ![userCalendarBtn](images/userCalendarBtn.PNG)
+
+Selon la demande dans le cahier de charge, elle est disponile seulement pour les administrateurs du site,
+Mais il serait intéressant de discuter de la possibilité que cette page soit accessible par tout le monde.
+
+
+Affichage du planning du secouriste dans un calendrier identique aux novas
 
 ![emptyCalendar](images/emptyCalendar.PNG)
 
+Le nom de l'horaire est écourté ( Horaire 6 => 6 ) et le jour/nuit sont indiqué par une icône
+
 ![userCalendarInfo](images/userCalendarInfo.PNG)
+
+Les codes de désignation utilisés au CSU (comme ci-dessous) ne sont pas utilisé, cela pourrait être mis en place, mais le temps de faire la demande pour avoir les correspondence et de tout mettre en place prendrait trop de temps pour le TPI
+
+![polypoints](images/polypoints.png)
 
 ## Droits de modification (garde)
 
@@ -238,7 +275,7 @@ Besjan Sejrani (collègue), avis sur le design du site
 
 [Behance](https://www.behance.net/) : Recherche d'idée graphique
 
-[W3schools](https://www.w3schools.com/css/) : Aide et rappel CSS
+[W3schools](https://www.w3schools.com/css/) : Aide et rappel CSS/PHP
 
 [PHP.net](https://www.php.net/) : Manuel PHP
 
