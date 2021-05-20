@@ -266,16 +266,19 @@ function importPlanning(){
     $workTimes = getWorkTimes();
     $bases = getbases();
     $errors = array();
+    $planningToImport = array();
+    $firstDate = null;
+    $lastDate = null;
 
     $selectedUserID = null;
     $date = null;
     $selectedWorkTimeID = null;
 
-    $row = 1;
     if (($handle = fopen($_FILES['file']['tmp_name'], "r")) !== FALSE) {
+        $row = 1;
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+            $ok = true;
             if(is_numeric($data[0])){
-                $ok = true;
                 $selectedUserID = checkUserNumber($users,$data[0]);
                 if($selectedUserID == false){
                     $selectedUserID = checkUserName($users,utf8_encode($data[1]),$data[0]);
@@ -290,21 +293,50 @@ function importPlanning(){
                         $ok = false;
                     }
                 }
-                $date = date_create($data[2]);
+
+                $date = DateTime::createFromFormat("d.m.Y", $data[2]);
+                if($date == false){
+                    array_push($errors, "ligne " . $row . " format de date incorrect, ");
+                    $ok = false;
+                }
+
                 $selectedWorkTimeID = checkWorkTime($workTimes,$data[5]);
                 if($selectedWorkTimeID == false){
                     $selectedWorkTimeID = tryAddWorkTime($data[5],utf8_encode($data[6]),$bases);
                     $workTimes = getWorkTimes();
                 }
+            }else{
+                $ok = false;
             }
-            $row++;
+            if($ok == true){
+                $newPlanning['workID'] = $selectedWorkTimeID;
+                $newPlanning['userID'] = $selectedUserID;
+                $newPlanning['date'] = date_format($date,"Y-m-d");
+                array_push($planningToImport,$newPlanning);
+                if($firstDate > $date || $firstDate == null){
+                    $firstDate = $date;
+                }
+                if($lastDate < $date || $lastDate == null){
+                    $lastDate = $date;
+                }
+            }
+            $row ++;
         }
         fclose($handle);
     }
-    foreach ($errors as $error){
-        echo $error . "<br>";
+    delPlanning(date_format($firstDate,"Y-m-d"),date_format($lastDate,"Y-m-d"));
+    foreach ($planningToImport as $planning){
+        addWorkPlanning($planning["workID"],$planning["userID"],$planning["date"]);
     }
-    //redirect("adminCrew");
+    if(count($errors) == 0){
+        setFlashMessage("Planning importé avec succès");
+    }else{
+        setFlashMessage("Certaines données n'ont pas pu être importée : ");
+        foreach ($errors as $error){
+            setFlashMessage($_SESSION['flashmessage'].$error);
+        }
+    }
+    redirect("adminCrew");
 }
 
 function checkUserNumber($users,$userNumber){
@@ -318,6 +350,7 @@ function checkUserNumber($users,$userNumber){
 
 function checkUserName($users,$userName,$userNumber){
     $bestCorrelation = null;
+    $minPercent = 90;
     $percent = 0;
     foreach ($users as $user){
         similar_text(($user["lastname"]. " " .$user["firstname"]),$userName,$res);
@@ -331,7 +364,7 @@ function checkUserName($users,$userName,$userNumber){
             $bestCorrelation = $user;
         }
     }
-    if($percent<90){
+    if($percent<$minPercent){
         return false;
     }else{
         $users = getUsers();
@@ -364,15 +397,13 @@ function tryAddWorkTime($code,$name,$bases){
     $special = false;
     $day = null;
     $bestBaseID = null;
-
-    echo "<br>" . $name;
+    $minPercent = 25;
 
     $tolowerName = strtolower($name);
     $words = explode(" ", $tolowerName);
 
     if(strpos($tolowerName, "horaire") === false){
         $special = true;
-        echo strpos($tolowerName, "horaire") ;
     }else{
         $lookingForNumber = false;
         $name = null;
@@ -405,16 +436,41 @@ function tryAddWorkTime($code,$name,$bases){
             }
         }
         $resultingString = implode(" ", $words);
-        echo " ". $resultingString;
         $percent = 0;
         foreach ($bases as $base){
             similar_text($base["name"],$tolowerName,$res);
-            if($percent < $res and $res > 25){
+            if($percent < $res and $res > $minPercent){
                 $percent = $res;
                 $bestBaseID = $base["id"];
             }
         }
-        echo " " . $bestBaseID;
     }
     return addWorkTime($code,$name,$day,$bestBaseID);
+}
+
+function showUser($id){
+    $user = getUser($id);
+    $dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+    $monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+    if (isset($_POST["month"]) and isset($_POST["year"])) {
+        $date = $_POST["year"]."-".$_POST["month"];
+    } else {
+        $date = date("Y-n");
+    }
+    $calendar = newCalendar($date);
+
+    foreach ($calendar as &$week){
+        foreach ($week as &$day){
+            $day["works"] = getPlanningForUser($user["id"],date_format($day["date"],"Y-m-d"));
+            if(date_format($day["date"],"Y-m-d") == date("Y-m-d")){
+                $day["color"] = "#FFD239";
+            }
+        }
+        unset($day);
+    }
+    unset($week);
+
+    $selectedMonth = date_format(date_create($date.'-01'), 'n');
+    $selectedYear = date_format(date_create($date.'-01'), 'Y');
+    require_once VIEW . 'admin/showUser.php';
 }

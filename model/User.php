@@ -52,7 +52,7 @@ function getUserByInitials($initials)       //Récupère un utilisateur en fonct
  */
 function changePwdState($changeUser)
 {
-    $newpassw = substr(md5(rand()),0,6);
+    $newpassw = substr(md5(rand()), 0, 6);
     $hash = password_hash($newpassw, PASSWORD_DEFAULT);
     execute("UPDATE users SET firstconnect= :firstconnect, password = :hash WHERE id= :id", ['firstconnect' => 1, 'id' => $changeUser, 'hash' => $hash]);
     return $newpassw;
@@ -67,23 +67,44 @@ function getUserByMail($email)
     return selectOne("SELECT id,initials FROM users where email=:email", ['email' => $email]);
 }
 
-function newToken($token,$user_id)
+function newToken($token, $user_id)
 {
-    return execute("Insert into tokens (value,validity,user_id) values (:token,:validity,:user_id)", ['token' => $token,'user_id' => $user_id, 'validity' => date('Y-m-d H:i:s',time()+3600)]);
+    return execute("Insert into tokens (value,validity,user_id) values (:token,:validity,:user_id)", ['token' => $token, 'user_id' => $user_id, 'validity' => date('Y-m-d H:i:s', time() + 3600)]);
 }
 
-function checkToken($token){
-    return selectOne("SELECT user_id FROM tokens where value=:token and validity > :now", ['token' => $token,'now' => date('Y-m-d H:i:s',time())])["user_id"];
+function checkToken($token)
+{
+    return selectOne("SELECT user_id FROM tokens where value=:token and validity > :now", ['token' => $token, 'now' => date('Y-m-d H:i:s', time())])["user_id"];
 }
 
-function addUserNumber($userID,$userNumber){
+function addUserNumber($userID, $userNumber)
+{
     return execute("UPDATE users SET number = :userNumber WHERE id= :userID", ['userID' => $userID, 'userNumber' => $userNumber]);
 }
 
-function getWorkTimes(){
-    return selectMany("select * from worktimes",[]);
+function getWorkTimes()
+{
+    return selectMany("select * from worktimes", []);
 }
 
-function addWorkTime($code,$name,$day,$baseID){
-    return intval(insert("INSERT INTO worktimes (code, type, day, base_id) VALUES (:code, :name, :day, :base_id)",['code' => $code, 'name' => $name, 'day' => $day, 'base_id' => $baseID]));
+function addWorkTime($code, $name, $day, $baseID)
+{
+    return intval(insert("INSERT INTO worktimes (code, type, day, base_id) VALUES (:code, :name, :day, :base_id)", ['code' => $code, 'name' => $name, 'day' => $day, 'base_id' => $baseID]));
+}
+
+function addWorkPlanning($selectedWorkTimeID, $selectedUserID, $date)
+{
+    return intval(insert("INSERT INTO workPlannings (worktime_id,user_id,date) VALUES (:workID, :userID, :date)", ['workID' => $selectedWorkTimeID, 'userID' => $selectedUserID, 'date' => $date]));
+}
+
+function delPlanning($firstDate, $lastDate)
+{
+    return execute("Delete from workPlannings where date BETWEEN :firstDate and :lastDate", ["firstDate" => $firstDate, "lastDate" => $lastDate]);
+}
+
+function getPlanningForUser($userID, $date)
+{
+    return selectMany("select worktimes.code,type,day,bases.name as base from workplannings 
+inner join worktimes on worktimes.id = workplannings.worktime_id
+left join bases on bases.id = worktimes.base_id where user_id = :userID and date = :date", ["userID" => $userID, "date" => $date]);
 }
