@@ -47,6 +47,12 @@ switch ($_GET['action']) {
     case "myactionsinshift":
         sheetUserAction();
         break;
+    case "novacheck":
+        insertNovaCheck();
+        break;
+    case "pharmacheck":
+        insertPharmaCheck();
+        break;
     default:
         notFound();
 }

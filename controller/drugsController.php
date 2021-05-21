@@ -103,7 +103,7 @@ function updateDrugSheet() {
         foreach ($novaChecks as $date => $novas){
             foreach ($novas as $novaID => $drugs){
                 foreach ($drugs as $drugID => $drug){
-                    $res = inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID);
+                    $res = inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID,$_SESSION['user']['id']);
                     if($res == null || $res === false ) {
                         $errors = true;
                     }
@@ -113,7 +113,7 @@ function updateDrugSheet() {
 
         foreach ($pharmaChecks as $date => $bateches){
             foreach ($bateches as $batchID => $batch){
-                $res = insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID);
+                $res = insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID,$_SESSION['user']['id']);
                 if($res == null || $res === false) $errors = true;
             }
         }

@@ -107,6 +107,7 @@ function checkApiToken()
 
             $return = getUserInfosByToken($token);
 
+
         } else {
             $return = "error400";
         }
@@ -146,6 +147,9 @@ function SheetListForUser()
     sendJson($httpErrorCode,$outText);
 }
 
+/**
+ * This function is used to get the list of shift sheets where a given user has checked a task
+ */
 function sheetUserAction(){
 
     $outText = null;
@@ -180,4 +184,68 @@ function sendJson($httpErrorCode,$outText)
     if (!is_null($outText)) {
         echo $outText;
     }
+}
+
+function insertNovaCheck(){
+    $outText = null;
+    $httpErrorCode = null;
+
+    $user = checkApiToken();
+
+    if (isset($user['id'])) {
+        if(isset($_POST['nova_id']) && isset($_POST['drugsheet_id']) && isset($_POST['start']) && isset($_POST['end']) && isset($_POST['date']) && isset($_POST['drug_id'])) {
+            $novaId = $_POST['nova_id'];
+            $drugsheetId = $_POST['drugsheet_id'];
+            $start = $_POST['start'];
+            $end = $_POST['end'];
+            $date = $_POST['date'];
+            $drugId = $_POST['drug_id'];
+            $drug = array("start"=>$start,"end"=>$end);
+
+            $res = inertOrUpdateNovaChecks($date,$drug,$drugId,$novaId,$drugsheetId,$user['id']);
+            if($res == null || $res == false ) {
+                $httpErrorCode = '400';
+            }
+        }else{
+            $httpErrorCode = '400';
+        }
+    } elseif ($user == "error400") {
+        $httpErrorCode = '400';
+    } else {
+        $httpErrorCode = '401';
+    }
+
+    sendJson($httpErrorCode,$outText);
+}
+
+function insertPharmaCheck(){
+    $outText = null;
+    $httpErrorCode = null;
+
+    $user = checkApiToken();
+
+    if (isset($user['id'])) {
+        if(isset($_POST['batch_id']) && isset($_POST['drugsheet_id']) && isset($_POST['start']) && isset($_POST['end']) && isset($_POST['date'])) {
+            $batchId = $_POST['batch_id'];
+            $drugsheetId = $_POST['drugsheet_id'];
+            $start = $_POST['start'];
+            $end = $_POST['end'];
+            $date = $_POST['date'];
+            $batch = array("start"=>$start,"end"=>$end);
+
+            $res = insertOrUpdatePharmaChecks($date,$batch,$batchId,$drugsheetId,$user['id']);
+            if($res == null || $res === false ) {
+                $httpErrorCode = '400';
+            }
+        }else{
+            $httpErrorCode = '400';
+        }
+    } elseif ($user == "error400") {
+        $httpErrorCode = '400';
+    } else {
+        $httpErrorCode = '401';
+    }
+
+    sendJson($httpErrorCode,$outText);
+
 }
