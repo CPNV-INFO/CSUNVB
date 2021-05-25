@@ -170,6 +170,8 @@ function sheetUserAction()
             $httpErrorCode = '401';
         }
 
+    }else{
+        $httpErrorCode = '400';
     }
 
     sendJson($httpErrorCode, $outText);
@@ -280,4 +282,31 @@ function insertPharmaCheck()
 
     sendJson($httpErrorCode, $outText);
 
+}
+
+function missingchecks(){
+    $outText = null;
+    $httpErrorCode = null;
+
+    if (isset($_GET['id'])) {
+        $baseId = $_GET['id'];
+
+        $user = checkApiToken();
+
+        if (isset($user['id'])) {
+            $pharmaChecks = getMissingPharmaChecks($baseId);
+            $novaChecks = getMissingNovaChecks($baseId);
+            $checks = array("pharma" => $pharmaChecks,"nova"=>$novaChecks);
+            $outText = json_encode($checks);
+        } elseif ($user == "error400") {
+            $httpErrorCode = '400';
+        } else {
+            $httpErrorCode = '401';
+        }
+
+    }else{
+        $httpErrorCode = '400';
+    }
+
+    sendJson($httpErrorCode, $outText);
 }

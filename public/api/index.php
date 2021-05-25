@@ -53,6 +53,9 @@ switch ($_GET['action']) {
     case "pharmacheck":
         insertPharmaCheck();
         break;
+    case "missingchecks":
+        missingchecks();
+        break;
     default:
         notFound();
 }
