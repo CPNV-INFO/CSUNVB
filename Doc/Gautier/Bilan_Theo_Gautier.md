@@ -33,6 +33,9 @@ Ce journal est une copie du journal présent sur Icescrum. Il est ordré du plus
 
 | Personne et date | Entrée du journal |
 | --- | --- |
+| TGR 25.05.2021 | J’ai eu un entretient durant 30 minutes. Je n’ai donc pas travaillé sur le projet de TPI durant ce temps là. |
+| XCL 22.05.2021 | Revue du planning: le sprint 5 (statistiques) est abandonné, d’une part pour rattraper le retard concédé au sprint 3 et d’autre part en faveur d’une qualité supérieure attendue dans la présentation du rapport de stupéfiant (colonne ‘sortie’ + CSS amélioré (issue #90)) |
+| XCL 22.05.2021 | Sprint 3 review: plusieurs problèmes constatés malgré une bonne partie des fonctionnalités OK. Aucune story ne peut être validée. Répétition du SR agendée à mardi 25 |
 | XCL 17.05.2021 | Envoi par mail à Théo des informations nécessaires à l’envoi de SMS |
 | TGR 17.05.2021 | Début du sprint 3. | 
 | TGR 11.05.2021 | Fin du Sprint 2 et sprint review. Tout les objectifs du sprint ont été atteints. |
