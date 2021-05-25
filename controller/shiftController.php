@@ -21,14 +21,14 @@ function newShiftSheet($baseID)
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le rapport de garde.");
     } else {
         setFlashMessage("le rapport de garde a bien été créé !");
-        writeLog("SHIFT",$result,"Rapport créé");
+        writeLog("SHIFT", $result, "Rapport créé");
     }
     $model = getModelByID($modelID);
     for ($i = 0; $i < $model["nbTeamD"]; $i++) {
-        addShiftTeam($result,1);
+        addShiftTeam($result, 1);
     }
     for ($i = 0; $i < $model["nbTeamN"]; $i++) {
-        addShiftTeam($result,0);
+        addShiftTeam($result, 0);
     }
     redirect("shiftList", $baseID);
 }
@@ -42,26 +42,26 @@ function shiftList($selectedBaseID = null)
     if ($selectedBaseID == null) $selectedBaseID = $_SESSION['base']['id'];
     $bases = getbases();
     $sheets = getAllShiftForBase($selectedBaseID);
-    foreach ($sheets as &$sheetBySlug){
-        foreach ($sheetBySlug as &$sheet){
-            $sheet["teamDay"] = getShiftTeam($sheet["id"],1);
-            $sheet["teamNight"] = getShiftTeam($sheet["id"],0);
+    foreach ($sheets as &$sheetBySlug) {
+        foreach ($sheetBySlug as &$sheet) {
+            $sheet["teamDay"] = getShiftTeam($sheet["id"], 1);
+            $sheet["teamNight"] = getShiftTeam($sheet["id"], 0);
         }
     }
 
     $models = getShiftModels();
     $suggestedModels = getSuggestedShiftModels();
-    foreach ($models as $model){
-        foreach ($sheets["close"] as &$sheet){
-            if($model["id"] == $sheet["model_id"]){
+    foreach ($models as $model) {
+        foreach ($sheets["close"] as &$sheet) {
+            if ($model["id"] == $sheet["model_id"]) {
                 $sheet["modelImage"] = $model["name"];
                 break;
             }
         }
     }
-    if(count($sheets["close"])==0 and count($sheets["reopen"])==0){
+    if (count($sheets["close"]) == 0 and count($sheets["reopen"]) == 0) {
         $emptyBase = true;
-    }else{
+    } else {
         $emptyBase = false;
     }
     require_once VIEW . 'shift/list.php';
@@ -74,15 +74,51 @@ function shiftList($selectedBaseID = null)
 function shiftShow($shiftid)
 {
     $shiftsheet = getshiftsheetByID($shiftid);
-    $shiftsheet["teamDay"] = getShiftTeam($shiftsheet["id"],1);
-    $shiftsheet["teamNight"] = getShiftTeam($shiftsheet["id"],0);
+    $shiftsheet["teamDay"] = getShiftTeam($shiftsheet["id"], 1);
+    $shiftsheet["teamNight"] = getShiftTeam($shiftsheet["id"], 0);
     $sections = getshiftsections($shiftid, $shiftsheet["baseID"]);
-    $enableshiftsheetUpdate = ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true);
-    $enableshiftsheetFilling = ($shiftsheet['status'] == "open" || $shiftsheet['status'] == "reopen" && $_SESSION['user']['admin'] == true);
+
+    $enableDataUpdate = ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true);
+    $enableFilling = canIEditShift($shiftsheet);
+    $enableStateChange = ((date('Y-m-d') <= date('Y-m-d', strtotime($shiftsheet["date"] . ' + 3 days'))) or $_SESSION['user']['admin']);
+    $enableStructureChange = ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true);
+
     $model = getModelByID($shiftsheet['model']);
     $novas = getNovas();
     $users = getUsers();
     require_once VIEW . 'shift/show.php';
+}
+
+
+function canIEditShift($shiftsheet)
+{
+    if ($shiftsheet['status'] == "open") {
+        if ($_SESSION['user']['admin'] == true) {
+            return true;
+        } else {
+            foreach ($shiftsheet["teamDay"] as $team) {
+                if ($team["boss_id"] == $_SESSION['user']['id'] || $team["teammate_id"] == $_SESSION['user']['id']) return true;
+            }
+            foreach ($shiftsheet["teamNight"] as $team) {
+                if ($team["boss_id"] == $_SESSION['user']['id'] || $team["teammate_id"] == $_SESSION['user']['id']) return true;
+            }
+        }
+    } elseif ($shiftsheet['status'] == "reopen") {
+        if ($_SESSION['user']['admin'] == true) {
+            return true;
+        } else {
+            if(date('Y-m-d') <= date('Y-m-d', strtotime($shiftsheet["date"] . ' + 3 days'))){
+                echo "test";
+                foreach ($shiftsheet["teamDay"] as $team) {
+                    if ($team["boss_id"] == $_SESSION['user']['id'] || $team["teammate_id"] == $_SESSION['user']['id']) return true;
+                }
+                foreach ($shiftsheet["teamNight"] as $team) {
+                    if ($team["boss_id"] == $_SESSION['user']['id'] || $team["teammate_id"] == $_SESSION['user']['id']) return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 /**
@@ -98,8 +134,8 @@ function checkShift()
     } else {
         setFlashMessage("La tâche a bien été validée !");
         $time = "nuit";
-        if($_POST["D/N"]==1)$time = "jour";
-        writeLog("SHIFT",$_POST["sheetID"],getShiftActionName($_POST["actionID"]). " ".$time. " validé");
+        if ($_POST["D/N"] == 1) $time = "jour";
+        writeLog("SHIFT", $_POST["sheetID"], getShiftActionName($_POST["actionID"]) . " " . $time . " validé");
     }
     redirect("shiftShow", $_POST["sheetID"]);
 }
@@ -109,15 +145,16 @@ function checkShift()
  * @param none
  * shows a message to confirm action or an error message
  */
-function unCheckShift(){
+function unCheckShift()
+{
     $res = unCheckActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["D/N"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'annuler la tâche");
     } else {
         setFlashMessage("La tâche a bien été annulée !");
         $time = "nuit";
-        if($_POST["D/N"]==1)$time = "jour";
-        writeLog("SHIFT",$_POST["sheetID"],getShiftActionName($_POST["actionID"]). " ".$time. " annulé");
+        if ($_POST["D/N"] == 1) $time = "jour";
+        writeLog("SHIFT", $_POST["sheetID"], getShiftActionName($_POST["actionID"]) . " " . $time . " annulé");
     }
     redirect("shiftShow", $_POST["sheetID"]);
 }
@@ -134,27 +171,12 @@ function commentShift()
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le commentaire.");
     } else {
         setFlashMessage("Le commentaire a bien été ajouté au rapport !");
-        writeLog("SHIFT",$_POST["sheetID"],"Commentaire pour ".getShiftActionName($_POST["actionID"])." : ".$_POST["comment"]);
+        writeLog("SHIFT", $_POST["sheetID"], "Commentaire pour " . getShiftActionName($_POST["actionID"]) . " : " . $_POST["comment"]);
     }
     redirect("shiftShow", $_POST["sheetID"]);
 }
 
-/**
- * updateShift : update the data of the sheet -> vehicle, teammates ...
- * @param none
- * show a message to confirm action or an error message
- */
-function updateShift()
-{
-    $res = updateDataShift($_GET["id"], $_POST["novaDay"], $_POST["novaNight"], $_POST["bossDay"], $_POST["bossNight"], $_POST["teammateDay"], $_POST["teammateNight"]);
-    if ($res == false) {
-        setFlashMessage("Une erreur est survenue. Impossible d'enregistrer les données.");
-    } else {
-        setFlashMessage("Les données ont été correctement enregistrées.");
-        writeLog("SHIFT",$_GET["id"],"Données de la feuille modifiées");//todo à mofifier quand elle seront modifiée automatiquement en précisant le champ modifié
-    }
-    redirect("shiftShow", $_GET["id"]);
-}
+
 /**
  * addActionForShift : add an action to a shiftsheet
  * @param int $sheetID : id of the sheet where the action is added
@@ -169,7 +191,7 @@ function addActionForShift($sheetID)
     } else {
         $actionName = getShiftActionName($_POST["actionID"]);
         setFlashMessage("L'action <strong>" . $actionName . "</strong> à été ajoutée au rapport");
-        writeLog("SHIFT",$sheetID, "Tâche ajoutée : ". $actionName);
+        writeLog("SHIFT", $sheetID, "Tâche ajoutée : " . $actionName);
     }
     redirect("shiftShow", $sheetID);
 }
@@ -184,18 +206,18 @@ function creatActionForShift($sheetID)
     $actionID = getShiftActionID($_POST["actionToAdd"], $_POST["section"]);
     if ($actionID == null) {
         $actionID = creatShiftAction($_POST["actionToAdd"], $_POST["section"]);
-        writeLog("SHIFT",$sheetID, "Tâche crée et ajoutée au rapport : " . $_POST["actionToAdd"]);
+        writeLog("SHIFT", $sheetID, "Tâche crée et ajoutée au rapport : " . $_POST["actionToAdd"]);
         setFlashMessage("Nouvelle action <strong>" . $_POST["actionToAdd"] . "</strong> créée et ajoutée au rapport");
 
     } else {
         setFlashMessage("L'action <strong>" . $_POST["actionToAdd"] . "</strong> à été ajoutée au rapport");
-        writeLog("SHIFT",$sheetID, "Tâche ajoutée : ". $_POST["actionToAdd"]);
+        writeLog("SHIFT", $sheetID, "Tâche ajoutée : " . $_POST["actionToAdd"]);
     }
     $modelID = configureModel($sheetID, $_POST["model"]);
     $res = addShiftAction($modelID, $actionID);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter l'action.");
-        }
+    }
     redirect("shiftShow", $sheetID);
 }
 
@@ -213,7 +235,7 @@ function removeActionForShift($sheetID)
     } else {
         $actionName = getShiftActionName($_POST["action"]);
         setFlashMessage("l'action <strong>" . $actionName . "</strong> a été suprimée");
-        writeLog("SHIFT",$sheetID, "Tâche supprimmée : ". $actionName);
+        writeLog("SHIFT", $sheetID, "Tâche supprimmée : " . $actionName);
     }
     redirect("shiftShow", $sheetID);
 }
@@ -238,7 +260,7 @@ function configureModel($sheetID, $modelID)
 function shiftSheetSwitchState()
 {
     $res = setSlugForShift($_POST["id"], $_POST["newSlug"]);
-    if($_POST["newSlug"] == 'close')closeBy($_POST["id"],$_SESSION['user']['id']);
+    if ($_POST["newSlug"] == 'close') closeBy($_POST["id"], $_SESSION['user']['id']);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de changer l'état du rapport de garde.");
     } else {
@@ -260,7 +282,7 @@ function shiftSheetSwitchState()
                 $name = "";
                 break;
         }
-        writeLog("SHIFT",$_POST["id"],"Changement d'état : ".$name);
+        writeLog("SHIFT", $_POST["id"], "Changement d'état : " . $name);
     }
     redirect("shiftList", getBaseIDForShift($_POST["id"]));
 }
@@ -284,75 +306,83 @@ function shiftDeleteSheet()
  * removeShiftModel : remove the model from the list of suggested models
  * shows a message to confirm action or an error message
  */
-function removeShiftModel(){
+function removeShiftModel()
+{
     $res = disableShiftModel($_POST["modelID"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de retirer le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement retiré de la liste des modèles disponibles.");
     }
-    redirect("shiftShow",$_POST["sheetID"]);
+    redirect("shiftShow", $_POST["sheetID"]);
 }
 
 /**
  * addShiftModel : add a model to the list of models
  * shows a message to confirm action or an error message
  */
-function addShiftModel(){
-    $res = enableShiftModel($_POST["modelID"],$_POST["name"]);
+function addShiftModel()
+{
+    $res = enableShiftModel($_POST["modelID"], $_POST["name"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement ajouté.");
     }
-    redirect("shiftShow",$_POST["sheetID"]);
+    redirect("shiftShow", $_POST["sheetID"]);
 }
 
 
-function reAddShiftModel(){
+function reAddShiftModel()
+{
     $res = reEnableShiftModel($_POST["modelID"]);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de réactiver le modèle.");
     } else {
         setFlashMessage("Le modèle a été correctement réactivé.");
     }
-    redirect("shiftShow",$_POST["sheetID"]);
+    redirect("shiftShow", $_POST["sheetID"]);
 }
 
-function shiftLog($sheetID){
+function shiftLog($sheetID)
+{
     $type = "SHIFT";
     $sheet = getshiftsheetByID($sheetID);
-    $logs = getLogs($type,$sheetID);
+    $logs = getLogs($type, $sheetID);
     require_once VIEW . 'main/log.php';
 }
 
-function uncheckActionForShift_AJAX($sheetID){
+function uncheckActionForShift_AJAX($sheetID)
+{
     echo getUncheckActionForShift($sheetID);
 }
 
-function addTeamForShift($sheetID){
+function addTeamForShift($sheetID)
+{
     $modelID = configureModel($sheetID, getshiftsheetByID($sheetID)["model"]);
-    addTeamToModel($modelID,$_POST["day"]);
-    addShiftTeam($sheetID,$_POST["day"]);
-    redirect("shiftShow",$sheetID);
+    addTeamToModel($modelID, $_POST["day"]);
+    addShiftTeam($sheetID, $_POST["day"]);
+    redirect("shiftShow", $sheetID);
 }
 
-function removeTeamForShift($sheetID){
-    if(count(getShiftTeam($sheetID,$_POST["day"]))>1){
+function removeTeamForShift($sheetID)
+{
+    if (count(getShiftTeam($sheetID, $_POST["day"])) > 1) {
         $modelID = configureModel($sheetID, getshiftsheetByID($sheetID)["model"]);
-        removeTeamToModel($modelID,$_POST["day"]);
-        removeLastTeamForShift($sheetID,$_POST["day"]);
-        redirect("shiftShow",$sheetID);
-    }else{
+        removeTeamToModel($modelID, $_POST["day"]);
+        removeLastTeamForShift($sheetID, $_POST["day"]);
+        redirect("shiftShow", $sheetID);
+    } else {
         setFlashMessage("Action impossible");
-        redirect("shiftShow",$sheetID);
+        redirect("shiftShow", $sheetID);
     }
 }
 
-function checkIfShiftIsReady(){
-    if(sheetIsReady("shift", $_POST["sheetID"])){
+function checkIfShiftIsReady()
+{
+    if (sheetIsReady("shift", $_POST["sheetID"])) {
         echo "true";
-    }else{
+    } else {
         echo "false";
     }
 }

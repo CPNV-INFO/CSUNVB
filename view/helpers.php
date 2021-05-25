@@ -220,7 +220,10 @@ function listShiftSheet($slug, $shiftList, $zone)
             $body .= $shiftInfo;
             $body .= "<td><div class='d-flex justify-content-around'>";
             $body .= buttonForSheet("shift", $shift['id'], "Show&id=" . $shift['id'], "Détails");
-            $body .= slugBtns("shift", $shift, $slug) . "</div></td>";
+            if((date('Y-m-d') <= date('Y-m-d', strtotime($shift["date"] . ' + 3 days'))) or $_SESSION['user']['admin']){
+                $body .= slugBtns("shift", $shift, $slug);
+            }
+            $body .= "</div></td>";
             $body .= "</tr>";
         }
         $foot = "</table>";
