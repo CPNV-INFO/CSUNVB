@@ -163,7 +163,7 @@ function getNovaCheckByDateAndDrug($date, $drug, $nova, $drugSheetID) {
  * @param $drugSheetID - The drugsheet ID
  * @return string|null
  */
-function inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID,$userId){
+function insertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID,$userId){
     return insert('INSERT INTO novachecks (date, start, end, drug_id, nova_id, user_id,drugsheet_id) VALUES(:date, :start, :end,:drug_id,:nova_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :start, END =:end, user_id = :user_id;', ['date' => $date,'start' => $drug["start"],'end'=>$drug["end"],'drug_id'=>$drugID,'nova_id'=>$novaID,'user_id'=>$userId,'drugsheet_id'=>$drugSheetID]);
 }
 

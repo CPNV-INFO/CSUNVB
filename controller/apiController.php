@@ -30,7 +30,7 @@ function basesList()
     $outText = json_encode(getbases());
     $httpErrorCode = null;
 
-    sendJson($httpErrorCode,$outText);
+    sendJson($httpErrorCode, $outText);
 }
 
 /**
@@ -39,8 +39,8 @@ function basesList()
 function notFound()
 {
     $httpErrorCode = '404';
-    $outText=null;
-    sendJson($httpErrorCode,$outText);
+    $outText = null;
+    sendJson($httpErrorCode, $outText);
 }
 
 /** This function is used to check the credentials given by the user and if it's correct generating a token,
@@ -68,7 +68,6 @@ function tokenManager()
         $user = getUserByInitials($initials);
 
 
-
         if (password_verify($password, $user['password'])) {
 
             //Generate a random string.
@@ -92,7 +91,7 @@ function tokenManager()
         $httpErrorCode = '400';
     }
 
-    sendJson($httpErrorCode,$outText);
+    sendJson($httpErrorCode, $outText);
 
 
 }
@@ -144,25 +143,26 @@ function SheetListForUser()
     }
 
 
-    sendJson($httpErrorCode,$outText);
+    sendJson($httpErrorCode, $outText);
 }
 
 /**
  * This function is used to get the list of shift sheets where a given user has checked a task
  */
-function sheetUserAction(){
+function sheetUserAction()
+{
 
     $outText = null;
     $httpErrorCode = null;
 
-    if(isset($_POST['sheetId'])) {
-        $sheetId = $_POST['sheetId'];
+    if (isset($_GET['id'])) {
+        $sheetId = $_GET['id'];
 
         $user = checkApiToken();
 
 
         if (isset($user['id'])) {
-            $checks = array("data" => getShiftChecks($user['id'],$sheetId));
+            $checks = array("data" => getShiftChecks($user['id'], $sheetId));
             $outText = json_encode($checks);
         } elseif ($user == "error400") {
             $httpErrorCode = '400';
@@ -172,10 +172,14 @@ function sheetUserAction(){
 
     }
 
-    sendJson($httpErrorCode,$outText);
+    sendJson($httpErrorCode, $outText);
 }
 
-function sendJson($httpErrorCode,$outText)
+/** This function is used to output the data from the API
+ * @param $httpErrorCode - The HTTP error code or null
+ * @param $outText - The Text (mostly JSON) or null
+ */
+function sendJson($httpErrorCode, $outText)
 {
     if (!is_null($httpErrorCode)) {
         http_response_code($httpErrorCode);
@@ -186,27 +190,52 @@ function sendJson($httpErrorCode,$outText)
     }
 }
 
-function insertNovaCheck(){
+/**
+ * This function is used to insert a novacheck.
+ *
+ * it require in POST:
+ * - 'nova_id' - The is of the nova
+ * - 'drugsheet_id' - The id of the drugsheet
+ * - 'start' - The value at the begining of the day
+ * - 'end' -
+ * - 'date'
+ * - 'drug_id'
+ */
+function insertNovaCheck()
+{
     $outText = null;
     $httpErrorCode = null;
+
+
+    /*$_POST['nova_id'] = "3";
+    $_POST['drugsheet_id'] = 43;
+    $_POST['start'] = 1;
+    $_POST['end']= 4;
+    $_POST['date'] ="2021-03-22 00:00:00";
+    $_POST['drug_id'] = 1;
+
+    $_SERVER['HTTP_AUTHORIZATION'] = "Bearer 9da517add82bd3cb2c0893393b980510381fc715d78c7309663e34ddf683";*/
+
 
     $user = checkApiToken();
 
     if (isset($user['id'])) {
-        if(isset($_POST['nova_id']) && isset($_POST['drugsheet_id']) && isset($_POST['start']) && isset($_POST['end']) && isset($_POST['date']) && isset($_POST['drug_id'])) {
+        if (isset($_POST['nova_id']) && isset($_POST['drugsheet_id']) && isset($_POST['start']) && isset($_POST['end']) && isset($_POST['date']) && isset($_POST['drug_id'])) {
             $novaId = $_POST['nova_id'];
             $drugsheetId = $_POST['drugsheet_id'];
             $start = $_POST['start'];
             $end = $_POST['end'];
             $date = $_POST['date'];
             $drugId = $_POST['drug_id'];
-            $drug = array("start"=>$start,"end"=>$end);
+            $drug = array("start" => $start, "end" => $end);
 
-            $res = inertOrUpdateNovaChecks($date,$drug,$drugId,$novaId,$drugsheetId,$user['id']);
-            if($res == null || $res == false ) {
-                $httpErrorCode = '400';
+            $res = insertOrUpdateNovaChecks($date, $drug, $drugId, $novaId, $drugsheetId, $user['id']);
+            if ($res == null || $res === false) {
+                $httpErrorCode = '500';
+            } else {
+                $outText = "Ok";
             }
-        }else{
+        } else {
             $httpErrorCode = '400';
         }
     } elseif ($user == "error400") {
@@ -215,29 +244,32 @@ function insertNovaCheck(){
         $httpErrorCode = '401';
     }
 
-    sendJson($httpErrorCode,$outText);
+    sendJson($httpErrorCode, $outText);
 }
 
-function insertPharmaCheck(){
+function insertPharmaCheck()
+{
     $outText = null;
     $httpErrorCode = null;
 
     $user = checkApiToken();
 
     if (isset($user['id'])) {
-        if(isset($_POST['batch_id']) && isset($_POST['drugsheet_id']) && isset($_POST['start']) && isset($_POST['end']) && isset($_POST['date'])) {
+        if (isset($_POST['batch_id']) && isset($_POST['drugsheet_id']) && isset($_POST['start']) && isset($_POST['end']) && isset($_POST['date'])) {
             $batchId = $_POST['batch_id'];
             $drugsheetId = $_POST['drugsheet_id'];
             $start = $_POST['start'];
             $end = $_POST['end'];
             $date = $_POST['date'];
-            $batch = array("start"=>$start,"end"=>$end);
+            $batch = array("start" => $start, "end" => $end);
 
-            $res = insertOrUpdatePharmaChecks($date,$batch,$batchId,$drugsheetId,$user['id']);
-            if($res == null || $res === false ) {
-                $httpErrorCode = '400';
+            $res = insertOrUpdatePharmaChecks($date, $batch, $batchId, $drugsheetId, $user['id']);
+            if ($res == null || $res === false) {
+                $httpErrorCode = '500';
+            } else {
+                $outText = "Ok";
             }
-        }else{
+        } else {
             $httpErrorCode = '400';
         }
     } elseif ($user == "error400") {
@@ -246,6 +278,6 @@ function insertPharmaCheck(){
         $httpErrorCode = '401';
     }
 
-    sendJson($httpErrorCode,$outText);
+    sendJson($httpErrorCode, $outText);
 
 }

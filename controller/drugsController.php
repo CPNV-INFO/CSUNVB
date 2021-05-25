@@ -84,7 +84,14 @@ function drugsDeleteSheet($baseID = null) {
     redirect("listDrugSheets", $baseID);
 }
 function drugSheetSwitchState() {
-    updateSheetState($_POST["id"], getStatusID($_POST['newSlug']));
+    $sheetId = $_POST["id"];
+    $newSlug = $_POST['newSlug'];
+    updateSheetState($sheetId, getStatusID($newSlug));
+
+    if($_POST['newSlug'] == "open"){
+        fillSheet($sheetId);
+    }
+
     redirect("listDrugSheets", $_SESSION["base"]["id"]);
 }
 
@@ -103,7 +110,7 @@ function updateDrugSheet() {
         foreach ($novaChecks as $date => $novas){
             foreach ($novas as $novaID => $drugs){
                 foreach ($drugs as $drugID => $drug){
-                    $res = inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID,$_SESSION['user']['id']);
+                    $res = insertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID,$_SESSION['user']['id']);
                     if($res == null || $res === false ) {
                         $errors = true;
                     }
@@ -293,4 +300,39 @@ function createBatch(){
         setFlashMessage("Le lot à correctement été ajouté.");
     }
     header('Location: ?action=showBatchList');
+}
+
+/** This function is used to fill drug sheets with 0 as value for every navachecks, pharmachecks and restocks
+ * @param $sheetId - The ID of the drugsheet
+ */
+function fillSheet($sheetId){
+    $drugsheet = getDrugSheetById($sheetId);
+    $dates = getDaysForWeekNumber($drugsheet["week"]);
+    $novas = getNovasForSheet($sheetId);
+    $batchesForSheet = getBatchesForSheet($sheetId);
+    $drugs = getDrugsInDrugSheet($sheetId);
+    $value = array("start"=>0,"end"=>0);
+    $userId = $_SESSION['user']['id'];
+
+    foreach ($dates as $date){
+        foreach ($drugs as $drug){
+            foreach ($novas as $nova){
+                insertOrUpdateNovaChecks($date,$value,$drug['id'],$nova['id'],$sheetId,$userId);
+            }
+        }
+    }
+
+    foreach ($dates as $date){
+        foreach ($batchesForSheet as $batch){
+            insertOrUpdatePharmaChecks($date,$value,$batch['id'],$sheetId,$userId);
+        }
+    }
+
+    foreach ($dates as $date){
+        foreach ($batchesForSheet as $batch){
+            foreach ($novas as $nova){
+                inertOrUpdateRestock($date,$batch['id'],$nova['id'],0,$sheetId);
+            }
+        }
+    }
 }
