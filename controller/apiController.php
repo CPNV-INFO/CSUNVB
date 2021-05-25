@@ -208,17 +208,6 @@ function insertNovaCheck()
     $outText = null;
     $httpErrorCode = null;
 
-
-    /*$_POST['nova_id'] = "3";
-    $_POST['drugsheet_id'] = 43;
-    $_POST['start'] = 1;
-    $_POST['end']= 4;
-    $_POST['date'] ="2021-03-22 00:00:00";
-    $_POST['drug_id'] = 1;
-
-    $_SERVER['HTTP_AUTHORIZATION'] = "Bearer 9da517add82bd3cb2c0893393b980510381fc715d78c7309663e34ddf683";*/
-
-
     $user = checkApiToken();
 
     if (isset($user['id'])) {
