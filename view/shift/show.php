@@ -52,7 +52,7 @@ $title = "CSU-NVB - Remise de garde";
                         <?php if ($enableDataUpdate) : ?>
                             <select name="boss" class="SH_dropdownInfo">
                                 <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Resp.</option>' : '' ?>
-                                <?php foreach ($users as $user): ?>
+                                <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -64,7 +64,7 @@ $title = "CSU-NVB - Remise de garde";
                         <?php if ($enableDataUpdate) : ?>
                             <select name="teammate" class="SH_dropdownInfo">
                                 <?= ($team['teammate'] == NULL) ? '<option value="NULL" selected disabled>Equi.</option>' : '' ?>
-                                <?php foreach ($users as $user): ?>
+                                <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -122,7 +122,7 @@ $title = "CSU-NVB - Remise de garde";
                         <?php if ($enableDataUpdate) : ?>
                             <select name="boss" class="SH_dropdownInfo">
                                 <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Resp.</option>' : '' ?>
-                                <?php foreach ($users as $user): ?>
+                                <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -134,7 +134,7 @@ $title = "CSU-NVB - Remise de garde";
                         <?php if ($enableDataUpdate) : ?>
                             <select name="teammate" class="SH_dropdownInfo">
                                 <?= ($team['teammate'] == NULL) ? '<option value="NULL" selected disabled>Equi.</option>' : '' ?>
-                                <?php foreach ($users as $user): ?>
+                                <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>

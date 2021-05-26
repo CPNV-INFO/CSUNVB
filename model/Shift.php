@@ -408,3 +408,22 @@ inner join bases on shiftsheets.base_id = bases.id
 inner join users on shiftteams.boss_id = users.id
 where nova_id = :novaID  and shiftsheets.date = :date order by day ASC",["novaID" => $novaID,"date" => $date]);
 }
+
+function getActivUserForShift($sheetID){
+    return selectMany("select users.id, users.initials from workplannings 
+inner join worktimes on worktimes.id = workplannings.worktime_id
+inner join bases on bases.id = worktimes.base_id
+inner join shiftsheets on (shiftsheets.date = workplannings.date and shiftsheets.base_id = bases.id)
+inner join users on workplannings.user_id = users.id
+where shiftsheets.id = :sheetID",["sheetID" => $sheetID]);
+}
+
+function getInactivUserForShift($sheetID){
+    return selectMany("select id,initials from users where id not in (
+select users.id from workplannings 
+inner join worktimes on worktimes.id = workplannings.worktime_id
+inner join bases on bases.id = worktimes.base_id
+inner join shiftsheets on (shiftsheets.date = workplannings.date and shiftsheets.base_id = bases.id)
+inner join users on workplannings.user_id = users.id
+where shiftsheets.id = :sheetID)",["sheetID" => $sheetID]);
+}

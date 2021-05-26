@@ -85,7 +85,7 @@ function shiftShow($shiftid)
 
     $model = getModelByID($shiftsheet['model']);
     $novas = getNovas();
-    $users = getUsers();
+    $activUsers = getActivUserForShift($shiftid);
     require_once VIEW . 'shift/show.php';
 }
 
