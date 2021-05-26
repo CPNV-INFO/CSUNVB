@@ -20,11 +20,11 @@ function getANovaByID($novaID){
 }
 
 function addUnAvailableNova($comment,$date,$day,$userID,$novaID){
-    return insert("INSERT INTO novaUnavailabilites (comment,date,day,user_id,nova_id) values (:comment,:date,:day,:userID,:novaID)",["comment" => $comment, "date" => $date, "day" => $day, "userID" => $userID, "novaID" => $novaID]);
+    return insert("INSERT INTO novaunavailabilites (comment,date,day,user_id,nova_id) values (:comment,:date,:day,:userID,:novaID)",["comment" => $comment, "date" => $date, "day" => $day, "userID" => $userID, "novaID" => $novaID]);
 }
 
 function delUnAvailableNova($date,$novaID){
-    return insert("delete from novaUnavailabilites where nova_id = :novaID and date = :date",["date" => $date, "novaID" => $novaID]);
+    return insert("delete from novaunavailabilites where nova_id = :novaID and date = :date",["date" => $date, "novaID" => $novaID]);
 }
 
 function getUnAvailableNova($date,$day,$novaID){

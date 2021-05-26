@@ -95,12 +95,12 @@ function addWorkTime($code, $name, $day, $baseID)
 
 function addWorkPlanning($selectedWorkTimeID, $selectedUserID, $date)
 {
-    return intval(insert("INSERT INTO workPlannings (worktime_id,user_id,date) VALUES (:workID, :userID, :date)", ['workID' => $selectedWorkTimeID, 'userID' => $selectedUserID, 'date' => $date]));
+    return intval(insert("INSERT INTO workplannings (worktime_id,user_id,date) VALUES (:workID, :userID, :date)", ['workID' => $selectedWorkTimeID, 'userID' => $selectedUserID, 'date' => $date]));
 }
 
 function delPlanning($firstDate, $lastDate)
 {
-    return execute("Delete from workPlannings where date BETWEEN :firstDate and :lastDate", ["firstDate" => $firstDate, "lastDate" => $lastDate]);
+    return execute("Delete from workplannings where date BETWEEN :firstDate and :lastDate", ["firstDate" => $firstDate, "lastDate" => $lastDate]);
 }
 
 function getPlanningForUser($userID, $date)
