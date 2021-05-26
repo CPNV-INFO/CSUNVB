@@ -28,7 +28,7 @@ function delUnAvailableNova($date,$novaID){
 }
 
 function getUnAvailableNova($date,$day,$novaID){
-    return selectOne("select comment,initials from novaUnavailabilites inner join users on novaUnavailabilites.user_id = users.id where nova_id=:novaID and date=:date and day=:day",["date" => $date, "day" => $day, "novaID" => $novaID]);
+    return selectOne("select comment,initials from novaunavailabilites inner join users on novaUnavailabilites.user_id = users.id where nova_id=:novaID and date=:date and day=:day",["date" => $date, "day" => $day, "novaID" => $novaID]);
 }
 
 
