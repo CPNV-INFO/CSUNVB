@@ -55,6 +55,9 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
+                                <?php foreach ($inActivUsers as $user): ?>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         <?php else : ?>
                             <?= (isset($team['boss'])) ? $team['boss'] : '-' ?>
@@ -66,6 +69,9 @@ $title = "CSU-NVB - Remise de garde";
                                 <?= ($team['teammate'] == NULL) ? '<option value="NULL" selected disabled>Equi.</option>' : '' ?>
                                 <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
+                                <?php foreach ($inActivUsers as $user): ?>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
@@ -125,6 +131,9 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
+                                <?php foreach ($inActivUsers as $user): ?>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         <?php else : ?>
                             <?= (isset($team['boss'])) ? $team['boss'] : '-' ?>
@@ -136,6 +145,9 @@ $title = "CSU-NVB - Remise de garde";
                                 <?= ($team['teammate'] == NULL) ? '<option value="NULL" selected disabled>Equi.</option>' : '' ?>
                                 <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
+                                <?php foreach ($inActivUsers as $user): ?>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
