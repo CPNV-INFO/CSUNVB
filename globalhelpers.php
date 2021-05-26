@@ -7,7 +7,7 @@ setlocale(LC_ALL, 'fr_CH'); // pour les format de dates
  */
 function getVersion()
 {
-    return "[TPI - Sprint 1]";
+    return "[TPI - Sprint 4]";
 }
 
 /**
