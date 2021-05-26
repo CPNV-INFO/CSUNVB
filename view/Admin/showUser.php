@@ -39,7 +39,7 @@ $title = "CSU-NVB - Administration - Planning";
                             <?php foreach ($day["works"] as $work): ?>
                                 <strong><?= $work["type"] ?> <?= $work["base"] ?> </strong>
                                 <?php if (isset($work["day"])) : ?>
-                                    <?php if ($work["day"] === 1 ) : ?>
+                                    <?php if ($work["day"] == 1 ) : ?>
                                         <i class="fas fa-sun fa-lg"></i>
                                     <?php else : ?>
                                         <i class="fas fa-moon fa-lg"></i>

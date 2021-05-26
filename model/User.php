@@ -25,6 +25,7 @@ function SaveUser($user)
 {
     unset($user['password']);
     unset($user['firstconnect']);
+    unset($user['number']);
     return execute("UPDATE users SET firstname= :firstname, lastname= :lastname, initials = :initials, admin = :admin, email = :email, mobileNumber = :mobileNumber where id = :id", $user);
 }
 
