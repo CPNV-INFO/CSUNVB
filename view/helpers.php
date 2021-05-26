@@ -290,7 +290,7 @@ function slugBtns($page, $sheet, $slug)
                 default:
                     break;
             }
-            $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
+            if ($_SESSION['user']['admin'] == true)$buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
             break;
         default:
             break;
