@@ -276,11 +276,21 @@ function slugBtns($page, $sheet, $slug)
             }
             break;
         case "reopen":
-            if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer", "", "close");
+            $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer", "", "close");
             break;
         case "close":
-            if (ican('opensheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
-            if (ican('archivesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
+            switch ($page) {
+                case "drug":
+                case "todo":
+                    $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
+                    break;
+                case "shift":
+                    if(canIEditShift($sheet))$buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
+                    break;
+                default:
+                    break;
+            }
+            $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
             break;
         default:
             break;

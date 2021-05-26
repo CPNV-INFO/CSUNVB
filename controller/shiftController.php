@@ -103,12 +103,11 @@ function canIEditShift($shiftsheet)
                 if ($team["boss_id"] == $_SESSION['user']['id'] || $team["teammate_id"] == $_SESSION['user']['id']) return true;
             }
         }
-    } elseif ($shiftsheet['status'] == "reopen") {
+    }elseif ($shiftsheet['status'] == "reopen" or $shiftsheet['statusslug'] == "close") {
         if ($_SESSION['user']['admin'] == true) {
             return true;
         } else {
             if(date('Y-m-d') <= date('Y-m-d', strtotime($shiftsheet["date"] . ' + 3 days'))){
-                echo "test";
                 foreach ($shiftsheet["teamDay"] as $team) {
                     if ($team["boss_id"] == $_SESSION['user']['id'] || $team["teammate_id"] == $_SESSION['user']['id']) return true;
                 }
