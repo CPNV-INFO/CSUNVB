@@ -144,8 +144,8 @@ function getPharmaCheckByDateAndBatch($date, $batch, $drugSheetID) {
  * @param $drugSheetID - The drugsheet ID
  * @return string|null
  */
-function insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID){
-    return insert('INSERT INTO pharmachecks (date, start, end, batch_id, user_id, drugsheet_id) VALUES(:date,:batch_start,:batch_end,:batch_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :batch_start, END =:batch_end, user_id = :user_id;', ['date'=>$date,"batch_start"=>$batch['start'],"batch_end"=>$batch['end'],"batch_id"=>$batchID,"user_id"=>$_SESSION['user']['id'],'drugsheet_id'=>$drugSheetID]);
+function insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID,$userId){
+    return insert('INSERT INTO pharmachecks (date, start, end, batch_id, user_id, drugsheet_id) VALUES(:date,:batch_start,:batch_end,:batch_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :batch_start, END =:batch_end, user_id = :user_id;', ['date'=>$date,"batch_start"=>$batch['start'],"batch_end"=>$batch['end'],"batch_id"=>$batchID,"user_id"=>$userId,'drugsheet_id'=>$drugSheetID]);
 }
 
 /**
@@ -163,8 +163,8 @@ function getNovaCheckByDateAndDrug($date, $drug, $nova, $drugSheetID) {
  * @param $drugSheetID - The drugsheet ID
  * @return string|null
  */
-function inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID){
-    return insert('INSERT INTO novachecks (date, start, end, drug_id, nova_id, user_id,drugsheet_id) VALUES(:date, :start, :end,:drug_id,:nova_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :start, END =:end, user_id = :user_id;', ['date' => $date,'start' => $drug["start"],'end'=>$drug["end"],'drug_id'=>$drugID,'nova_id'=>$novaID,'user_id'=>$_SESSION['user']['id'],'drugsheet_id'=>$drugSheetID]);
+function insertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID,$userId){
+    return insert('INSERT INTO novachecks (date, start, end, drug_id, nova_id, user_id,drugsheet_id) VALUES(:date, :start, :end,:drug_id,:nova_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :start, END =:end, user_id = :user_id;', ['date' => $date,'start' => $drug["start"],'end'=>$drug["end"],'drug_id'=>$drugID,'nova_id'=>$novaID,'user_id'=>$userId,'drugsheet_id'=>$drugSheetID]);
 }
 
 /**
