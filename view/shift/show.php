@@ -22,7 +22,7 @@ $title = "CSU-NVB - Remise de garde";
         </h6>
         <div>
             <div class="d-print-none d-inline">
-                <?= slugBtns("shift", $shiftsheet, $shiftsheet["status"]) ?>
+                <?= $enableStateChange ? slugBtns("shift", $shiftsheet, $shiftsheet["status"]) : '' ?>
                 <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i>
                 </button>
                 <form method="POST" class="d-inline" action='?action=shiftLog&id=<?= $shiftsheet['id'] ?>'>
@@ -37,7 +37,7 @@ $title = "CSU-NVB - Remise de garde";
             <?php foreach ($shiftsheet['teamDay'] as $team): ?>
                 <div data-team="<?= $team["team_id"] ?>" style="margin-bottom: 5px">
                     <div class="text-center selectForDay first">
-                        <?php if ($enableshiftsheetUpdate) : ?>
+                        <?php if ($enableDataUpdate) : ?>
                             <select name="nova" class="SH_dropdownInfo">
                                 <?= ($team['nova'] == NULL) ? '<option value="NULL" selected disabled>Nova</option>' : '' ?>
                                 <?php foreach ($novas as $nova): ?>
@@ -49,11 +49,14 @@ $title = "CSU-NVB - Remise de garde";
                         <?php endif; ?>
                     </div>
                     <div class="text-center selectForDay">
-                        <?php if ($enableshiftsheetUpdate) : ?>
+                        <?php if ($enableDataUpdate) : ?>
                             <select name="boss" class="SH_dropdownInfo">
                                 <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Resp.</option>' : '' ?>
-                                <?php foreach ($users as $user): ?>
+                                <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
+                                <?php foreach ($inActivUsers as $user): ?>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
@@ -61,11 +64,14 @@ $title = "CSU-NVB - Remise de garde";
                         <?php endif; ?>
                     </div>
                     <div class="text-center selectForDay last">
-                        <?php if ($enableshiftsheetUpdate) : ?>
+                        <?php if ($enableDataUpdate) : ?>
                             <select name="teammate" class="SH_dropdownInfo">
                                 <?= ($team['teammate'] == NULL) ? '<option value="NULL" selected disabled>Equi.</option>' : '' ?>
-                                <?php foreach ($users as $user): ?>
+                                <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
+                                <?php foreach ($inActivUsers as $user): ?>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
@@ -74,7 +80,7 @@ $title = "CSU-NVB - Remise de garde";
                     </div>
                 </div>
             <?php endforeach; ?>
-            <?php if ($enableshiftsheetUpdate) : ?>
+            <?php if ($enableStructureChange) : ?>
                 <div style="align-items: center; margin-bottom: 5px" class="d-flex">
                     <div class="flex-container column" style="margin: 5px;align-items: center; -webkit-align-items: center; ">
                         <div class="flex-item" style="margin-bottom: 5px">
@@ -107,7 +113,7 @@ $title = "CSU-NVB - Remise de garde";
             <?php foreach ($shiftsheet['teamNight'] as $team): ?>
                 <div data-team="<?= $team["team_id"] ?>" style="margin-bottom: 5px">
                     <div class="text-center selectForNight first">
-                        <?php if ($enableshiftsheetUpdate) : ?>
+                        <?php if ($enableDataUpdate) : ?>
                             <select name="nova" class="SH_dropdownInfo">
                                 <?= ($team['nova'] == NULL) ? '<option value="NULL" selected disabled>Nova</option>' : '' ?>
                                 <?php foreach ($novas as $nova): ?>
@@ -119,11 +125,14 @@ $title = "CSU-NVB - Remise de garde";
                         <?php endif; ?>
                     </div>
                     <div class="text-center selectForNight">
-                        <?php if ($enableshiftsheetUpdate) : ?>
+                        <?php if ($enableDataUpdate) : ?>
                             <select name="boss" class="SH_dropdownInfo">
                                 <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Resp.</option>' : '' ?>
-                                <?php foreach ($users as $user): ?>
+                                <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
+                                <?php foreach ($inActivUsers as $user): ?>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
@@ -131,11 +140,14 @@ $title = "CSU-NVB - Remise de garde";
                         <?php endif; ?>
                     </div>
                     <div class="text-center selectForNight last">
-                        <?php if ($enableshiftsheetUpdate) : ?>
+                        <?php if ($enableDataUpdate) : ?>
                             <select name="teammate" class="SH_dropdownInfo">
                                 <?= ($team['teammate'] == NULL) ? '<option value="NULL" selected disabled>Equi.</option>' : '' ?>
-                                <?php foreach ($users as $user): ?>
+                                <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                <?php endforeach; ?>
+                                <?php foreach ($inActivUsers as $user): ?>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
@@ -144,7 +156,7 @@ $title = "CSU-NVB - Remise de garde";
                     </div>
                 </div>
             <?php endforeach; ?>
-            <?php if ($enableshiftsheetUpdate) : ?>
+            <?php if ($enableStructureChange) : ?>
             <div style="align-items: center;display: flex;margin-bottom: 5px" class="d-flex">
                 <div class="flex-container column" style="margin: 5px;align-items: center; -webkit-align-items: center; ">
                     <div class="flex-item" style="margin-bottom: 5px">
@@ -192,8 +204,7 @@ $title = "CSU-NVB - Remise de garde";
                     <!-- actionName Cell-->
                     <td class="SH_actionCase">
                         <form action="?action=removeActionForShift&id=<?= $shiftsheet['id'] ?>" method="post">
-                            <?php if ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true): ?>
-
+                            <?php if ($enableStructureChange): ?>
                                 <input type="hidden" name="model" value="<?= $shiftsheet['model'] ?>">
                                 <input type="hidden" name="action" value="<?= $action['id'] ?>">
                                 <button type="submit" class="btn btn-danger">
@@ -203,7 +214,7 @@ $title = "CSU-NVB - Remise de garde";
                             <div class="SH_actionName"><?= $action['text'] ?></div>
                         </form>
                     </td>
-                    <?php if ($enableshiftsheetFilling): ?>
+                    <?php if ($enableFilling): ?>
                         <!-- Check for the day -->
                         <td class="SH_checkCase" value="1">
                             <?php if (count($action["checksDay"]) == 0): ?>
@@ -284,7 +295,7 @@ $title = "CSU-NVB - Remise de garde";
                     <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
-            <?php if ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true): ?>
+            <?php if ($enableStructureChange): ?>
                 <tr>
                     <td colspan="4" style="padding: 0px;">
                         <div>
@@ -324,30 +335,32 @@ $title = "CSU-NVB - Remise de garde";
     <?php else: ?>
         <?= $model["name"] ?>
     <?php endif; ?>
-    <div class="float-right d-print-none">
-        <div class="d-flex flex-row">
-            <?php if ($model["suggested"] == 0) : ?>
-                <?php if ($model["name"] != "") : ?>
-                    <button class="btn blueBtn m-1"
-                            onclick="reAddShiftModel(<?= $shiftsheet["model"] ?>, '<?= $model["name"] ?>',<?= $shiftsheet['id'] ?>)">
-                        Ré-activer le modèle
-                    </button>
+    <?php if ($_SESSION['user']['admin']): ?>
+        <div class="float-right d-print-none">
+            <div class="d-flex flex-row">
+                <?php if ($model["suggested"] == 0) : ?>
+                    <?php if ($model["name"] != "") : ?>
+                        <button class="btn blueBtn m-1"
+                                onclick="reAddShiftModel(<?= $shiftsheet["model"] ?>, '<?= $model["name"] ?>',<?= $shiftsheet['id'] ?>)">
+                            Ré-activer le modèle
+                        </button>
+                    <?php else : ?>
+                        <button class="btn blueBtn m-1"
+                                onclick="saveShiftModel(<?= $shiftsheet['id'] ?>,<?= $shiftsheet["model"] ?>)">
+                            Enregistrer comme modèle
+                        </button>
+                    <?php endif; ?>
                 <?php else : ?>
-                    <button class="btn blueBtn m-1"
-                            onclick="saveShiftModel(<?= $shiftsheet['id'] ?>,<?= $shiftsheet["model"] ?>)">
-                        Enregistrer comme modèle
-                    </button>
+                    <?php if ($model["name"] != "Vide") : ?>
+                        <button class="btn blueBtn m-1"
+                                onclick="disableShiftModel(<?= $shiftsheet["model"] ?>, <?= $model["name"] ?>,<?= $shiftsheet['id'] ?>)">
+                            Oublier le modèle
+                        </button>
+                    <?php endif; ?>
                 <?php endif; ?>
-            <?php else : ?>
-                <?php if ($model["name"] != "Vide") : ?>
-                    <button class="btn blueBtn m-1"
-                            onclick="disableShiftModel(<?= $shiftsheet["model"] ?>, <?= $model["name"] ?>,<?= $shiftsheet['id'] ?>)">
-                        Oublier le modèle
-                    </button>
-                <?php endif; ?>
-            <?php endif; ?>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 </div>
 <script src="js/shift.js"></script>
 <?php

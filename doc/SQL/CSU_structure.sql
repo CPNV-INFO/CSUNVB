@@ -182,8 +182,8 @@ CREATE TABLE IF NOT EXISTS `novas` (
   UNIQUE KEY `number_UNIQUE` (`number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `novaUnavailabilites`;
-CREATE TABLE IF NOT EXISTS `novaUnavailabilites` (
+DROP TABLE IF EXISTS `novaunavailabilites`;
+CREATE TABLE IF NOT EXISTS `novaunavailabilites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `comment` varchar(45) NULL,
   `date` date NOT NULL,
@@ -191,11 +191,11 @@ CREATE TABLE IF NOT EXISTS `novaUnavailabilites` (
   `user_id` int(11) NOT NULL,
   `nova_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_novaUnavailabilites` (`date`,`day`,`nova_id`) USING BTREE,
-  KEY `fk_novaUnavailabilites_user_id` (`user_id`),
-  KEY `fk_novaUnavailabilites_nova_id` (`nova_id`),
-  CONSTRAINT `fk_novaUnavailabilites_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_novaUnavailabilites_nova_id` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`)
+  UNIQUE KEY `unique_novaunavailabilites` (`date`,`day`,`nova_id`) USING BTREE,
+  KEY `fk_novaunavailabilites_user_id` (`user_id`),
+  KEY `fk_novaunavailabilites_nova_id` (`nova_id`),
+  CONSTRAINT `fk_novaunavailabilites_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_novaunavailabilites_nova_id` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2251 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Les données exportées n'étaient pas sélectionnées.
@@ -480,11 +480,11 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `initials_UNIQUE` (`initials`)
 ) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `worktime`;
-CREATE TABLE IF NOT EXISTS `worktime` (
+DROP TABLE IF EXISTS `worktimes`;
+CREATE TABLE IF NOT EXISTS `worktimes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(5) NOT NULL,
-  `type` int(11) NOT NULL,
+  `code` int NOT NULL,
+  `type` varchar(50) NULL,
   `day` tinyint(1) NULL,
   `base_id` int NULL,
   PRIMARY KEY (`id`),
@@ -492,6 +492,20 @@ CREATE TABLE IF NOT EXISTS `worktime` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_base_id` (`base_id`),
   CONSTRAINT `fk_base_id` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `workplannings`;
+CREATE TABLE IF NOT EXISTS `workplannings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `worktime_id` int NULL,
+  `user_id` int NULL,
+  `date` date NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_worktime_id` (`worktime_id`),
+  CONSTRAINT `fk_worktime_id` FOREIGN KEY (`worktime_id`) REFERENCES `worktimes` (`id`),
+  KEY `fk_user_id` (`user_id`),
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.

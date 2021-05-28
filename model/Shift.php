@@ -444,3 +444,22 @@ function getShiftChecks($userId,$sheetId){
  join shiftactions on shiftchecks.shiftaction_id = shiftactions.id
 WHERE user_id = :user_ID and shiftchecks.shiftsheet_id = :sheet_ID;",["user_ID"=>$userId,"sheet_ID"=>$sheetId]);
 }
+
+function getActivUserForShift($sheetID){
+    return selectMany("select users.id, users.initials from workplannings 
+inner join worktimes on worktimes.id = workplannings.worktime_id
+inner join bases on bases.id = worktimes.base_id
+inner join shiftsheets on (shiftsheets.date = workplannings.date and shiftsheets.base_id = bases.id)
+inner join users on workplannings.user_id = users.id
+where shiftsheets.id = :sheetID",["sheetID" => $sheetID]);
+}
+
+function getInactivUserForShift($sheetID){
+    return selectMany("select id,initials from users where id not in (
+select users.id from workplannings 
+inner join worktimes on worktimes.id = workplannings.worktime_id
+inner join bases on bases.id = worktimes.base_id
+inner join shiftsheets on (shiftsheets.date = workplannings.date and shiftsheets.base_id = bases.id)
+inner join users on workplannings.user_id = users.id
+where shiftsheets.id = :sheetID)",["sheetID" => $sheetID]);
+}

@@ -3,11 +3,9 @@
  * Auteur: Thomas Grossmann / Mounir Fiaux
  * Date: Mars 2020
  **/
-
 ob_start();
 $title = "CSU-NVB - Administration - Secouristes";
 ?>
-<?= $_SESSION["a"] ?>
 <a href="?action=newUser" class="btn btn-success">Créer un utilisateur</a>
 
 <form action="?action=importPlanning" method="post" class="d-inline float-right" accept-charset="utf-8" enctype="multipart/form-data">
@@ -36,7 +34,9 @@ $title = "CSU-NVB - Administration - Secouristes";
                     <?= $user['initials'] ?>
                 </div>
                 <div style="margin-left: 12px;">
-                    <i class="far fa-calendar-alt fa-2x modify"></i>
+                    <a href="?action=showUser&id=<?= $user['id'] ?>" class="text-dark">
+                        <i class="far fa-calendar-alt fa-2x modify"></i>
+                    </a>
                 </div>
             </div>
 

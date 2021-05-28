@@ -220,7 +220,10 @@ function listShiftSheet($slug, $shiftList, $zone)
             $body .= $shiftInfo;
             $body .= "<td><div class='d-flex justify-content-around'>";
             $body .= buttonForSheet("shift", $shift['id'], "Show&id=" . $shift['id'], "Détails");
-            $body .= slugBtns("shift", $shift, $slug) . "</div></td>";
+            if((date('Y-m-d') <= date('Y-m-d', strtotime($shift["date"] . ' + 3 days'))) or $_SESSION['user']['admin']){
+                $body .= slugBtns("shift", $shift, $slug);
+            }
+            $body .= "</div></td>";
             $body .= "</tr>";
         }
         $foot = "</table>";
@@ -273,11 +276,21 @@ function slugBtns($page, $sheet, $slug)
             }
             break;
         case "reopen":
-            if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer", "", "close");
+            $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer", "", "close");
             break;
         case "close":
-            if (ican('opensheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
-            if (ican('archivesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
+            switch ($page) {
+                case "drug":
+                case "todo":
+                    $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
+                    break;
+                case "shift":
+                    if(canIEditShift($sheet))$buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
+                    break;
+                default:
+                    break;
+            }
+            if ($_SESSION['user']['admin'] == true)$buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
             break;
         default:
             break;

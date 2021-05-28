@@ -7,7 +7,7 @@ error_reporting(0);
  */
 function getVersion()
 {
-    return "1.0";
+    return "[TPI - Sprint 4]";
 }
 
 /**
