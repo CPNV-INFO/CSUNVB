@@ -336,3 +336,9 @@ function fillSheet($sheetId){
         }
     }
 }
+
+function insertSpecialDrugExit(){
+    $drugsheetId = $_POST['sheetId'];
+
+    header('Location: ?action=showDrugSheet&id='.$drugsheetId);
+}

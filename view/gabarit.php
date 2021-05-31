@@ -31,7 +31,7 @@ $page = getPage($_GET["action"]);
             echo '<link href="css/todo.css" rel="stylesheet"><script src="js/todo.js" defer></script>';
             break;
         case "drug":
-            echo '<link href="css/drug.css" rel="stylesheet"><script src="js/drug.js" defer></script>';
+            echo '<link href="css/drug.css" rel="stylesheet"><script src="js/drugs.js" defer></script>';
             break;
         case "admin":
             echo '<link href="css/admin.css" rel="stylesheet"><script src="js/admin.js" defer></script>';

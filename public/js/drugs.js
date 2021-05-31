@@ -165,3 +165,17 @@ function createNewBatch(baseID,drugID){
         form.submit();
     }
 }
+
+function showModalElementByDateAndBatch(date,batchId,sheetId){
+    let inputDate = document.getElementById("specialCheckInputDate");
+    let inputBatch = document.getElementById("specialCheckInputBatchId");
+    let inputDrugSheetId = document.getElementById("specialCheckInputSheetId");
+
+    inputDate.value = date;
+    inputBatch.value = batchId;
+    inputDrugSheetId.value = sheetId;
+    let test = document.getElementById("test2");
+
+
+    test.hidden = false;
+}
