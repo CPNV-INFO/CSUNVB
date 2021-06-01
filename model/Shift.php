@@ -306,15 +306,15 @@ function updateShiftTeams()
 {
     switch ($_POST["field"]) {
         case "nova":
-            execute("UPDATE shiftteams SET nova_id = :novaID WHERE id = :id", [ "id" => $_POST["teamID"], "novaID" => $_POST["value"]]);
+            execute("UPDATE shiftteams SET nova_id = :value WHERE id = :id", [ "id" => $_POST["teamID"], "value" => $_POST["value"]]);
             echo "true";
             break;
         case "boss":
-            execute("UPDATE shiftteams SET boss_id = :novaID WHERE id = :bossID", [ "id" => $_POST["teamID"], "bossID" => $_POST["value"]]);
+            execute("UPDATE shiftteams SET boss_id = :value WHERE id = :id", [ "id" => $_POST["teamID"], "value" => $_POST["value"]]);
             echo "true";
             break;
         case "teammate":
-            execute("UPDATE shiftteams SET teammate_id = :novaID WHERE id = :teammateID", [ "id" => $_POST["teamID"], "teammateID" => $_POST["value"]]);
+            execute("UPDATE shiftteams SET teammate_id = :value WHERE id = :id", [ "id" => $_POST["teamID"], "value" => $_POST["value"]]);
             echo "true";
             break;
         default:
