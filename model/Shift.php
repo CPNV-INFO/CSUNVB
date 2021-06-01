@@ -306,15 +306,15 @@ function updateShiftTeams()
 {
     switch ($_POST["field"]) {
         case "nova":
-            execute("UPDATE shiftteams SET nova_id = :novaID WHERE id = :id", [ "id" => $_POST["teamID"], "novaID" => $_POST["value"]]);
+            execute("UPDATE shiftteams SET nova_id = :value WHERE id = :id", [ "id" => $_POST["teamID"], "value" => $_POST["value"]]);
             echo "true";
             break;
         case "boss":
-            execute("UPDATE shiftteams SET boss_id = :novaID WHERE id = :id", [ "id" => $_POST["teamID"], "novaID" => $_POST["value"]]);
+            execute("UPDATE shiftteams SET boss_id = :value WHERE id = :id", [ "id" => $_POST["teamID"], "value" => $_POST["value"]]);
             echo "true";
             break;
         case "teammate":
-            execute("UPDATE shiftteams SET teammate_id = :novaID WHERE id = :id", [ "id" => $_POST["teamID"], "novaID" => $_POST["value"]]);
+            execute("UPDATE shiftteams SET teammate_id = :value WHERE id = :id", [ "id" => $_POST["teamID"], "value" => $_POST["value"]]);
             echo "true";
             break;
         default:
@@ -337,7 +337,7 @@ INNER JOIN shiftsheets
 ON shiftsheets.shiftmodel_id = shiftmodels.id
 WHERE shiftsheets.id = :sheetID ) AS test 
 WHERE code not IN(
-SELECT unique CONCAT(shiftactions.id,'/',shiftchecks.day) AS 'code' FROM shiftchecks
+SELECT CONCAT(shiftactions.id,'/',shiftchecks.day) AS 'code' FROM shiftchecks
 inner JOIN shiftactions
 ON shiftactions.id = shiftchecks.shiftaction_id
 WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]));

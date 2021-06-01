@@ -142,7 +142,7 @@ Il serait intéressant de supprimer ce formaulaire et d'ajouter un icone "crayon
 La calendrier des novas a pour but de plannifier l'utilisation de novas, et de voir d'éventuels problèmes (une même nova utilisée par 2 équipes au même moment par exemple),
 elle sont en général toujours disponible mais faut pouvoir indiquer leur indisponibilités (comme un rendez-vous au garage)
 
-Deux gardes se déroulent par journée, il faut donc savoir si la nova sera indisponible durant la nuit, le jour ou toute la journée
+Deux gardes se déroulent par créneaux jour/nuit, il faut donc savoir si la nova sera indisponible durant la nuit, le jour ou toute la journée
 
 La base de donnée doit être mofifiée afin d'y ajouter la table indiponibilité, la base de donnée est prévue pour pouvoir avoir plusieurs entrée par jour et par créneaux mais actuelement, il est possible d'avoir d'en inscrire une seule dans le calendrier
 
@@ -192,7 +192,8 @@ Le code PA et la désignation sont liés, ils seront tous deuxregistré dans une
 
 ### Risque
 
-...
+Les nom de secouriste, des horaires ou des bases ne sont pas forcément identique entre la base de donnée du site et les donnée du fichier CSV, si cette différence est trop grande il est possible qu'elle ne soient pas reconnue ou associée à une mauvaise donnée.
+Actuelement certains test ont été effectués pour savoir si le lien entre "la vallée" et "la vallée de joux" se fait bien et si il n'y pas pas de confision entre par exemple sainte-croix et saint-loup
 
 ## Visualisation du plan de travail
 
@@ -215,6 +216,16 @@ Le nom de l'horaire est écourté ( Horaire 6 => 6 ) et le jour/nuit sont indiqu
 Les codes de désignation utilisés au CSU (comme ci-dessous) ne sont pas utilisé, cela pourrait être mis en place, mais le temps de faire la demande pour avoir les correspondence et de tout mettre en place prendrait trop de temps pour le TPI
 
 ![polypoints](images/polypoints.png)
+
+### Sélectionner un secouriste actif
+
+Grâce au planning importer, il est possible de différencier les secouristes actif sur la base pour le jour en question, la sélection sera plus facile lorsqu'il y aura presque 100 secouriste dans la liste
+
+Les secouriste actifs sont affiché en premier et ils sont séparé par une ligne "-----"
+
+Les autres secouriste sont toutefois aussi sélectionnable si jamais un changement de dernière minute se produit et que le planning n'est pas modifié.
+
+![selectUser](images/selectUser.png)
 
 ## Droits de modification (garde)
 
@@ -252,24 +263,26 @@ Le problème est de type humain et rien qui serait simple à mettre en place pou
 
 Ce fichier comprend les points importants par rappport au TPI (reflexion, déroulement, etc.) mais pas les points techniques importants au projet.
 
-Tous les autres documents peuvent être retrouvés sur le [GitHub](https://github.com/CPNV-INFO/CSUNVB/tree/MGT/Doc) public, sur la branche MGT, associée à mon TPI
+Tous les autres documents peuvent être retrouvés sur le [GitHub](https://github.com/CPNV-INFO/CSUNVB/tree/MGT/Doc) public, sur la branche MGT, associée à mon TPI, dans le dossier Doc/Gogniat (Attention il peut y avoir un problème avec 2 dossier doc,"doc" "et "Doc" suite au travail précédant effectué avec des collègues)
 
-Le fichier "Doc\Mapping Dossier de projet.docx" contient les directives un peu particulères à ce projet de TPI, et où on peut retrouver les différents éléments demandés.
+La documentation technique qui explique le fonctionnement du site pour de potentiels futurs développeurs
 
-Le fichier "Doc\documentation technique.md" explique le fonctionnement du site pour de potentiels futurs développeurs
+Le journal de bord, contenant les évenements importants du projet
 
-Le fichier Doc\Gogniat\Journal_de_Travail.pdf, exporter depuis Icescrum et tenu à jour deux fois par semaine (mardi et jeudi)
+Le Journal de Travail, exporter depuis Icescrum et tenu à jour deux fois par semaine (mardi et jeudi)
 
-Le fichier Doc\Gogniat\Journal_de_Test.pdf, exporter depuis Icescrum, il liste les différents test de validation, il est tenu à jour à chaque fin de sprint
+Le Journal de Test, exporter depuis Icescrum, il liste les différents test de validation, il est tenu à jour à chaque fin de sprint
 
-Document physique ? à discuter avec les experts
+Les PV des 2 rendez-vous avec le CSU
+
+La documentation de remise au client
 
 
 ## Conclusion
 
 ## Sources / Aides
 
-Xavier Carrel, chef de projet et conseils
+Xavier Carrel, chef de projet et conseiller
 
 Besjan Sejrani (collègue), avis sur le design du site
 

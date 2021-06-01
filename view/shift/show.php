@@ -53,13 +53,13 @@ $title = "CSU-NVB - Remise de garde";
                             <select name="boss" class="SH_dropdownInfo">
                                 <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Resp.</option>' : '' ?>
                                 <?php foreach ($activUsers as $user): ?>
-                                    <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                    <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials']?></option>
                                 <?php endforeach; ?>
+                                <option disabled="disabled">----</option>
                                 <?php foreach ($inActivUsers as $user): ?>
                                     <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
-                            </select>
-                        <?php else : ?>
+                            </select><?php else : ?>
                             <?= (isset($team['boss'])) ? $team['boss'] : '-' ?>
                         <?php endif; ?>
                     </div>
@@ -70,8 +70,9 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
+                                <option disabled="disabled">----</option>
                                 <?php foreach ($inActivUsers as $user): ?>
-                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
@@ -131,6 +132,7 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
+                                <option disabled="disabled">----</option>
                                 <?php foreach ($inActivUsers as $user): ?>
                                     <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
@@ -146,8 +148,9 @@ $title = "CSU-NVB - Remise de garde";
                                 <?php foreach ($activUsers as $user): ?>
                                     <option value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
+                                <option disabled="disabled">----</option>
                                 <?php foreach ($inActivUsers as $user): ?>
-                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['teammate'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         <?php else : ?>
@@ -353,7 +356,7 @@ $title = "CSU-NVB - Remise de garde";
                 <?php else : ?>
                     <?php if ($model["name"] != "Vide") : ?>
                         <button class="btn blueBtn m-1"
-                                onclick="disableShiftModel(<?= $shiftsheet["model"] ?>, <?= $model["name"] ?>,<?= $shiftsheet['id'] ?>)">
+                                onclick='disableShiftModel(<?= $shiftsheet["model"] ?>, "<?= $model["name"] ?>",<?= $shiftsheet['id'] ?>)'>
                             Oublier le modèle
                         </button>
                     <?php endif; ?>
