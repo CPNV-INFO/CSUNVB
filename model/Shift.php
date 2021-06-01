@@ -337,7 +337,7 @@ INNER JOIN shiftsheets
 ON shiftsheets.shiftmodel_id = shiftmodels.id
 WHERE shiftsheets.id = :sheetID ) AS test 
 WHERE code not IN(
-SELECT unique CONCAT(shiftactions.id,'/',shiftchecks.day) AS 'code' FROM shiftchecks
+SELECT CONCAT(shiftactions.id,'/',shiftchecks.day) AS 'code' FROM shiftchecks
 inner JOIN shiftactions
 ON shiftactions.id = shiftchecks.shiftaction_id
 WHERE shiftchecks.shiftsheet_id = :sheetID)",["sheetID" => $sheetID]));
