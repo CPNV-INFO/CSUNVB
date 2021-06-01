@@ -124,11 +124,14 @@ Les nom de fonction appelée depuis le javascript en ajax se termine par _ajax()
 
 ## Stratégie de test
 
-Les testes se déroulent en 2 phases différentes :
+Les testes se déroulent en 3 phases différentes :
 
 Dans un premier temps, le développeur crée les différents test pour chaque story sur Icescrum, ceux-ci seront validé lors de la reviews de sprint, s'ils sont refusés, ils seront vérifiés à nouveau lors de la prochaine review
 
-Dans un deuxième temps, le développeur ira sur place faire tester les fonctionnalités aux membres de Csunvb afin de savoir si elles conviennent bien à leurs attentes
+Dans un deuxième temps, le développeur ira sur place faire tester les fonctionnalités aux membres de Csunvb afin de savoir si elles conviennent bien à leurs attentes, dans le cadre du TPI,
+si des problèmes sont mis en évidence mais que ces points ne font pas partie du cahier des charges, ils seront traité à plus tard
+
+Dans un troisième, une remise au client est faite ou celui-ci atteste de ce qui est présent sur le site un signant, des tests de régression sont aussi fait à cette occasion afin de vérifier que tout fonctionne. 
 
 
 ## Points techniques détaillés
