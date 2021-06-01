@@ -53,7 +53,7 @@ $title = "CSU-NVB - Remise de garde";
                             <select name="boss" class="SH_dropdownInfo">
                                 <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Resp.</option>' : '' ?>
                                 <?php foreach ($activUsers as $user): ?>
-                                    <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'].$team['boss'] ?></option>
+                                    <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials']?></option>
                                 <?php endforeach; ?>
                                 <option disabled="disabled">----</option>
                                 <?php foreach ($inActivUsers as $user): ?>
