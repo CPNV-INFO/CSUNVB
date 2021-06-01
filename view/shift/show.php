@@ -356,7 +356,7 @@ $title = "CSU-NVB - Remise de garde";
                 <?php else : ?>
                     <?php if ($model["name"] != "Vide") : ?>
                         <button class="btn blueBtn m-1"
-                                onclick="disableShiftModel(<?= $shiftsheet["model"] ?>, <?= $model["name"] ?>,<?= $shiftsheet['id'] ?>)">
+                                onclick='disableShiftModel(<?= $shiftsheet["model"] ?>, "<?= $model["name"] ?>",<?= $shiftsheet['id'] ?>)'>
                             Oublier le modèle
                         </button>
                     <?php endif; ?>
