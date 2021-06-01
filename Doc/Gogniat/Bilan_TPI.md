@@ -175,7 +175,7 @@ Le CSU ayant déjà une base de donnée avec la planning des secouriste, celui-c
 
 Ce fichier comprend pour chaque horaire de travail, le nom + prénom du secouriste ainsi que son matricule
 
-Le nom et le prénom peuvent être légérement différents ("ë" à la place de "e"), il faut donc vérifier si un utilistateur avec un nom/prénom très proche existe dans la base de donnée (cette recherche ce fait grâce à la fonction similar_text(), et demandant un correspondance à 90%). Si l'utilisateur existe, son matricule est ajouter à là base de donnée, celui-ci est unique et restera identique, rendant les prochaines recherche plus rapide
+Le nom et le prénom peuvent être légèrement différents ("ë" à la place de "e"), il faut donc vérifier si un utilistateur avec un nom/prénom très proche existe dans la base de donnée (cette recherche ce fait grâce à la fonction similar_text(), et demandant un correspondance à 90%). Si l'utilisateur existe, son matricule est ajouter à là base de donnée, celui-ci est unique et restera identique, rendant les prochaines recherche plus rapide
 
 La date, pouvant être directement traitée
 
@@ -183,17 +183,17 @@ Le nom de service, inutile dans notre cas car il est toujours identique ("CSU")
 
 La fonction n'est pas traitée dans le cadre du TPI selon la demande de M. Carrel
 
-Le code PA et la désignation sont liés, ils seront tous deuxregistré dans une nouvelle table horaires, la désignation étant une string, il faut extraire les données importante à savoir :
+Le code PA et la désignation sont liés, ils seront tous deux enregistré dans une nouvelle table horaires, la désignation étant une string, il faut extraire les données importante à savoir :
 - un nom pour l'horaire
-- la base pour les horaires classique lorsqu'elle est renseignée
-- jour/nuit pour les horaires classique lorsqu'il est renseigné
+- la base pour les horaires classiques lorsqu'elle est renseignée
+- jour/nuit pour les horaires classiques lorsqu'il est renseigné
 
 ![indispo](images/mcdPlanning.PNG)
 
 ### Risque
 
-Les nom de secouriste, des horaires ou des bases ne sont pas forcément identique entre la base de donnée du site et les donnée du fichier CSV, si cette différence est trop grande il est possible qu'elle ne soient pas reconnue ou associée à une mauvaise donnée.
-Actuelement certains test ont été effectués pour savoir si le lien entre "la vallée" et "la vallée de joux" se fait bien et si il n'y pas pas de confision entre par exemple sainte-croix et saint-loup
+Les noms de secouriste, des horaires ou des bases ne sont pas forcément identique entre la base de donnée du site et les donnée du fichier CSV, si cette différence est trop grande il est possible qu'elle ne soit pas reconnue ou associée à une mauvaise donnée.
+Actuelement certains tests ont été effectués pour savoir si le lien entre "la vallée" et "la vallée de joux" se fait bien et qu'il n'y pas de confusion entre par exemple sainte-croix et saint-loup
 
 ## Visualisation du plan de travail
 
@@ -201,7 +201,7 @@ Le planning, d'un secouriste est accessible depuis la section administration en 
 
 ![userCalendarBtn](images/userCalendarBtn.PNG)
 
-Selon la demande dans le cahier de charge, elle est disponile seulement pour les administrateurs du site,
+Selon la demande dans le cahier de charge, elle est disponible seulement pour les administrateurs du site,
 Mais il serait intéressant de discuter de la possibilité que cette page soit accessible par tout le monde.
 
 
@@ -219,7 +219,7 @@ Les codes de désignation utilisés au CSU (comme ci-dessous) ne sont pas utilis
 
 ### Sélectionner un secouriste actif
 
-Grâce au planning importer, il est possible de différencier les secouristes actif sur la base pour le jour en question, la sélection sera plus facile lorsqu'il y aura presque 100 secouriste dans la liste
+Grâce au planning importer, il est possible de différencier les secouristes actifs sur la base pour le jour en question, la sélection sera plus facile lorsqu'il y aura presque 100 secouriste dans la liste
 
 Les secouriste actifs sont affiché en premier et ils sont séparé par une ligne "-----"
 
@@ -231,7 +231,7 @@ Les autres secouriste sont toutefois aussi sélectionnable si jamais un changeme
 
 ### Analyse
 
-Les secoursites qui ne sont pas présents sur un rapport de garde ne devraient pas avoir le droits de le remplir
+Les secoursites qui ne sont pas présents sur un rapport de garde ne devraient pas avoir le droit de le remplir
 
 Il faut donc limiter les droits à : 
 
@@ -245,23 +245,27 @@ Si le rapport date de plus de 3 jours, un simple secouriste n'aura plus les droi
 
 ## Objectif atteints/Non-atteints
 
+Tous les objectifs du cahier des charges ont été atteint, toutefois, après avoir pris rendez-vous avec le CSU et effectué des démonstrations, certains points devront être modifiés pour une meilleure utilisation (voir PV des rendez-vous).
+
+Les modifications, ne faisant pas partie du cahier des charges n’ont pas été effectuée afin de ne pas ajouter trop de contenu au TPI, elles se feront plus tard, hors du cadre du CPNV.
+
 ## Analyse de risques
 
-Si le serveur prend du temps à répondre, il est possible de cliquer plusieur fois sur le même boutons ce qui execute l'ation plusieurs fois, il pourrait être intéressant à therme de désactivé le boutons lorsqu'il est cliqué
+Si le serveur prend du temps à répondre, il est possible de cliquer plusieurs fois sur le même boutons ce qui execute l'action plusieurs fois, il pourrait être intéressant à therme de désactivé le boutons lorsqu'il est cliqué
 
 Comme la page n'est pas en permanence rechargée, si un secouriste charge la page et qu'un deuxième effectue des actions entre-deux, le premier ne vera pas les modifications.
-Une solution serait d'ajouter le champs date de dernière mofification sur les rapports ainsi qu'une fonction javascript (ajax), qui questionnerait le serveur afin de savoir si la page est à jour.
+Une solution serait d'ajouter le champ date de dernière modification sur les rapports ainsi qu'une fonction javascript (ajax), qui questionnerait le serveur afin de savoir si la page est à jour.
 Le problème reste actuellement minime car chaque base possédera qu'une tablette permettant de remplir son rapport.
 
 
 Une seule tablette sera présente par base pour remplir les rapports, il y aura donc un seul utilisateur connecté, pourtant plusieurs d'entre eux travailleront en même temps, il se peut donc que certaines données soient validées par un autre secouriste que celui qu'y s'est connecté au début de la garde
-Le problème est de type humain et rien qui serait simple à mettre en place pour résoudre ce soucis.
+Le problème est de type humain et rien qui serait simple à mettre en place pour résoudre ce souci.
 
 
 
 ## Document Fournis
 
-Ce fichier comprend les points importants par rappport au TPI (reflexion, déroulement, etc.) mais pas les points techniques importants au projet.
+Ce fichier comprend les points importants par rapport au TPI (reflexion, déroulement, etc.) mais pas les points techniques importants au projet.
 
 Tous les autres documents peuvent être retrouvés sur le [GitHub](https://github.com/CPNV-INFO/CSUNVB/tree/MGT/Doc) public, sur la branche MGT, associée à mon TPI, dans le dossier Doc/Gogniat (Attention il peut y avoir un problème avec 2 dossier doc,"doc" "et "Doc" suite au travail précédant effectué avec des collègues)
 
@@ -271,7 +275,7 @@ Le journal de bord, contenant les évenements importants du projet
 
 Le Journal de Travail, exporter depuis Icescrum et tenu à jour deux fois par semaine (mardi et jeudi)
 
-Le Journal de Test, exporter depuis Icescrum, il liste les différents test de validation, il est tenu à jour à chaque fin de sprint
+Le Journal de Test, exporter depuis Icescrum, il liste les différents tests de validation, il est tenu à jour à chaque fin de sprint
 
 Les PV des 2 rendez-vous avec le CSU
 
@@ -279,6 +283,8 @@ La documentation de remise au client
 
 
 ## Conclusion
+
+Dans l'ensemble le projet s'est bien déroulé, et il n'y pas eu trop de perte de temps à cause de bug, les fonctionalités, même si le cahier des charges ne correspondait pas parfaitement aux attentes du CSU, ceux-ci sont satisfaits du résultat, je continuerai donc de travailler un peu sur le projet hors du cadre du CPNV.
 
 ## Sources / Aides
 
