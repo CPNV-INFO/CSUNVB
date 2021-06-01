@@ -360,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `shiftteams` (
   KEY `fk_shiftteams_boss` (`boss_id`),
   KEY `fk_shiftteams_teammate` (`teammate_id`),
   KEY `fk_shiftteams_nova` (`nova_id`),
-  CONSTRAINT `fk_shiftteams_shiftsheet` FOREIGN KEY (`shiftsheet_id`) REFERENCES `shiftsheets` (`id`),
+  CONSTRAINT `fk_shiftteams_shiftsheet` FOREIGN KEY (`shiftsheet_id`) REFERENCES `shiftsheets` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_shiftteams_boss` FOREIGN KEY (`boss_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_shiftteams_teammate` FOREIGN KEY (`teammate_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_shiftteams_nova` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`)
