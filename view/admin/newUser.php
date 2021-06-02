@@ -7,36 +7,15 @@
 ob_start();
 $title = "CSU-NVB - Administration - Nouveau secouriste";
 ?>
-<form method="post" action="?action=saveNewUser">
-    <table class="table table-bordered">
-        <thead>
-        <th>Prénom</th>
-        <th>Nom</th>
-        <th>Initiales</th>
-        <th>Mot de passe de départ</th>
-        </thead>
-        <tbody>
-        <tr>
-            <td><input type="text" name="prenomUser" required></td>
-            <td><input type="text" name="nomUser" required></td>
-            <td><input type="text" name="initialesUser" required></td>
-            <td><input type="password" name="startPassword" required></td>
-        </tr>
-        </tbody>
-    </table>
-    <button type="submit" class="btn btn-primary">Créer</button>
-</form>
-
 <div>
     <form>
         <input type="hidden" name="action" value="adminCrew">
         <button type="submit" class="btn blueBtn m-1 float-right">Retour à la liste</button>
     </form>
 </div>
-
 <div class="sheetForm" style="width: 400px !important;">
     <h3 class="mr-3 d-inline">Ajouter un secouriste</h3>
-    <form method="post" action="?action=saveNewUserT">
+    <form method="post" action="?action=saveNewUser">
         <table>
             <tr>
                 <td>
@@ -68,7 +47,6 @@ $title = "CSU-NVB - Administration - Nouveau secouriste";
         <button type="submit" class="btn blueBtn">Créer</button>
     </form>
 </div>
-
 <?php
 $content = ob_get_clean();
 require GABARIT;

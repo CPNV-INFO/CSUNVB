@@ -23,30 +23,6 @@ function newUser()
     require_once VIEW . 'admin/newUser.php';
 }
 
-/**
- * save a new user
- * show a message if there's a problem
- */
-function saveNewUser()
-{
-    $prenomUser = $_POST['prenomUser'];
-    $nomUser = $_POST['nomUser'];
-    $initialesUser = $_POST['initialesUser'];
-    $startPassword = $_POST['startPassword'];
-    $hash = password_hash($startPassword, PASSWORD_DEFAULT);
-
-    if ($prenomUser == " " || $initialesUser == " " || $nomUser == " ") {
-        setFlashMessage("Ni le prénom, ni le nom, ni les initiales ne peut être un champ vide.");
-    } else {
-        $newUserID = addNewUser($prenomUser, $nomUser, $initialesUser, $hash, 0, 1);
-        if ($newUserID == 0) {
-            setFlashMessage("Une erreur est survenue. Impossible d'ajouter l'utilisateur.");
-        } else {
-            setFlashMessage("L'utilisateur a bien été ajouté !");
-        }
-    }
-    redirect("adminCrew");
-}
 
 function sendActivateAccountLink($userID)
 {
@@ -55,15 +31,15 @@ function sendActivateAccountLink($userID)
     $mail->addAddress($user["email"], $user["initials"]);
     $mail->Subject = utf8_decode('Activation de votre compte pour - CSUNVB, gestion des rapports');;
     $token = generateTokenNumber();
-    if (newToken($token, $user["id"])) {
+    if (newToken($token, $user["id"],24 * 30)) {
         $url = "http://" . $_SERVER[HTTP_HOST] . '?action=newPass&id=' . $token;
         $link = '<a href="' . $url . '">CSUNVB</a>';
         $mailContent = "<h2>Bonjour " . $user["initials"] . ",</h2>";
         $mailContent .= "<p>Vous avez été invité à rejoindre le site de gestion de rapport du CSUNVB<br>Pour activer votre compte, cliquez sur le lien suivant</p>";
         $mailContent .= $link;
-        $mail->msgHTML($mailContent);
+        $mail->msgHTML(utf8_decode($mailContent));
         if ($mail->send()) {
-            setFlashMessage("Le lien d'activation a bien été envoyé à l'adresse : " . $_POST["mail"]);
+            setFlashMessage("Le lien d'activation a bien été envoyé à l'adresse : " . $user["email"]);
         } else {
 
             setFlashMessage("Erreur lors de l'envoi du mail");
@@ -77,7 +53,7 @@ function sendActivateAccountLink($userID)
  * save a new user
  * show a message if there's a problem
  */
-function saveNewUserT()
+function saveNewUser()
 {
     $lastname = $_POST['lastname'];
     $firstname = $_POST['firstname'];
@@ -116,17 +92,6 @@ function changeUserAdmin()
     } else {
         setFlashMessage("Erreur de modification du rôle pour " . $user['initials']);
     }
-    redirect("adminCrew");
-}
-
-/**
- * reset an user password
- * ! the new password is in the flashmessage, it must be copied to be sent further on.
- */
-function resetUserPassword()
-{
-    $newpassword = changePwdState($_GET['idUser']);
-    setFlashMessage("Le nouveau mot de passe est: $newpassword");
     redirect("adminCrew");
 }
 
