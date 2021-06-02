@@ -72,19 +72,25 @@ function tryLogin()
     $password = $_POST['password'];
     $baseLogin = $_POST['base'];
     $user = getUserByInitials($initials);
-    if (password_verify($password, $user['password'])) {
-        unset($user['password']); // don't store password in the session
-        $_SESSION['user'] =  $user;
-        $_SESSION['base'] = getbasebyid($baseLogin);        //Met la base dans la session
-        if ($user['firstconnect'] == true) {
-            firstLogin();
-        } else {
-            setFlashMessage('Bienvenue ' . $user['firstname'] . ' ' . $user['lastname'] . ' !');
-            redirect("home");
-        }
-    } else {
-        setFlashMessage('Identifiants incorrects ...');
+    if($user['firstconnect'] == true){
+        setFlashMessage("Ce compte semble inactif, vérifiez votre boite mail, vous avez peut-être reçu un lien d'activation pour le compte, si ce n'est pas le cas, contacter un administrateur");
         displayLoginPage();
+    }else{
+        if (password_verify($password, $user['password'])) {
+            unset($user['password']); // don't store password in the session
+            $_SESSION['user'] =  $user;
+            $_SESSION['base'] = getbasebyid($baseLogin);        //Met la base dans la session
+            if ($user['firstconnect'] == true) {
+                //inutile après changement du système de première connection
+                //firstLogin();
+            } else {
+                setFlashMessage('Bienvenue ' . $user['firstname'] . ' ' . $user['lastname'] . ' !');
+                redirect("home");
+            }
+        } else {
+            setFlashMessage('Identifiants incorrects ...');
+            displayLoginPage();
+        }
     }
 }
 

@@ -13,6 +13,11 @@ function addNewUser($prenomUser, $nomUser, $initialesUser, $hash, $admin, $first
     return intval(insert("INSERT INTO users (firstname, lastname, initials, password, admin, firstconnect) VALUES (:firstname, :lastname, :initials, :password, :admin, :firstconnect)", ['firstname' => $prenomUser, 'lastname' => $nomUser, 'initials' => $initialesUser, 'password' => $hash, 'admin' => $admin, 'firstconnect' => $firstconnect]));       //à optimiser/simplifier avec un tableau
 }
 
+function addNewUserT($lastname, $firstname, $initials, $email, $tel)
+{
+    return intval(insert("INSERT INTO users (firstname, lastname, initials,email,mobileNumber, admin, firstconnect) VALUES (:firstname, :lastname, :initials,:email,:mobileNumber, 0, 1)", ['firstname' => $firstname, 'lastname' => $lastname, 'initials' => $initials,"email" => $email,"mobileNumber" => $tel]));       //à optimiser/simplifier avec un tableau
+}
+
 function SaveUserPassword($hash, $id)       //Met à jour le mdp d'un utilisateur
 {
     return execute("UPDATE users SET password= :password, firstconnect= :firstconnect where id = :id", ['password' => $hash, 'firstconnect' => 0, 'id' => $id]);

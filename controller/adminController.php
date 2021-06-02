@@ -1,5 +1,8 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+
 /** Display admin page */
 function adminHome()
 {
@@ -35,12 +38,58 @@ function saveNewUser()
     if ($prenomUser == " " || $initialesUser == " " || $nomUser == " ") {
         setFlashMessage("Ni le prénom, ni le nom, ni les initiales ne peut être un champ vide.");
     } else {
-        $result = addNewUser($prenomUser, $nomUser, $initialesUser, $hash, 0, 1);
-        if ($result == 0) {
+        $newUserID = addNewUser($prenomUser, $nomUser, $initialesUser, $hash, 0, 1);
+        if ($newUserID == 0) {
             setFlashMessage("Une erreur est survenue. Impossible d'ajouter l'utilisateur.");
         } else {
             setFlashMessage("L'utilisateur a bien été ajouté !");
         }
+    }
+    redirect("adminCrew");
+}
+
+function sendActivateAccountLink($userID)
+{
+    $mail = newMail();
+    $user = getUser($userID);
+    $mail->addAddress($user["email"], $user["initials"]);
+    $mail->Subject = utf8_decode('Activation de votre compte pour - CSUNVB, gestion des rapports');;
+    $token = generateTokenNumber();
+    if (newToken($token, $user["id"])) {
+        $url = "http://" . $_SERVER[HTTP_HOST] . '?action=newPass&id=' . $token;
+        $link = '<a href="' . $url . '">CSUNVB</a>';
+        $mailContent = "<h2>Bonjour " . $user["initials"] . ",</h2>";
+        $mailContent .= "<p>Vous avez été invité à rejoindre le site de gestion de rapport du CSUNVB<br>Pour activer votre compte, cliquez sur le lien suivant</p>";
+        $mailContent .= $link;
+        $mail->msgHTML($mailContent);
+        if ($mail->send()) {
+            setFlashMessage("Le lien d'activation a bien été envoyé à l'adresse : " . $_POST["mail"]);
+        } else {
+
+            setFlashMessage("Erreur lors de l'envoi du mail");
+        }
+    } else {
+        setFlashMessage("Erreur lors de la création du token");
+    }
+}
+
+/**
+ * save a new user
+ * show a message if there's a problem
+ */
+function saveNewUserT()
+{
+    $lastname = $_POST['lastname'];
+    $firstname = $_POST['firstname'];
+    $initials = $_POST['initials'];
+    $email = $_POST['email'];
+    $tel = $_POST['tel'];
+    $newUserID = addNewUserT($lastname, $firstname, $initials, $email, $tel);
+    if ($newUserID == 0) {
+        setFlashMessage("Une erreur est survenue. Impossible d'ajouter l'utilisateur.");
+    } else {
+        setFlashMessage("L'utilisateur a bien été ajouté !");
+        sendActivateAccountLink($newUserID);
     }
     redirect("adminCrew");
 }
@@ -212,28 +261,28 @@ function showNova($novaID)
 {
     $nova = getANovaByID($novaID);
     $dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-    $monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+    $monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
     if (isset($_POST["month"]) and isset($_POST["year"])) {
-        $date = $_POST["year"]."-".$_POST["month"];
+        $date = $_POST["year"] . "-" . $_POST["month"];
     } else {
         $date = date("Y-n");
     }
     $calendar = newCalendar($date);
 
-    foreach ($calendar as &$week){
-        foreach ($week as &$day){
-            $day["shifts"] = getShiftUsingNova($novaID,date_format($day["date"],"Y-m-d"));
-            $day["unAvailableDay"] = getUnAvailableNova(date_format($day["date"],"Y-m-d"),1,$novaID);
-            $day["unAvailableNight"] = getUnAvailableNova(date_format($day["date"],"Y-m-d"),0,$novaID);
-            if(date_format($day["date"],"Y-m-d") == date("Y-m-d")){
+    foreach ($calendar as &$week) {
+        foreach ($week as &$day) {
+            $day["shifts"] = getShiftUsingNova($novaID, date_format($day["date"], "Y-m-d"));
+            $day["unAvailableDay"] = getUnAvailableNova(date_format($day["date"], "Y-m-d"), 1, $novaID);
+            $day["unAvailableNight"] = getUnAvailableNova(date_format($day["date"], "Y-m-d"), 0, $novaID);
+            if (date_format($day["date"], "Y-m-d") == date("Y-m-d")) {
                 $day["color"] = "#FFD239";
             }
         }
         unset($day);
     }
     unset($week);
-    $selectedMonth = date_format(date_create($date.'-01'), 'n');
-    $selectedYear = date_format(date_create($date.'-01'), 'Y');
+    $selectedMonth = date_format(date_create($date . '-01'), 'n');
+    $selectedYear = date_format(date_create($date . '-01'), 'Y');
 
     require_once VIEW . 'admin/showNova.php';
 }
@@ -247,21 +296,23 @@ function updateNova($novaID)
     } else {
         setFlashMessage("La nova a été correctement renommée.");
     }
-    redirect("showNova",$novaID);
+    redirect("showNova", $novaID);
 }
 
-function updateNovaAvailable($novaID){
-    delUnAvailableNova($_POST["date"],$novaID);
-    if(isset($_POST["day"])and($_POST["day"] == "on")){
-        addUnAvailableNova($_POST["comment"],$_POST["date"],1,$_SESSION["user"]["id"],$novaID);
+function updateNovaAvailable($novaID)
+{
+    delUnAvailableNova($_POST["date"], $novaID);
+    if (isset($_POST["day"]) and ($_POST["day"] == "on")) {
+        addUnAvailableNova($_POST["comment"], $_POST["date"], 1, $_SESSION["user"]["id"], $novaID);
     }
-    if(isset($_POST["night"])and($_POST["night"] == "on")){
-        addUnAvailableNova($_POST["comment"],$_POST["date"],0,$_SESSION["user"]["id"],$novaID);
+    if (isset($_POST["night"]) and ($_POST["night"] == "on")) {
+        addUnAvailableNova($_POST["comment"], $_POST["date"], 0, $_SESSION["user"]["id"], $novaID);
     }
-    redirect("showNova",$novaID);
+    redirect("showNova", $novaID);
 }
 
-function importPlanning(){
+function importPlanning()
+{
     $users = getUsers();
     $workTimes = getWorkTimes();
     $bases = getbases();
@@ -278,16 +329,15 @@ function importPlanning(){
         $row = 1;
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
             $ok = true;
-            if(is_numeric($data[0])){
-                $selectedUserID = checkUserNumber($users,$data[0]);
-                if($selectedUserID == false){
-                    $selectedUserID = checkUserName($users,utf8_encode($data[1]),$data[0]);
-                    if($selectedUserID != false){
+            if (is_numeric($data[0])) {
+                $selectedUserID = checkUserNumber($users, $data[0]);
+                if ($selectedUserID == false) {
+                    $selectedUserID = checkUserName($users, utf8_encode($data[1]), $data[0]);
+                    if ($selectedUserID != false) {
                         $users = getUsers();
-                    }else{
-                        $newError = $data[0] . "/". utf8_encode($data[1]) ." : mauvais nom de secouriste, matricule ou secouriste non enregistré sur le site, ";
-                        if (!in_array($newError, $errors))
-                        {
+                    } else {
+                        $newError = $data[0] . "/" . utf8_encode($data[1]) . " : mauvais nom de secouriste, matricule ou secouriste non enregistré sur le site, ";
+                        if (!in_array($newError, $errors)) {
                             array_push($errors, $newError);
                         }
                         $ok = false;
@@ -295,105 +345,110 @@ function importPlanning(){
                 }
 
                 $date = DateTime::createFromFormat("d.m.Y", $data[2]);
-                if($date == false){
+                if ($date == false) {
                     array_push($errors, "ligne " . $row . " format de date incorrect, ");
                     $ok = false;
                 }
 
-                $selectedWorkTimeID = checkWorkTime($workTimes,$data[5]);
-                if($selectedWorkTimeID == false){
-                    $selectedWorkTimeID = tryAddWorkTime($data[5],utf8_encode($data[6]),$bases);
+                $selectedWorkTimeID = checkWorkTime($workTimes, $data[5]);
+                if ($selectedWorkTimeID == false) {
+                    $selectedWorkTimeID = tryAddWorkTime($data[5], utf8_encode($data[6]), $bases);
                     $workTimes = getWorkTimes();
                 }
-            }else{
+            } else {
                 $ok = false;
             }
-            if($ok == true){
+            if ($ok == true) {
                 $newPlanning['workID'] = $selectedWorkTimeID;
                 $newPlanning['userID'] = $selectedUserID;
-                $newPlanning['date'] = date_format($date,"Y-m-d");
-                array_push($planningToImport,$newPlanning);
-                if($firstDate > $date || $firstDate == null){
+                $newPlanning['date'] = date_format($date, "Y-m-d");
+                array_push($planningToImport, $newPlanning);
+                if ($firstDate > $date || $firstDate == null) {
                     $firstDate = $date;
                 }
-                if($lastDate < $date || $lastDate == null){
+                if ($lastDate < $date || $lastDate == null) {
                     $lastDate = $date;
                 }
             }
-            $row ++;
+            $row++;
         }
         fclose($handle);
     }
-    delPlanning(date_format($firstDate,"Y-m-d"),date_format($lastDate,"Y-m-d"));
-    foreach ($planningToImport as $planning){
-        addWorkPlanning($planning["workID"],$planning["userID"],$planning["date"]);
+    delPlanning(date_format($firstDate, "Y-m-d"), date_format($lastDate, "Y-m-d"));
+    foreach ($planningToImport as $planning) {
+        addWorkPlanning($planning["workID"], $planning["userID"], $planning["date"]);
     }
-    if(count($errors) == 0){
+    if (count($errors) == 0) {
         setFlashMessage("Planning importé avec succès");
-    }else{
+    } else {
         setFlashMessage("Certaines données n'ont pas pu être importée : ");
-        foreach ($errors as $error){
-            setFlashMessage($_SESSION['flashmessage'].$error);
+        foreach ($errors as $error) {
+            setFlashMessage($_SESSION['flashmessage'] . $error);
         }
     }
     redirect("adminCrew");
 }
 
-function checkUserNumber($users,$userNumber){
-    foreach ($users as $user){
-        if($user["number"] == $userNumber){
+function checkUserNumber($users, $userNumber)
+{
+    foreach ($users as $user) {
+        if ($user["number"] == $userNumber) {
             return $user["id"];
         }
     }
     return false;
 }
 
-function checkUserName($users,$userName,$userNumber){
+function checkUserName($users, $userName, $userNumber)
+{
     $bestCorrelation = null;
     $minPercent = 90;
     $percent = 0;
-    foreach ($users as $user){
-        similar_text(($user["lastname"]. " " .$user["firstname"]),$userName,$res);
-        if($percent < $res){
+    foreach ($users as $user) {
+        similar_text(($user["lastname"] . " " . $user["firstname"]), $userName, $res);
+        if ($percent < $res) {
             $percent = $res;
             $bestCorrelation = $user;
         }
-        similar_text(($user["firstname"]. " " .$user["lastname"]),$userName,$res);
-        if($percent < $res){
+        similar_text(($user["firstname"] . " " . $user["lastname"]), $userName, $res);
+        if ($percent < $res) {
             $percent = $res;
             $bestCorrelation = $user;
         }
     }
-    if($percent<$minPercent){
+    if ($percent < $minPercent) {
         return false;
-    }else{
+    } else {
         $users = getUsers();
-        return tryAddUserNumber($bestCorrelation,$userNumber);
+        return tryAddUserNumber($bestCorrelation, $userNumber);
     }
 }
 
-function checkWorkTime($workTimes,$code){
-    foreach ($workTimes as $workTime){
-        if($workTime["code"] == $code){
+function checkWorkTime($workTimes, $code)
+{
+    foreach ($workTimes as $workTime) {
+        if ($workTime["code"] == $code) {
             return $workTime["id"];
         }
     }
     return false;
 }
 
-function tryAddUserNumber($user,$userNumber){
-    if($user["number"] != null){
+function tryAddUserNumber($user, $userNumber)
+{
+    if ($user["number"] != null) {
         return false;
-    }else{
-        if(addUserNumber($user["id"],$userNumber)){
+    } else {
+        if (addUserNumber($user["id"], $userNumber)) {
             return $user["id"];
-        }else{
+        } else {
             return false;
         }
     }
 }
 
-function tryAddWorkTime($code,$name,$bases){
+function tryAddWorkTime($code, $name, $bases)
+{
     $special = false;
     $day = null;
     $bestBaseID = null;
@@ -402,19 +457,19 @@ function tryAddWorkTime($code,$name,$bases){
     $tolowerName = strtolower($name);
     $words = explode(" ", $tolowerName);
 
-    if(strpos($tolowerName, "horaire") === false){
+    if (strpos($tolowerName, "horaire") === false) {
         $special = true;
-    }else{
+    } else {
         $lookingForNumber = false;
         $name = null;
-        foreach ($words as $key => $word){
-            if($lookingForNumber === true){
-                if(strlen($word) < 4){
+        foreach ($words as $key => $word) {
+            if ($lookingForNumber === true) {
+                if (strlen($word) < 4) {
                     $name = strtoupper($word);
                     unset($words[$key]);
                 }
                 $lookingForNumber = false;
-            }else{
+            } else {
                 switch ($word) {
                     case "horaire":
                         $lookingForNumber = true;
@@ -437,32 +492,33 @@ function tryAddWorkTime($code,$name,$bases){
         }
         $resultingString = implode(" ", $words);
         $percent = 0;
-        foreach ($bases as $base){
-            similar_text($base["name"],$tolowerName,$res);
-            if($percent < $res and $res > $minPercent){
+        foreach ($bases as $base) {
+            similar_text($base["name"], $tolowerName, $res);
+            if ($percent < $res and $res > $minPercent) {
                 $percent = $res;
                 $bestBaseID = $base["id"];
             }
         }
     }
-    return addWorkTime($code,$name,$day,$bestBaseID);
+    return addWorkTime($code, $name, $day, $bestBaseID);
 }
 
-function showUser($id){
+function showUser($id)
+{
     $user = getUser($id);
     $dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-    $monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+    $monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
     if (isset($_POST["month"]) and isset($_POST["year"])) {
-        $date = $_POST["year"]."-".$_POST["month"];
+        $date = $_POST["year"] . "-" . $_POST["month"];
     } else {
         $date = date("Y-n");
     }
     $calendar = newCalendar($date);
 
-    foreach ($calendar as &$week){
-        foreach ($week as &$day){
-            $day["works"] = getPlanningForUser($user["id"],date_format($day["date"],"Y-m-d"));
-            if(date_format($day["date"],"Y-m-d") == date("Y-m-d")){
+    foreach ($calendar as &$week) {
+        foreach ($week as &$day) {
+            $day["works"] = getPlanningForUser($user["id"], date_format($day["date"], "Y-m-d"));
+            if (date_format($day["date"], "Y-m-d") == date("Y-m-d")) {
                 $day["color"] = "#FFD239";
             }
         }
@@ -470,7 +526,7 @@ function showUser($id){
     }
     unset($week);
 
-    $selectedMonth = date_format(date_create($date.'-01'), 'n');
-    $selectedYear = date_format(date_create($date.'-01'), 'Y');
+    $selectedMonth = date_format(date_create($date . '-01'), 'n');
+    $selectedYear = date_format(date_create($date . '-01'), 'Y');
     require_once VIEW . 'admin/showUser.php';
 }
