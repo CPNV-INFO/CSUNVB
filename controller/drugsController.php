@@ -23,6 +23,19 @@ function showDrugSheet($drugSheetID, $edition = false) {
     $novas = getNovasForSheet($drugSheetID);
     $batchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
     $drugSignatures = getDrugSignaturesForDrugSheet($drugSheetID);
+    $adminsWithNumber = getAdminsWithMobileNumber();
+    $sumsOfSpecialDrugOut = getSumOfSpecialDrugOutForSheet($drugSheetID);
+    $specialDrugsOut = getSpecialDrugOutForSheet($drugSheetID);
+    $sumsOfSpecialDrugOutByDateAndBatch = array();
+    $specialDrugsOutByDateAndBatch = array();
+
+    foreach ($sumsOfSpecialDrugOut as $sumOfSpecialDrugOut){
+        $sumsOfSpecialDrugOutByDateAndBatch[$sumOfSpecialDrugOut['date']][$sumOfSpecialDrugOut['batch_id']] = $sumOfSpecialDrugOut['sum'];
+    }
+
+    foreach ($specialDrugsOut as $specialDrugOut){
+        $specialDrugsOutByDateAndBatch[$specialDrugOut['date']][$specialDrugOut['batch_id']][] = $specialDrugOut;
+    }
 
     foreach ($batchesForSheet as $p) {
         $batchesForSheetByDrugId[$p["drug_id"]][] = $p;
@@ -337,8 +350,28 @@ function fillSheet($sheetId){
     }
 }
 
-function insertSpecialDrugExit(){
+function newSpecialDrugOut(){
+    $date = $_POST['date'];
+    $batchId = $_POST['batchId'];
     $drugsheetId = $_POST['sheetId'];
+    $quantity = $_POST['quantity'];
+    $comment = $_POST['comment'];
+    $adminId = $_POST['admin'];
+    $userId = $_SESSION['user']['id'];
+
+    $adminNumber = getNumberOfUser($adminId)['mobileNumber'];
+
+
+    $res = insertSpecialDrugOut($date, $batchId, $drugsheetId, $quantity, $comment, $adminId, $userId);
+    if ($res == false || $res == null) {
+        setFlashMessage("Une erreur est survenue. Impossible d'ajouter cette sortie spéciale'.");
+    } else {
+        setFlashMessage("La sortie spéciale a correctement été ajoutée.");
+        $resSms = json_decode(sendSms($adminNumber,$_SESSION['initials']."a sorti ".$quantity."ampoules de"));
+        if(!isset($resSms['msgId'])){
+            setFlashMessage("Un problème a eu lieu avec l'envoi du sms.");
+        }
+    }
 
     header('Location: ?action=showDrugSheet&id='.$drugsheetId);
 }

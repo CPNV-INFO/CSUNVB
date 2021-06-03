@@ -273,6 +273,20 @@ function insertDrugSignatures($drugSheetID,$day,$userID,$baseID){
     return insert("INSERT INTO drugsignatures (day, drugsheet_id, user_id, base) values (:day,:drugSheetID,:userID,:baseID);",['drugSheetID' => $drugSheetID, 'day'=>$day,'userID'=>$userID,'baseID'=>$baseID]);
 }
 
+function insertSpecialDrugOut($date, $batchId, $drugsheetId, $quantity, $comment, $adminId, $userId){
+    return insert("INSERT into specialdrugout(date, batch_id, drugsheet_id, quantity, comment, notified_admin_id,user_id) values (:date, :batch_id,:drugsheet_id,:quantity,:comment,:admin_id,:user_id)",["date" => $date,"batch_id"=>$batchId,"drugsheet_id"=>$drugsheetId,"quantity"=>$quantity,"comment"=>$comment,"admin_id"=>$adminId,"user_id"=>$userId]);
+}
+
+function getSumOfSpecialDrugOutForSheet($sheetId){
+    return selectMany("select specialdrugout.date,specialdrugout.batch_id,sum(specialdrugout.quantity) as sum from specialdrugout where drugsheet_id = :sheetId group by specialdrugout.date, specialdrugout.batch_id order by specialdrugout.date,specialdrugout.batch_id",["sheetId"=>$sheetId]);
+}
+
+function getSpecialDrugOutForSheet($sheetId){
+    return selectMany("Select specialdrugout.date,specialdrugout.execution_date, specialdrugout.batch_id,specialdrugout.quantity,specialdrugout.comment, usersnotified.initials as notified_admin, users.initials as user from specialdrugout
+join users usersnotified on usersnotified.id = specialdrugout.notified_admin_id
+join users on users.id = specialdrugout.user_id
+where specialdrugout.drugsheet_id = :sheetId",["sheetId"=>$sheetId]);
+}
 /* ---- API ----- */
 
 /** This function is use to get the list of the drug sheets where a given user performed an action.

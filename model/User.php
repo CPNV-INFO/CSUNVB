@@ -75,3 +75,11 @@ function newToken($token,$user_id)
 function checkToken($token){
     return selectOne("SELECT user_id FROM tokens where value=:token and validity > :now", ['token' => $token,'now' => date('Y-m-d H:i:s',time())])["user_id"];
 }
+
+function getAdminsWithMobileNumber(){
+    return selectMany("Select users.id,users.firstname,users.lastname,users.initials,users.mobileNumber from users where admin = 1 and users.mobileNumber is not NULL");
+}
+
+function getNumberOfUser($id){
+    return selectOne("Select users.mobileNumber from users where users.id =:id",["id"=>$id]);
+}

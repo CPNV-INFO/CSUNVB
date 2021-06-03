@@ -20,11 +20,14 @@
 }
 
 #specialCheckInputTable{
-
     border: none;
 }
 
 #specialCheckInputTable td,tr{
     word-wrap: break-word;
     border: none;
+}
+
+#specialCheckInputTable th{
+    padding-right: 6px;
 }

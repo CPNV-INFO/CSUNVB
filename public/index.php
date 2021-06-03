@@ -40,6 +40,7 @@ require CONTROLLER . "drugsController.php";
 require CONTROLLER . "mainController.php";
 require CONTROLLER . "shiftController.php";
 require CONTROLLER . "todoController.php";
+require CONTROLLER . "smsController.php";
 
 /**
  * Call database login details and functions
