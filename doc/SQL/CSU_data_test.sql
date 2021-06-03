@@ -165,15 +165,15 @@ UNLOCK TABLES;
 LOCK TABLES `drugsheets` WRITE;
 /*!40000 ALTER TABLE `drugsheets` DISABLE KEYS */;
 INSERT INTO `drugsheets` VALUES
-(22,2105,2,1),
-(23,2105,2,2),
-(25,2105,2,3),
-(26,2105,2,4),
-(27,2105,2,5);
+(22,2123,2,1),
+(23,2123,2,2),
+(25,2123,2,3),
+(26,2123,2,4),
+(27,2123,2,5);
 /*!40000 ALTER TABLE `drugsheets` ENABLE KEYS */;
 UNLOCK TABLES;
 
-set @todoweek = 2116; -- Current week after seeding
+set @todoweek = 2123; -- Current week after seeding
 
 -- Generate 5 todosheets per base: 3 closed, 1 current, 1 prep
 delimiter #
@@ -337,13 +337,14 @@ delimiter #
 create procedure set_users()
 begin
 
-	declare max int unsigned default 50;
+	declare max int unsigned default 20;
 	declare i int default 0;
+    declare currentDay int default 1;
     declare targetid int;
     
     update todos set user_id = null;
     while i <= MAX do
-		set targetid = (select todos.id from todos inner join todosheets on todosheet_id = todosheets.id where todosheets.status_id = 2 order by rand() limit 1);
+		set targetid = (select todos.id from todos inner join todosheets on todosheet_id = todosheets.id where todosheets.status_id = 2 and todos.day_of_week = currentDay order by rand() limit 1);
 		update todos set user_id = (SELECT id from users order by rand() limit 1) where id = targetid;
         set i = i+1;
 	end while;
@@ -420,11 +421,12 @@ BEGIN
     declare base int default 1;
 	declare nbMaxBase int default (SELECT count(id) FROM bases);
     declare nbShift int default 1;
+    declare selectedDate date default '2010-06-07 00:00:00';
     declare nbMaxUser int default (SELECT count(id) FROM users);
     declare nbMaxNova int default (SELECT count(id) FROM novas);
     while base <= nbMaxBase do
 		while nbShift <= nbClose do
-			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL -nbShift DAY)),2,base,3,(SELECT FLOOR(RAND()*(nbMaxUser)+1)));
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(selectedDate, INTERVAL -nbShift DAY)),2,base,3,(SELECT FLOOR(RAND()*(nbMaxUser)+1)));
             INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),0);
             set team_id = team_id + 1;
             INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),1);
@@ -434,7 +436,7 @@ BEGIN
 		end while;
         set nbShift = 1;
         
-        INSERT INTO `shiftsheets` VALUES (id,CURDATE(),2,base,2,null);
+        INSERT INTO `shiftsheets` VALUES (id,selectedDate,2,base,2,null);
         INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),0);
         set team_id = team_id + 1;
         INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),1);
@@ -444,7 +446,7 @@ BEGIN
         set id = id + 1;
         
         while nbShift <= nbBlankFull do
-			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,null);
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(selectedDate, INTERVAL +nbShift DAY)),2,base,1,null);
             INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),0);
             set team_id = team_id + 1;
             INSERT INTO `shiftteams` VALUES (team_id,id,(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxUser)+1)),(SELECT FLOOR(RAND()*(nbMaxNova)+1)),1);
@@ -453,7 +455,7 @@ BEGIN
             set nbShift = nbShift + 1;
 		end while;
         while nbShift <= nbBlank do
-			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(CURDATE(), INTERVAL +nbShift DAY)),2,base,1,null);
+			INSERT INTO `shiftsheets` VALUES (id,(SELECT DATE_ADD(selectedDate, INTERVAL +nbShift DAY)),2,base,1,null);
             INSERT INTO `shiftteams` VALUES (team_id,id,null,null,null,0);
             set team_id = team_id + 1;
             INSERT INTO `shiftteams` VALUES (team_id,id,null,null,null,1);
