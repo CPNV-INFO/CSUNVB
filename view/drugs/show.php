@@ -82,10 +82,10 @@ ob_start();
                             <?php else: ?>
                                 <td id="<?= $UID ?>" class="text-center">
                                     <div id="<?= $UID ?>start"
-                                         class="w-25 d-inline checkMorning"><?= (is_numeric($ncheck["start"]) == true ? $ncheck["start"] : '0') ?></div>
+                                         class="mw-25 w-fit-content d-inline checkMorning"><?= (is_numeric($ncheck["start"]) == true ? $ncheck["start"] : '0') ?></div>
                                     /
                                     <div id="<?= $UID ?>end"
-                                         class="w-25 d-inline checkEvening"><?= (is_numeric($ncheck["end"]) == true ? $ncheck["end"] : '0') ?></div>
+                                         class="mw-25 w-fit-content d-inline checkEvening"><?= (is_numeric($ncheck["end"]) == true ? $ncheck["end"] : '0') ?></div>
                                 </td>
                             <?php endif; ?>
                             <?php array_push($UIDs, $UID);
@@ -106,7 +106,7 @@ ob_start();
 
                                 <?php if ($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div    ?>
 
-                                    <input type="number" min="0" class="text-center border-0 checkMorning w-50"
+                                    <input type="number" min="0" class="text-center border-0  checkMorning w-50"
                                            name="pharmachecks[<?= $date ?>][<?= $batch['id'] ?>][start]"
                                            value="<?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?>"
                                            onchange="cellUpdate('<?= $UID ?>', 'start');"
@@ -114,7 +114,7 @@ ob_start();
 
 
                                 <?php else: ?>
-                                    <div class="text-center checkMorning w-25 mx-auto"
+                                    <div class="text-center checkMorning mw-25 w-fit-content mx-auto"
                                          id="<?= $UID ?>start"><?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?></div>
 
                                 <?php endif; ?>
@@ -131,15 +131,27 @@ ob_start();
                                     <?php endif; ?>
                                 </td>
                             <?php endforeach; ?>
+                            <?php if ($drugsheet['slug'] != "close"): ?>
                             <td>
                                 <div id='<?= $UID ?>special'
                                      class="w-100 text-center"><?= isset($sumsOfSpecialDrugOutByDateAndBatch[$date][$batch['id']]) ? $sumsOfSpecialDrugOutByDateAndBatch[$date][$batch['id']] : 0 ?></div>
-                                <button type='button' class='btn btn-primary' data-toggle="modal"
+                                <button type='button' class='btn btn-primary specialOutButton' data-toggle="modal"
                                         data-target="#specialCheckModal"
-                                        onclick="showModalElementByDateAndBatch('<?= $date ?>',<?= $batch['id'] ?>,<?= $drugSheetID ?>);">
+                                        onclick="showModalElementByDateAndBatch('<?= $date ?>',<?= $batch['id'] ?>,<?= $drugSheetID ?>,'<?= date("d.m.Y", strtotime($date))?>','<?=$batch['number']?>');">
                                     Plus
                                 </button>
                             </td>
+                            <?php else: ?>
+                                <td class="text-center">
+                                    <div id='<?= $UID ?>special'
+                                         class="w-100 text-center"><?= isset($sumsOfSpecialDrugOutByDateAndBatch[$date][$batch['id']]) ? $sumsOfSpecialDrugOutByDateAndBatch[$date][$batch['id']] : 0 ?></div>
+                                    <button type='button' class='btn btn-primary specialOutButton' data-toggle="modal"
+                                            data-target="#specialCheckModal"
+                                            onclick="showModalElementByDateAndBatch('<?= $date ?>',<?= $batch['id'] ?>,<?= $drugSheetID ?>,'<?= date("d.m.Y", strtotime($date))?>','<?=$batch['number']?>');">
+                                        Plus
+                                    </button>
+                                </td>
+                            <?php endif; ?>
                             <td id="<?= $UID ?>" class="text-center">
                                 <?php if ($drugsheet['slug'] != "close"): ?>
 
@@ -150,7 +162,7 @@ ob_start();
                                            id="<?= $UID ?>end">
                                 <?php else: ?>
 
-                                    <div class="text-center checkEvening w-25 mx-auto"
+                                    <div class="text-center checkEvening mw-25 w-fit-content mx-auto"
                                          id="<?= $UID ?>end"><?= is_numeric($pcheck['end']) ? $pcheck['end'] : '0' ?></div>
 
                                 <?php endif; ?>
@@ -178,7 +190,7 @@ ob_start();
                                 $day = new DateTime($date);
                                 $today = new DateTime('now');
                                 if ($today >= $day) {
-                                    echo "<button type='button' class='btn btn-primary m-1' onclick='signDrugSheetDay(\"" . $date . "\"," . $drugSheetID . ")'>Signer</button>";
+                                    echo "<button type='button' class='btn btn-primary m-1 signDayButton' onclick='signDrugSheetDay(\"" . $date . "\"," . $drugSheetID . ")'>Signer</button>";
                                 }
                             }
                         }
@@ -194,16 +206,13 @@ ob_start();
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="specialCheckModalTitle">Sortie spéciale de stupéfiants</h5>
+                    <h5 class="modal-title" id="specialCheckModalTitle">Sortie spéciale de stupéfiants du <span id="specialBatchOutDate"></span> pour le lot <span id="specialBatchOutBatch"></span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="p-3 mb-2 bg-warning"><span class="font-weight-bold">Attention!</span> Le reste des
-                        données du rapport doivent être enregistrées avant de procéder à
-                        l'enregistrement de sorties spéciales!
-                    </div>
+                    <?php if ($drugsheet['slug'] != "close"): ?>
                     <section>
                         <form action="?action=newSpecialDrugOut" method="POST">
                             <input id="specialCheckInputDate" type="text" name="date" hidden required>
@@ -239,6 +248,10 @@ ob_start();
                             </table>
 
                         </form>
+                    </section>
+                    <?php endif; ?>
+                    <section id="noSpecialOutData" hidden>
+                        Aucune sortie spéciale n'a été effectuée pour ce batch à cette date
                     </section>
                     <section>
                         <?php foreach ($specialDrugsOutByDateAndBatch as $specialDrugsOutDateKey => $specialDrugsOutDateData): ?>

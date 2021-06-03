@@ -31,3 +31,7 @@
 #specialCheckInputTable th{
     padding-right: 6px;
 }
+
+.w-fit-content{
+    width: fit-content;
+}

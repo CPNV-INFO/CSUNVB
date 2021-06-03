@@ -350,6 +350,9 @@ function fillSheet($sheetId){
     }
 }
 
+/** This function is used to insert new special out operation of drugs
+ *
+ */
 function newSpecialDrugOut(){
     $date = $_POST['date'];
     $batchId = $_POST['batchId'];
@@ -359,6 +362,7 @@ function newSpecialDrugOut(){
     $adminId = $_POST['admin'];
     $userId = $_SESSION['user']['id'];
 
+    $batch = getBatchByID($batchId);
     $adminNumber = getNumberOfUser($adminId)['mobileNumber'];
 
 
@@ -367,8 +371,8 @@ function newSpecialDrugOut(){
         setFlashMessage("Une erreur est survenue. Impossible d'ajouter cette sortie spéciale'.");
     } else {
         setFlashMessage("La sortie spéciale a correctement été ajoutée.");
-        $resSms = json_decode(sendSms($adminNumber,$_SESSION['initials']."a sorti ".$quantity."ampoules de"));
-        if(!isset($resSms['msgId'])){
+        $resSms = json_decode(sendSms($adminNumber,$_SESSION['user']['initials']." a sorti ".$quantity." ampoule(s) de ".$batch['drugName']." du lot ".$batch['number']." à ".$_SESSION['base']['name'].". Raison: ".$comment));
+        if(!isset($resSms -> msgId) || $resSms == false){
             setFlashMessage("Un problème a eu lieu avec l'envoi du sms.");
         }
     }

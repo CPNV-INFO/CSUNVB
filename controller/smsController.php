@@ -1,5 +1,10 @@
 <?php
 
+/** This function is used to send SMS
+ * @param $number - The phone number
+ * @param $message - The message
+ * @return bool|string
+ */
 function sendSms($number,$message){
     require_once ".const.php";
     $ch = curl_init();
@@ -22,8 +27,10 @@ function sendSms($number,$message){
     curl_setopt($ch,CURLOPT_POST,1);
     curl_setopt($ch,CURLOPT_POSTFIELDS,$json);
     curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-
-//execute post
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json'
+    ));
+    
     $result = curl_exec($ch);
 
     curl_close($ch);

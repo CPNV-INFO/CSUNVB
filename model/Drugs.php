@@ -15,6 +15,7 @@ function updateDrugName($updatedName, $drugID) {
     return execute("UPDATE drugs SET name='$updatedName' WHERE id=:drug", ['drug' => $drugID]);
 }
 
+
 //-------------------------------------- drugs --------------------------------------------
 /**
  *  Retourne une sheet précise
@@ -98,6 +99,10 @@ function getBatchesForSheet($drugSheetID) {
  */
 function getBatchesForBase($baseID) {
     return selectMany("SELECT batches.id AS id, number, drug_id, state FROM batches WHERE base_id=:baseID", ['baseID' => $baseID ]);
+}
+
+function getBatchByID($batchID){
+    return selectOne("Select batches.number, drugs.name drugName from batches join drugs on drugs.id = batches.drug_id where batches.id = :batchId",['batchId'=>$batchID]);
 }
 
 /** This function is used to Insert a batch in a sheet
@@ -273,14 +278,32 @@ function insertDrugSignatures($drugSheetID,$day,$userID,$baseID){
     return insert("INSERT INTO drugsignatures (day, drugsheet_id, user_id, base) values (:day,:drugSheetID,:userID,:baseID);",['drugSheetID' => $drugSheetID, 'day'=>$day,'userID'=>$userID,'baseID'=>$baseID]);
 }
 
+/** This function is used to insert new special out operation of drugs in the database
+ * @param $date - The Date in the drug sheet
+ * @param $batchId - The ID of the Batch
+ * @param $drugsheetId - The ID of the drug sheet
+ * @param $quantity - The amount
+ * @param $comment - The comment
+ * @param $adminId - The notified admin
+ * @param $userId - The ID of the user that performed the action
+ * @return string|null
+ */
 function insertSpecialDrugOut($date, $batchId, $drugsheetId, $quantity, $comment, $adminId, $userId){
     return insert("INSERT into specialdrugout(date, batch_id, drugsheet_id, quantity, comment, notified_admin_id,user_id) values (:date, :batch_id,:drugsheet_id,:quantity,:comment,:admin_id,:user_id)",["date" => $date,"batch_id"=>$batchId,"drugsheet_id"=>$drugsheetId,"quantity"=>$quantity,"comment"=>$comment,"admin_id"=>$adminId,"user_id"=>$userId]);
 }
 
+/** Get the sum of special out operation of drugs for a drug sheet
+ * @param $sheetId
+ * @return array|mixed|null
+ */
 function getSumOfSpecialDrugOutForSheet($sheetId){
     return selectMany("select specialdrugout.date,specialdrugout.batch_id,sum(specialdrugout.quantity) as sum from specialdrugout where drugsheet_id = :sheetId group by specialdrugout.date, specialdrugout.batch_id order by specialdrugout.date,specialdrugout.batch_id",["sheetId"=>$sheetId]);
 }
 
+/** Get the list of special out operation of drugs for a drug sheet
+ * @param $sheetId
+ * @return array|mixed|null
+ */
 function getSpecialDrugOutForSheet($sheetId){
     return selectMany("Select specialdrugout.date,specialdrugout.execution_date, specialdrugout.batch_id,specialdrugout.quantity,specialdrugout.comment, usersnotified.initials as notified_admin, users.initials as user from specialdrugout
 join users usersnotified on usersnotified.id = specialdrugout.notified_admin_id

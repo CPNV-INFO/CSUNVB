@@ -13,6 +13,21 @@ $('document').ready(function() {
 function cellUpdate(UID, time = '') {
     document.getElementById("save").removeAttribute("hidden");
     document.cookie = "drug" + UID + time + "=" + document.getElementById(UID + time).value;
+    let allSignButtons = document.querySelectorAll(".signDayButton");
+    let allSpecialOutButtons = document.querySelectorAll(".specialOutButton");
+    if (allSignButtons != null) {
+        for (var i = 0; i < allSignButtons.length; i++) {
+            allSignButtons[i].disabled = true;
+            allSignButtons[i].title = "Enregistrez le rapport d'abord!"
+        }
+    }
+    if (allSpecialOutButtons != null) {
+        for (var j = 0; j < allSpecialOutButtons.length; j++) {
+            allSpecialOutButtons[j].disabled = true;
+            allSpecialOutButtons[j].title = "Enregistrez le rapport d'abord!"
+        }
+    }
+
     drugCheck(UID);
 }
 
@@ -90,7 +105,7 @@ function checkForEnable() {
     (novas.length >= 1 && batches.length >= 1) || btnSwitchState.textContent != "Activer" ? btnSwitchState.disabled = false : btnSwitchState.disabled = true;
 }
 
-/** This function is used to submit a isgnature
+/** This function is used to submit a signature
  *
  * @param day - The day we want to sign
  * @param drugSheet - The drugsheet where there is the day
@@ -167,14 +182,26 @@ function createNewBatch(baseID, drugID) {
     }
 }
 
-function showModalElementByDateAndBatch(date, batchId, sheetId) {
-    let inputDate = document.getElementById("specialCheckInputDate");
-    let inputBatch = document.getElementById("specialCheckInputBatchId");
-    let inputDrugSheetId = document.getElementById("specialCheckInputSheetId");
+function showModalElementByDateAndBatch(date, batchId, sheetId, formattedDate, batchNumber) {
 
-    inputDate.value = date;
-    inputBatch.value = batchId;
-    inputDrugSheetId.value = sheetId;
+    let formDate = document.getElementById("specialBatchOutDate");
+    let formBatch = document.getElementById("specialBatchOutBatch");
+    let noData = document.getElementById("noSpecialOutData");
+
+    formDate.textContent = formattedDate;
+    formBatch.textContent = batchNumber;
+    noData.hidden = true;
+
+    if (drugsheetmode !== "close") {
+        let inputDate = document.getElementById("specialCheckInputDate");
+        let inputBatch = document.getElementById("specialCheckInputBatchId");
+        let inputDrugSheetId = document.getElementById("specialCheckInputSheetId");
+        inputDate.value = date;
+        inputBatch.value = batchId;
+        inputDrugSheetId.value = sheetId;
+    }
+
+
     let allTables = document.querySelectorAll(".specialDrugOutTable");
     if (allTables != null) {
         for (var i = 0; i < allTables.length; i++) {
@@ -185,5 +212,7 @@ function showModalElementByDateAndBatch(date, batchId, sheetId) {
     let selectedBatchTable = document.getElementById("tableSpecialD" + date + "B" + batchId);
     if (selectedBatchTable != null) {
         selectedBatchTable.hidden = false;
+    }else{
+        noData.hidden = false;
     }
 }
