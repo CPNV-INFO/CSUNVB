@@ -199,9 +199,9 @@ function sendJson($httpErrorCode, $outText)
  * - 'nova_id' - The is of the nova
  * - 'drugsheet_id' - The id of the drugsheet
  * - 'start' - The value at the begining of the day
- * - 'end' -
- * - 'date'
- * - 'drug_id'
+ * - 'end' - he value at the end of the day
+ * - 'date' - The date
+ * - 'drug_id' - The drug ID
  */
 function insertNovaCheck()
 {
@@ -238,6 +238,10 @@ function insertNovaCheck()
     sendJson($httpErrorCode, $outText);
 }
 
+/**
+ * This function is used to insert PharmaCheck.
+ * Check documentation for more informations.
+ */
 function insertPharmaCheck()
 {
     $outText = null;
@@ -273,6 +277,10 @@ function insertPharmaCheck()
 
 }
 
+/**
+ * This function is used to get novachecks or pharmachecks that have no value and are for a specific base and for yesterday.
+ * Check documentation for more informations.
+ */
 function missingchecks(){
     $outText = null;
     $httpErrorCode = null;
