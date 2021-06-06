@@ -15,14 +15,15 @@ Un utilisateur peut se connecter à toutes les bases mais certaines actions ne s
 
 ### Dans quel contexte (technique) fonctionne ce site ?
 
-Le site sera hébérgé chez swisscenter. Une connexion internet sera donc nécessaire pour accèder au site.
-A cause de la durée écourtée du du la documentation de déploiement sera mise à jour après la fin de pré-tpi, la semaine du 3 au 7 mai.
+Le site sera hébérgé chez swisscenter pour la durée du TPI, par la suite il sera migré vers les serveurs du CSU. Une connexion internet sera donc nécessaire pour accèder au site.
+
+La procédure de déploiement est disponible est disponible dans le dossier doc.
 
 Celui-ci sera accessible et utilisable avec un pc ou une tablette, car le site, a terme, devra être entierement responsive.
 
 ### Qu'est-ce que je dois faire pour pouvoir essayer ce site ?
 
-Pour l'instant, une version en développement, régulièrement mise à jour,  est disponible à l'adresse [csunvb.mycpnv.ch]. Cependant, il est nécessaire de posséder un identifiant pour s'y connecter. Pour le récupérer, il faut s'adresser au chef de projet, M. Carrel.
+Pour l'instant, une version en développement, régulièrement mise à jour, est disponible à l'adresse [csunvb.mycpnv.ch]. Cependant, il est nécessaire de posséder un identifiant pour s'y connecter. Pour le récupérer, il faut s'adresser au chef de projet, M. Carrel.
 
 ### Quelles sont les données / informations que ce site manipule ?
 
@@ -57,17 +58,18 @@ Le site est basé sur la méthode MVC (Model, vue, controleur), pour chaque part
 - Il y as un dossier Doc contenant la documentation
 - Il y as un dossier public qui contient l'index, le js, le CSS et les assets, ce dossier sera utilisé comme root du serveur web afin que le reste du site ne soit pas accessible en tappant l'url
 - A la racine on trouve les fichiers globalhelpers.php (les fonctions communes a toutes les parties), path.php (les chemins), policies.php (les politiques d'accès), pageList (les différentes paramètre $_GET['action'] possible pour chaque page)
-- Dans le dossier Vue on retrouve le gabarit et le fichier helpers.php (fonction général d'affichage)
+- Dans le dossier Vue on retrouve le gabarit et le fichier helpers.php (fonction générale d'affichage)
 - Le dossier PHPMailer packet utilisé pour envoyer de mail
 
 ### Quelles technologies est-ce que je dois connaître pour pouvoir développer ce site ? 
 
 Les languages PHP et javascripts (utilisant parfois JQuery) sont indispensables pour travailler sur ce projet.
+
 Ajax est aussi utilisé afin de réaliser des requêtes asyncrones au serveur.
 
 Il faut aussi être à l'aise avec le html et le css pour tout ce qui est de la mise en forme
 
-Il est aussi nécessaire de connaître mysql car il y aura plusieures requête MYSQL pour interroger la base de donnée.
+Il est aussi nécessaire de connaître mysql car il est utilisé pour interroger la base de donnée.
 
 Le choix de ces languages paraissent évidents pour le développement d'un site internet.
 
@@ -82,10 +84,10 @@ Les logiciels suivant sont ceux que nous avaons utiliser pour travailler. Des al
 
 Il faut posséder :
 
-- Un environnement de développement: PhpStorm 2019.3.x https://www.jetbrains.com/fr-fr/phpstorm/
+- Un environnement de développement : PhpStorm 2019.3.x https://www.jetbrains.com/fr-fr/phpstorm/
 - PHP version 7.4.x
-- Serveur de base de données: MySQL Community Server 8.0.23 https://dev.mysql.com/downloads/mysql/
-- Client de base de données: MySQL Workbench (distribué avec MySQL serveur), Heidi SQL v11.2 https://www.heidisql.com/
+- Serveur de base de donnée : MySQL Community Server 8.0.23 https://dev.mysql.com/downloads/mysql/
+- Client de base de donnée : MySQL Workbench (distribué avec MySQL serveur), Heidi SQL v11.2 https://www.heidisql.com/
 - une adresse gmail servant pour l'envoi de mail
 - drawio pour consulter ou éditer certains fichiers comme les MCD de base de donnée
 - balsamiq pour créer ou éditer les maquettes
@@ -123,9 +125,16 @@ Les fonctions sont précédées d'un bloc de commentaire qui a la forme suivante
 Les nom de fonction appelée depuis le javascript en ajax se termine par _ajax() pour les différencier
 
 ## Stratégie de test
-Il n'y a pas de tests unitaires implémentés dans le projet. 
 
-Pour effecturer les tests nous pouvons demander a plusieurs personnes de tester toute l'application dans plusieurs environnements. Il faut la tester sur plusieurs systèmes comme Windows, linux, mac pour les différentes particularités propres aux différents systèmes.
+Les testes se déroulent en 3 phases différentes :
+
+Dans un premier temps, le développeur crée les différents tests pour chaque story sur Icescrum, ceux-ci seront validés lors de la reviews de sprint, s'ils sont refusés, ils seront vérifiés à nouveau lors de la prochaine review
+
+Dans un deuxième temps, le développeur ira sur place faire tester les fonctionnalités aux membres de Csunvb afin de savoir si elles conviennent bien à leurs attentes, dans le cadre du TPI,
+si des problèmes sont mis en évidence mais que ces points ne font pas partie du cahier des charges, ils seront traités à plus tard
+
+Dans un troisième, une remise au client est faite ou celui-ci atteste de ce qui est présent sur le site un signant, des tests de régression sont aussi fait à cette occasion afin de vérifier que tout fonctionne. 
+
 
 ## Points techniques détaillés
 
@@ -133,18 +142,18 @@ Pour effecturer les tests nous pouvons demander a plusieurs personnes de tester 
 
 Le site utilise un modèle MVC et le fichier index.php et toujours appelé et il sert pour le routage, ( et aussi à définir les différents paramètres PHP et à appeler les autres fichiers utiles ).
 Le paramètre servant au routage est un GET "action" est utilisé dans toutes les url du site, il définit l'action que l'on cherche à effectuer, par exemple : http://localhost:8080/index.php?action=home
-si l'utilisateur n'est pas connecté il aura un choix d'action possible restreint par un switch un fonction de cette action,
-sinon si il est connecté et qu'une fonction d'un des contrôleur possède le même nom que le paramètre GET "action", celle-ci sera appelée,
-sinon la fonction home() sera appelée par défault
+si l'utilisateur n'est pas connecté il aura un choix d'action possible restreint par un switch une fonction de cette action,
+sinon s'il est connecté et qu'une fonction d'un des contrôleurs possède le même nom que le paramètre GET "action", celle-ci sera appelée,
+sinon la fonction home() sera appelée par défaut
 
 ### Comment marche le système de policies ?
 
-Avec le système de routage ci-dessus, si un utilisateur connait le nom de l'action, il pourra entrer l'url et effetuer l'action même si son rôle ne devrait pas le lui permettre,
+Avec le système de routage ci-dessus, si un utilisateur connait le nom de l'action, il pourra entrer l'url et effectuer l'action même si son rôle ne devrait pas le lui permettre,
 C'est pourquoi, il faut vérifier que l'utilisateur a bien les droits d'effectuer cette action :
 
 Le fichier policies.php liste les actions possible et leur niveau de droit nécéssaire
 
-Les actions possible par tout le monde (niveau 0) n'ont pas besoin d'être renseignées
+Les actions possibles par tout le monde (niveau 0) n'ont pas besoin d'être renseignées
 
 Lorsqu'on tente d'accèder un une page, la fonction ican("nom de l'action") est appelée (dans index.php) afin de savoir si l'utilisateur possède un niveau de privillège suffisant, si ce n'est pas le cas il est redirigé vers la page d'accueil.
 
@@ -156,26 +165,26 @@ Voir [cette référence](https://medium.com/dailyjs/web-developer-playbook-slug-
 
 ### Qu'est-ce que c'est que le 'flashmessage' ?
 
-Le flash message est un message en haut de la page utilisé pour indiquer à l'utlisateur si une action s'est effectuée correctement ou si il y a une erreur.
+Le flash message est un message en haut de la page utilisé pour indiquer à l'utilisateur si une action s'est effectuée correctement ou si il y a une erreur.
 
 ![flashMessage image](images/flashMessage.PNG)
 
 Celui-ci peut être affiché de deux manières différentes :
- - En php, avec la fonction : setFlashMessage("mon message") lors du chargemement d'une nouvelle page
+ - En php, avec la fonction : setFlashMessage("mon message") lors du chargement d'une nouvelle page
  - En javascript, avec la fonction : flashMessage("mon message") si la page n'est pas rechargée
 
 ### Comment marchent les commentaires épinglés ?
 
-Le système d'épinglage permet un commentaire d'un rapport de garde, d'être affiché sur les prochains rapport.
-Par exemple : "Les piles de la radio sont plates" pour l'indiquer au prochains groupes jusqu'à ce que le problème soit réglé.
+Le système d'épinglage permet un commentaire d'un rapport de garde, d'être affiché sur les prochains rapports.
+Par exemple : "Les piles de la radio sont plates" pour l'indiquer au prochain groupes jusqu'à ce que le problème soit réglé.
 
 ![flashMessage image](images/commentaireEpigle.PNG)
 
-Au survol d'un commentaire, un bouton pour épinglé gris est visible, lors que le commentaire est épinglé il sera visible sur les prochains rapports et aura champs champ carryOn à 1 dans la base de donnée.
-Pour désactiver l'épinglage cliquer à nouveau sur l'icone "épinglé" cela aura pour conséquence de remplir le champs "endOfCarryOn" avec la date du rapport sur lequel la personne se trouve, à partir de ce moment, le message ne sera plus affiché sur les prochains rapports.
+Au survol d'un commentaire, un bouton pour épingler gris est visible, lors que le commentaire est épinglé il sera visible sur les prochains rapports et aura champs champ carryOn à 1 dans la base de donnée.
+Pour désactiver l'épinglage cliquer à nouveau sur l'icone "épinglé" cela aura pour conséquence de remplir le champ "endOfCarryOn" avec la date du rapport sur lequel la personne se trouve, à partir de ce moment, le message ne sera plus affiché sur les prochains rapports.
 
-La selection des commentaire de la base de donnée à affiché sur le rapport se fait deux manière :
-- Si le commentaire est lié au rapport, il est affiché ainsi que l'heure et la personne qui l'a écris
+La selection des commentaires de la base de donnée à affiché sur le rapport se fait deux manières :
+- Si le commentaire est lié au rapport, il est affiché ainsi que l'heure et la personne qui l'a écrit
 - Si le commentaire n'est pas lié au rapport mais qu'il est sur la même base et que :
    
    ( date du commentaire < date du rapport sélectionné ) et que ( date du rapport sélectionné < endOfCarryOn du commentaire ou endOfCarryOn est null )
@@ -199,7 +208,7 @@ Lors du clic sur le boutons fermer, une requête AJAX est envoyée au serveur qu
 
 Pour les rapports clôturés
 - Les tâches non-validées sont affichée en rouge
-- Une icône /!\ indique l'erreur dans la liste des rapport, au survol de l'icone est affiché le nombre de tâches non effectuées
+- Une icône /!\ indique l'erreur dans la liste des rapports, au survol de l'icone est affiché le nombre de tâches non effectuées
 
 De plus les initiales de la personnes ayant clôturé un rapport seront affichées en haut de celui-ci
 
@@ -215,15 +224,15 @@ Pour chaque onglet de la navbar si le paramètre $_Get['action'] est présent da
 
 ### Edition Rapport Todo
 
-Pour éditer un rapport un icone crayon est présent, et pour sortir de ce mode il faut fermer le formulaire d'édition
+Pour éditer un rapport une icone crayon est présent, et pour sortir de ce mode il faut fermer le formulaire d'édition
 
-Les listes déroulentes jour et créneau possèdent un champ vide avec comme paramètre "selected disabled hidden" afin d'avoir une option par défaut non-sélectionnable
+Les listes déroulantes "jour" et "créneau" possèdent un champ vide avec comme paramètre "selected disabled hidden" afin d'avoir une option par défaut non-sélectionnable
 
-Si les champs jour et créneau sont renseignés, deux champs permettent d'ajouter des action existante ou d'en crée une nouvelle.
+Si les champs jour et créneau sont renseignés, deux champs permettent d'ajouter des actions existante ou d'en crée une nouvelle.
 
 ### Envois de formulaire en javascript
 
-La fonction javascript post() permet de créer et d'envoyer direcement un formulaire en post sans avoir à le créer dans le code html
+La fonction javascript post() permet de créer et d'envoyer directement un formulaire en post sans avoir à le créer dans le code html
 
 Il faut lui fournir les paramètres path et un tableau des paramètres comme ceci :
 
@@ -239,5 +248,65 @@ Les données sont envoyées par méthode POST comme nous le ferions en général
 La subtilité de ce formulaire est que tous les champs qui ont des données à envoyer ont un attribut "name" qui est un index de tableau. Cela permet d'avoir du côté du Controller PHP une variable qui est un array que l'on peut parser efficacement avec un foreach.
 
 ### Comment fonctionnent les boutons qui sont déjà à l'intérieur d'un autre formulaire dans la partie des rapports de stupéfiants ?
+
 La problématique est qu'il ne faut pas faire de formulaire dans un autre formulaire. Donc la solution suivante a été mise en place :
 Les boutons appellent une fonction javascript en lui donnant les données en paramètres et la fonction créent un formulaire caché qui est ajouté à la fin de la page et envoyés.  
+
+### Comment marchent la validation des équipes d'un rapport de garde avant son activation
+
+Pour qu'un rapport puisse être activé :
+-  aucun autre rapport doit être ouvert sur cette base
+- Tous les champs des équipes suivent être renseignés
+
+Afin d'enregister les données des équipes de garde sans ajouter de latence, chaque fois qu'un champ est modifié, l'information est envoyée au serveur par une requête Ajax.
+
+Ensuite si la modification s'est effectuée normalement, une seconde requête demande si tous les champs sont indiqué, si c'est le cas, la page est finalement rechargé et le boutons activer devient actif s'il le doit
+
+### Comment marchent les calendriers pour le planning des secouristes ou des novas ?
+
+La fonction newCalendar(mois) de helper.php a besoin comme paramètre le mois sous la forme d'une chaine de caractère au format "YYYY-MM"
+Elle retourne un tableau à plusieurs dimensions, structuré ainsi
+- le tableau du mois contient plusieurs éléments semaines
+- chaque semaine possède 7 éléments jour
+- chaque jour possède l'attribut "date" et l'attribut "color"
+- l'attribut "color" est la couleur par défaut qui sera affichée pour le jour (de base bleu clair pour les jours du mois et gris pour les derniers jours du mois précédant et les premiers du mois suivant)
+
+Il est ensuite possible de parcourir le tableau et d'y insérer les données à affiché dans le calendrier
+
+### Importation du planning des secouristes
+
+![CSVPlanning](images/CSVPlanning.PNG)
+
+Ce fichier comprend pour chaque horaire de travail, le nom + prénom du secouriste ainsi que son matricule
+
+Le nom et le prénom peuvent être légérement différents ("ë" à la place de "e"), il a donc une vérification si un utilisateur avec un nom/prénom très proche existe dans la base de donnée (cette recherche ce fait grâce à la fonction similar_text(), et demandant un correspondance à 90%). Si l'utilisateur existe, son matricule est ajouté à là base de donnée, celui-ci est unique et restera identique, rendant les prochaines recherche plus rapide
+
+La date, pouvant être directement traitée
+
+Le nom de service, inutile dans notre cas car il est toujours identique ("CSU")
+
+La fonction n'est pas traitée dans le cadre du TPI selon la demande de M. Carrel
+
+Le code PA et la désignation sont liés, ils seront tous deux enregistrés dans une nouvelle table horaires, la désignation étant une string, il faut extraire les données importante à savoir :
+- un nom pour l'horaire si le champ contient "horaire"
+- la base pour les horaires classiques lorsqu'elle est renseignée
+- jour/nuit pour les horaires classiques lorsqu'il est renseigné
+
+Le nom des bases n'étant pas similaire à ceux de la base de donnée (la vallée à la place de la vallée de joux), il faut chercher la meilleures correspondances s'il en existe une.
+
+Pour la chaine de caractère est découpée en mot, et chaque mot qui n'a pas de rapport avec la base est supprimé, ex. Horaire 1 La vallée > La vallée
+
+Il est ensuite possible de chercher la meilleure correspondance entre les bases de la base de donnée et la chaine de caractère épurée
+
+
+### Comment marchent la gestion de droits sur un rapport de garde
+
+Les droits sur un rapport de garde se divise en 4 :
+
+- $enableDataUpdate : définit si la personne a le droit de remplir les équipes pour le rapport de garde
+- $enableFilling : définit si l'utilisateur peut remplir le rapport, valider des actions, etc
+- $enableStateChange : définit si l'utilisateur a le droit de changer l'état du rapport (ex. passer de ouvert à fermé)
+- $enableStructureChange : définit si l'utilisateur a le droit de modifier la structure (ex. ajouter une action à effectuer sur le rapport)
+
+
+

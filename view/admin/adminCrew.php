@@ -3,11 +3,18 @@
  * Auteur: Thomas Grossmann / Mounir Fiaux
  * Date: Mars 2020
  **/
-
 ob_start();
 $title = "CSU-NVB - Administration - Secouristes";
 ?>
 <a href="?action=newUser" class="btn btn-success">Créer un utilisateur</a>
+
+<form action="?action=importPlanning" method="post" class="d-inline float-right" accept-charset="utf-8" enctype="multipart/form-data">
+    <input type="file" name="file" id="selectedFile" accept=".csv" class="d-none">
+    <button class="btn blueBtn" id="submitFileBtn" onclick="document.getElementById('selectedFile').click()">
+        Planning <i class="fas fa-file-upload"></i>
+    </button>
+</form>
+
 <table class="table table-bordered table-hover" style="text-align: center">
     <thead class="thead-dark">
     <th>Initiales</th>
@@ -21,7 +28,19 @@ $title = "CSU-NVB - Administration - Secouristes";
     <tbody>
     <?php foreach ($users as $user) { ?>
         <tr id="user-<?= $user['id'] ?>">
-        <td><?= $user['initials'] ?></td>
+        <td style="width: 110px">
+            <div style="margin: 0 !important;" class="row">
+                <div style="margin-top: 5px">
+                    <?= $user['initials'] ?>
+                </div>
+                <div style="margin-left: 12px;">
+                    <a href="?action=showUser&id=<?= $user['id'] ?>" class="text-dark">
+                        <i class="far fa-calendar-alt fa-2x modify"></i>
+                    </a>
+                </div>
+            </div>
+
+        </td>
         <td><?= $user['firstname'] ?></td>
         <td><?= $user['lastname'] ?></td>
         <td>

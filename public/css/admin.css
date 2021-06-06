@@ -8,6 +8,10 @@
 tr .modify {
     display: none;
 }
+
+.modify:hover{
+    cursor: pointer;
+}
 tr:hover .modify {
     display: inline;
 }
@@ -23,3 +27,60 @@ tr:hover .modify {
     color: #a71d2a;
     margin-left: 5px;
 }
+
+
+/* CSS for novaShow  */
+
+.calender{
+    width: 100%;
+}
+
+.calender .col{
+    width: 14.286%;
+    padding: 2px;
+}
+
+.calender .day{
+    border-radius: 10px;
+    padding: 10px;
+    min-height: 130px
+}
+
+.calender .dayName{
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.calenderError{
+    background-color: #ffc0c6;
+    color: #a71f2c;
+}
+
+
+.calender .available{
+    color: gray;
+    display: none;
+}
+
+.calender .day:hover .available {
+    display: inline;
+}
+
+.day .fa-slash{
+    cursor: pointer;
+    z-index: 1;
+}
+
+.calender .unAvailable .fa-moon, .calender .unAvailable .fa-sun{
+    background-color: red;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+.calender .unAvailable .fa-slash{
+    left: 1px;
+}
+

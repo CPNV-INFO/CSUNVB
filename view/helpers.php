@@ -178,28 +178,53 @@ function listShiftSheet($slug, $shiftList, $zone)
         $head = '<table class="table table-bordered ' . $slug . 'Sheets" style="margin-top:0px; text-align: center">
         <thead class="thead-dark">
         <th>Date</th>
-        <th>Véhicule</th>
-        <th>Responsable</th>
+        <th>Véhicules</th>
+        <th>Responsables</th>
         <th>Équipage</th>
         <th class="actions">Action</th>
         </thead>';
         $body = "";
         foreach ($shiftList as $shift) {
+            $shiftInfo = "<td>Jour : ";
+            foreach ($shift["teamDay"] as $teams){
+                $shiftInfo .= $teams["nova"] . " ";
+            }
+            $shiftInfo .= "<br>Nuit : ";
+            foreach ($shift["teamNight"] as $teams){
+                $shiftInfo .= $teams["nova"] . " ";
+            }
+            $shiftInfo .= "</td><td>Jour : ";
+            foreach ($shift["teamDay"] as $teams){
+                $shiftInfo .= $teams["boss"] . " ";
+            }
+            $shiftInfo .= "<br>Nuit : ";
+            foreach ($shift["teamNight"] as $teams){
+                $shiftInfo .= $teams["boss"] . " ";
+            }
+            $shiftInfo .= "</td><td>Jour : ";
+            foreach ($shift["teamDay"] as $teams){
+                $shiftInfo .= $teams["teammate"] . " ";
+            }
+            $shiftInfo .= "<br>Nuit : ";
+            foreach ($shift["teamNight"] as $teams){
+                $shiftInfo .= $teams["teammate"] . " ";
+            }
+            $shiftInfo .= "</td>";
             $body .= "<tr>
                 <td>" . date('d.m.Y', strtotime($shift['date']));
             if (isset($shift["modelImage"])) {
                 $body .= "<i class='fas fa-file-alt template' title='Modèle : " . $shift["modelImage"] . "'></i>";
             }
             $nbEmpty = getUncheckActionForShift($shift['id']);
-            if ($nbEmpty != 0 and $slug == 'close') $body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='" . $nbEmpty . " vide(s)" . "'><i class='fas fa-exclamation-triangle warning'></i></span>";
-            $body .= "</td>
-                <td>Jour : " . $shift['novaDay'] . "<br>Nuit : " . $shift['novaNight'] . "</td>
-                <td>Jour : " . $shift['bossDay'] . "<br>Nuit : " . $shift['bossNight'] . "</td>
-                <td>Jour : " . $shift['teammateDay'] . "<br>Nuit : " . $shift['teammateNight'] . "</td>";
+            if ($nbEmpty != 0 and $slug == 'close') $body .= " <span class='glyphicon glyphicon-question-sign' data-toggle='tooltip' data-placement='bottom' title='" . $nbEmpty . " vide(s)" . "'><i class='fas fa-exclamation-triangle warning'></i></span></td>";
+            $body .= $shiftInfo;
             $body .= "<td><div class='d-flex justify-content-around'>";
             $body .= buttonForSheet("shift", $shift['id'], "Show&id=" . $shift['id'], "Détails");
-            $body .= slugBtns("shift", $shift, $slug) . "</div></td>";
-            $body .= "</td></tr>";
+            if((date('Y-m-d') <= date('Y-m-d', strtotime($shift["date"] . ' + 3 days'))) or $_SESSION['user']['admin']){
+                $body .= slugBtns("shift", $shift, $slug);
+            }
+            $body .= "</div></td>";
+            $body .= "</tr>";
         }
         $foot = "</table>";
         $table = $head . $body . $foot;
@@ -251,11 +276,21 @@ function slugBtns($page, $sheet, $slug)
             }
             break;
         case "reopen":
-            if (ican('closesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer", "", "close");
+            $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Refermer", "", "close");
             break;
         case "close":
-            if (ican('opensheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
-            if (ican('archivesheet')) $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
+            switch ($page) {
+                case "drug":
+                case "todo":
+                    $buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
+                    break;
+                case "shift":
+                    if(canIEditShift($sheet))$buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Corriger", "", "reopen");
+                    break;
+                default:
+                    break;
+            }
+            if ($_SESSION['user']['admin'] == true)$buttonList .= buttonForSheet($page, $sheet['id'], "SheetSwitchState", "Archiver", "", "archive");
             break;
         default:
             break;
@@ -405,9 +440,11 @@ function sheetIsReady($page, $id)
         case 'todo':
             return true;
         case 'shift':
-            $shiftsheet = getshiftsheetByID($id);
-            if (!empty($shiftsheet["teammateDay"]) and !empty($shiftsheet["teammateNight"]) and !empty($shiftsheet["novaNight"]) and !empty($shiftsheet["bossDay"]) and !empty($shiftsheet["bossNight"]) and !empty($shiftsheet["novaDay"])) return true;
-            return false;
+            if(nbEmptyTeams($id) == 0 ){
+                return true;
+            }else{
+                return false;
+            }
     }
 }
 
@@ -419,4 +456,47 @@ function getPage($action){
     if(in_array($action, $stupPages)) return "drug";
     if(in_array($action, $adminPages)) return "admin";
     return "undefined";
+}
+
+function newCalendar($date){
+    $selectedMonth = date_format(date_create($date.'-01'), 'n');
+    $selectedYear = date_format(date_create($date.'-01'), 'Y');
+
+    $dayByMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if ((is_int($selectedYear / 4) && !is_int($selectedYear / 100)) || is_int($selectedYear / 400)) {
+        $dayByMonth[1]= 29;
+    }
+    $firstDay = date_format(date_create($selectedYear."-".$selectedMonth."-1"),"N");
+    $lastDay = date_format(date_create($selectedYear."-".$selectedMonth."-".$dayByMonth[$selectedMonth-1]),"N");
+    $nbDayBefore = $firstDay - 1;
+    $nbDayAfter = 7 - $lastDay;
+    $calendar = array();
+    $week = 0;
+    $calendar[$week]= array();
+    $lastMonth = $selectedMonth -1;
+    $nextMonth = $selectedMonth +1;
+    $lastMonthYear = $selectedYear;
+    $nextMonthYear = $selectedYear;
+    if($lastMonth == 0){
+        $lastMonth = 12;
+        $lastMonthYear --;
+    }
+    if ($nextMonth == 13){
+        $nextMonth = 1;
+        $nextMonthYear++;
+    }
+    for ($i = 1; $i <= $nbDayBefore; $i++) {
+        array_push($calendar[$week], ["date" => date_create($lastMonthYear."-".$lastMonth."-".($dayByMonth[$lastMonth-1] - $nbDayBefore + ($i))) , "color" => "lightgray"]);
+    }
+    for ($i = 1; $i <= $dayByMonth[$selectedMonth-1]; $i++) {
+        array_push($calendar[$week], ["date" => date_create($selectedYear."-".$selectedMonth."-". $i), "color" => "lightblue"]);
+        if(count($calendar[$week])==7){
+            $week ++;
+            $calendar[$week]= array();
+        }
+    }
+    for ($i = 1; $i <= $nbDayAfter; $i++) {
+        array_push($calendar[$week], ["date" => date_create($nextMonthYear."-".$nextMonth."-". $i), "color" => "lightgray"]);
+    }
+    return $calendar;
 }

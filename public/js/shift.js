@@ -4,20 +4,6 @@
  * Date: Décembre 2020
  **/
 
-// formulaire de vérification pour shiftModal
-var buttons = document.querySelectorAll('.toggleShiftModal');
-
-buttons.forEach((item) => {
-    item.addEventListener('click', function (event) {
-        $("#shiftModal").modal("toggle");
-        $("#action_id").val( this.getAttribute("data-action_id"));
-        $("#day").val( this.getAttribute("data-day"));
-        $("#modal-content").html(this.getAttribute("data-content"));
-        $("#shiftSheetinfo").attr('action', this.getAttribute("data-action"));
-        $("#comment").prop("type",this.getAttribute("data-comment"));
-    }, false);
-})
-
 var addCarryOnBtn = document.querySelectorAll('.addCarryOnBtn');
 addCarryOnBtn.forEach((item) => {
     item.addEventListener('click', function (event) {
@@ -57,5 +43,43 @@ removeCarryOnBtn.forEach((item) => {
 })
 
 $( ".SH_dropdownInfo" ).change(function() {
-    $( "#SH_updateInfoBtn").show();
+    $.ajax({
+        type: "POST",
+        url: "?action=updateShiftTeams",
+        data: {
+            field: this.name,
+            teamID: $(this).parent().parent().attr("data-team"),
+            value : $(this).find('option:selected').attr("value")
+        },
+        cache: false,
+        success: function(data) {
+            if(data == "false"){
+                location.reload(true);
+            }
+            checkIfReady();
+        },
+        error: function(xhr, status, error) {
+            location.reload(true);
+        }
+    });
+    $(this).blur();
 });
+
+function checkIfReady(){
+    $.ajax({
+        type: "POST",
+        url: "?action=checkIfShiftIsReady",
+        data: {
+            sheetID: $("#sheetID").val()
+        },
+        cache: false,
+        success: function(data) {
+            if(data == "true"){
+                location.reload(true);
+            }
+        },
+        error: function(xhr, status, error) {
+            location.reload(true);
+        }
+    });
+}

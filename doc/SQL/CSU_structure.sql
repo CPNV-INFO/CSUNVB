@@ -11,10 +11,11 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+unlock tables;
 
 -- Listage de la structure de la base pour csunvb_csu
--- DROP DATABASE IF EXISTS `csunvb_csu`;
--- CREATE DATABASE IF NOT EXISTS `csunvb_csu` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+DROP DATABASE IF EXISTS `csunvb_csu`;
+CREATE DATABASE IF NOT EXISTS `csunvb_csu` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `csunvb_csu`;
 
 -- Listage de la structure de la table csunvb_csu. bases
@@ -168,6 +169,22 @@ CREATE TABLE IF NOT EXISTS `novas` (
   UNIQUE KEY `number_UNIQUE` (`number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `novaunavailabilites`;
+CREATE TABLE IF NOT EXISTS `novaunavailabilites` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(45) NULL,
+  `date` date NOT NULL,
+  `day` tinyint(1) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `nova_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_novaunavailabilites` (`date`,`day`,`nova_id`) USING BTREE,
+  KEY `fk_novaunavailabilites_user_id` (`user_id`),
+  KEY `fk_novaunavailabilites_nova_id` (`nova_id`),
+  CONSTRAINT `fk_novaunavailabilites_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_novaunavailabilites_nova_id` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2251 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Les données exportées n'étaient pas sélectionnées.
 -- Listage de la structure de la table csunvb_csu. pharmachecks
 DROP TABLE IF EXISTS `pharmachecks`;
@@ -270,6 +287,8 @@ DROP TABLE IF EXISTS `shiftmodels`;
 CREATE TABLE IF NOT EXISTS `shiftmodels` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
+  `nbTeamD` int(11) NOT NULL DEFAULT '1',
+  `nbTeamN` int(11) NOT NULL DEFAULT '1',
   `suggested` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idshiftmodels_UNIQUE` (`id`),
@@ -312,36 +331,39 @@ CREATE TABLE IF NOT EXISTS `shiftsheets` (
   `shiftmodel_id` int(11) NOT NULL,
   `base_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
-  `dayboss_id` int(11) DEFAULT NULL,
-  `nightboss_id` int(11) DEFAULT NULL,
-  `dayteammate_id` int(11) DEFAULT NULL,
-  `nightteammate_id` int(11) DEFAULT NULL,
   `closeBy` int(11) DEFAULT NULL,
-  `daynova_id` int(11) DEFAULT NULL,
-  `nightnova_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq` (`base_id`,`date`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_shiftsheets_bases1_idx` (`base_id`),
   KEY `fk_shiftSheets_status1_idx` (`status_id`),
-  KEY `fk_shiftSheets_users1_idx` (`dayboss_id`),
-  KEY `fk_shiftSheets_users2_idx` (`nightboss_id`),
-  KEY `fk_shiftSheets_users3_idx` (`dayteammate_id`),
-  KEY `fk_shiftSheets_users4_idx` (`nightteammate_id`),
   KEY `fk_shiftSheets_users5_idx` (`closeBy`),
-  KEY `fk_shiftSheets_novas1_idx` (`daynova_id`),
-  KEY `fk_shiftSheets_novas2_idx` (`nightnova_id`),
   KEY `fk_shiftsheets_shiftmodels1_idx` (`shiftmodel_id`),
-  CONSTRAINT `fk_shiftSheets_novas1` FOREIGN KEY (`daynova_id`) REFERENCES `novas` (`id`),
-  CONSTRAINT `fk_shiftSheets_novas2` FOREIGN KEY (`nightnova_id`) REFERENCES `novas` (`id`),
   CONSTRAINT `fk_shiftSheets_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
-  CONSTRAINT `fk_shiftSheets_users1` FOREIGN KEY (`dayboss_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_shiftSheets_users2` FOREIGN KEY (`nightboss_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_shiftSheets_users3` FOREIGN KEY (`dayteammate_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_shiftSheets_users4` FOREIGN KEY (`nightteammate_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_shiftSheets_users5` FOREIGN KEY (`closeBy`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_shiftsheets_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
   CONSTRAINT `fk_shiftsheets_shiftmodels1` FOREIGN KEY (`shiftmodel_id`) REFERENCES `shiftmodels` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `shiftteams`;
+CREATE TABLE IF NOT EXISTS `shiftteams` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `shiftsheet_id` int(11) NOT NULL,
+  `boss_id` int(11) DEFAULT NULL,
+  `teammate_id` int(11) DEFAULT NULL,
+  `nova_id` int(11) DEFAULT NULL,
+  `day` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_shiftteams_shiftsheet` (`shiftsheet_id`),
+  KEY `fk_shiftteams_boss` (`boss_id`),
+  KEY `fk_shiftteams_teammate` (`teammate_id`),
+  KEY `fk_shiftteams_nova` (`nova_id`),
+  CONSTRAINT `fk_shiftteams_shiftsheet` FOREIGN KEY (`shiftsheet_id`) REFERENCES `shiftsheets` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_shiftteams_boss` FOREIGN KEY (`boss_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_shiftteams_teammate` FOREIGN KEY (`teammate_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_shiftteams_nova` FOREIGN KEY (`nova_id`) REFERENCES `novas` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.
@@ -437,9 +459,38 @@ CREATE TABLE IF NOT EXISTS `users` (
   `firstconnect` tinyint(4) NOT NULL,
   `email` varchar(254) DEFAULT NULL,
   `mobileNumber` varchar(20) DEFAULT NULL,
+  `number` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `initials_UNIQUE` (`initials`)
 ) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `worktimes`;
+CREATE TABLE IF NOT EXISTS `worktimes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` int NOT NULL,
+  `type` varchar(50) NULL,
+  `day` tinyint(1) NULL,
+  `base_id` int NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code_UNIQUE` (`code`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_base_id` (`base_id`),
+  CONSTRAINT `fk_base_id` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `workplannings`;
+CREATE TABLE IF NOT EXISTS `workplannings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `worktime_id` int NULL,
+  `user_id` int NULL,
+  `date` date NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_worktime_id` (`worktime_id`),
+  CONSTRAINT `fk_worktime_id` FOREIGN KEY (`worktime_id`) REFERENCES `worktimes` (`id`),
+  KEY `fk_user_id` (`user_id`),
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
