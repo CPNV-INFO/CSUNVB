@@ -221,7 +221,7 @@ function shiftSheetDelete($id)
 
 function getShiftModels()
 {
-    $models = selectMany("SELECT id,name FROM shiftModels where name <> ''", []);
+    $models = selectMany("SELECT id,name FROM shiftmodels where name <> ''", []);
     return $models;
 }
 
