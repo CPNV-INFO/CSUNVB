@@ -454,14 +454,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   `firstname` varchar(45) NOT NULL,
   `lastname` varchar(45) NOT NULL,
   `initials` varchar(45) NOT NULL,
-  `password` varchar(100) NOT NULL,
+  `password` varchar(100) NULL,
   `admin` tinyint(4) NOT NULL,
   `firstconnect` tinyint(4) NOT NULL,
   `email` varchar(254) DEFAULT NULL,
   `mobileNumber` varchar(20) DEFAULT NULL,
   `number` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `initials_UNIQUE` (`initials`)
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `initials_UNIQUE` (`initials`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `worktimes`;

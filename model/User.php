@@ -13,6 +13,11 @@ function addNewUser($prenomUser, $nomUser, $initialesUser, $hash, $admin, $first
     return intval(insert("INSERT INTO users (firstname, lastname, initials, password, admin, firstconnect) VALUES (:firstname, :lastname, :initials, :password, :admin, :firstconnect)", ['firstname' => $prenomUser, 'lastname' => $nomUser, 'initials' => $initialesUser, 'password' => $hash, 'admin' => $admin, 'firstconnect' => $firstconnect]));       //à optimiser/simplifier avec un tableau
 }
 
+function addNewUserT($lastname, $firstname, $initials, $email, $tel)
+{
+    return intval(insert("INSERT INTO users (firstname, lastname, initials,email,mobileNumber, admin, firstconnect) VALUES (:firstname, :lastname, :initials,:email,:mobileNumber, 0, 1)", ['firstname' => $firstname, 'lastname' => $lastname, 'initials' => $initials,"email" => $email,"mobileNumber" => $tel]));       //à optimiser/simplifier avec un tableau
+}
+
 function SaveUserPassword($hash, $id)       //Met à jour le mdp d'un utilisateur
 {
     return execute("UPDATE users SET password= :password, firstconnect= :firstconnect where id = :id", ['password' => $hash, 'firstconnect' => 0, 'id' => $id]);
@@ -47,18 +52,6 @@ function getUserByInitials($initials)       //Récupère un utilisateur en fonct
     return selectOne("SELECT * FROM users where initials =:initials", ['initials' => $initials]);
 }
 
-/** change password of a user ( a radom one )
- * @param $changeUser id of the user
- * @return false|string ( string of the new password )
- */
-function changePwdState($changeUser)
-{
-    $newpassw = substr(md5(rand()), 0, 6);
-    $hash = password_hash($newpassw, PASSWORD_DEFAULT);
-    execute("UPDATE users SET firstconnect= :firstconnect, password = :hash WHERE id= :id", ['firstconnect' => 1, 'id' => $changeUser, 'hash' => $hash]);
-    return $newpassw;
-}
-
 /** return the user from database
  * @param string $email
  * @return array|mixed|null
@@ -68,9 +61,9 @@ function getUserByMail($email)
     return selectOne("SELECT id,initials FROM users where email=:email", ['email' => $email]);
 }
 
-function newToken($token, $user_id)
+function newToken($token, $user_id, $validity)
 {
-    return execute("Insert into tokens (value,validity,user_id) values (:token,:validity,:user_id)", ['token' => $token, 'user_id' => $user_id, 'validity' => date('Y-m-d H:i:s', time() + 3600)]);
+    return execute("Insert into tokens (value,validity,user_id) values (:token,:validity,:user_id)", ['token' => $token, 'user_id' => $user_id, 'validity' => date('Y-m-d H:i:s', time() + ($validity * 3600))]);
 }
 
 function checkToken($token)

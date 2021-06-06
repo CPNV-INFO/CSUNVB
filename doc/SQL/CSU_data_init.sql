@@ -110,7 +110,7 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `initials`, `password`, `adm
 (3, 'Antonio', 'Casaburi', 'ACI', '$2y$10$NtDXutN9baamLrMugoAdAODxW5ot9.ImKn9NomZNMZocELkymDFvC', 1, 0, NULL, NULL),
 (4, 'Xavier', 'Carrel', 'XCL', '$2y$10$QcssFUbiDCWC.1ggh3UYOukKcN2zqYF/LuraET75yLNMHU1kPNqfa', 1, 0, NULL, NULL),
 (5, 'Thierry', 'Billieux', 'TBX', '$2y$10$KOto6XQdNqRZjoK.yXNNZ.29ycB311mHI.QM3DNJlVyoZRPFgNPbS', 1, 0, NULL, NULL),
-(6, 'Michaël', 'Gogniat', 'MGT', '$2y$10$6JjX6WpKdgRZ44PQj.5C2.9mO2CeAekcKngNmvRh9ttX9mSyO8LGu', 1, 0, NULL, NULL),
+(6, 'Michael', 'Gogniat', 'MGT', '$2y$10$6JjX6WpKdgRZ44PQj.5C2.9mO2CeAekcKngNmvRh9ttX9mSyO8LGu', 1, 0, NULL, NULL),
 (7, 'Philippe', 'Michel', 'PML', '$2y$10$2VfVqMAibraMuJWzMLSiLeBDXOnM9Lig7uapBb2iToqiFhylytM2O', 0, 0, NULL, NULL),
 (8, 'Laurent', 'Pedroli', 'LPI', '$2y$10$ARMvzj7acmGDIzoBBNRghObQLpSf3FUKm7nN4n8MpranEVlHOq.eq', 0, 0, NULL, NULL),
 (9, 'Damaris', 'Bourgeois', 'DMS', '$2y$10$enagKYdNGrztWs1pHSLB/.QaupoFkHc9hOCa9LoyjwWZpGvlKtYZ6', 0, 1, NULL, NULL),
