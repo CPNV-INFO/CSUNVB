@@ -231,7 +231,7 @@ function getShiftModels()
  * @return array : array of models with id and name
  */
 function getSuggestedShiftModels(){
-    $models = selectMany("SELECT id,name FROM shiftModels where name <> ''  and suggested = 1", []);
+    $models = selectMany("SELECT id,name FROM shiftmodels where name <> ''  and suggested = 1", []);
     return $models;
 }
 
