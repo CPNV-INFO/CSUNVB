@@ -3,15 +3,13 @@ ob_start();
 $title = "CSU-NVB - Tâches hebdomadaires";
 ?>
 <input type="hidden" id="sheetID" value="<?= $week['id'] ?>"><!-- used to get date in javascrpt -->
-<a href="?action=listtodoforbase&id=<?= $base['id'] ?>" class="text-dark d-print-none"><i class="fas fa-angle-left backIcon"></i>Retour</a>
-<h1>
-    Tâches hebdomadaires
-</h1>
 <div class="float-right d-print-none d-inline">
     <?= slugBtns("todo", $week, $week['slug']) ?>
     <?= (!$edition && ican("modifySheet") && $week['slug'] == "blank") ? '<form method="POST" class="d-inline" action="?action=todoEditionMode&id=' . $week['id'] . '"><button type="submit" class="btn blueBtn m-0"><i class="fa fa-pen"></i></button></form>' : '' ?>
     <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i></button>
-    <form method="POST" class="d-inline" action="?action=todoLog&id=<?= $week['id']?>"><button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button></form>
+    <form method="POST" class="d-inline" action="?action=todoLog&id=<?= $week['id'] ?>">
+        <button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button>
+    </form>
 </div>
 <h5>
     Semaine <?= $week['week'] ?><br>

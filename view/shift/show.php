@@ -4,35 +4,26 @@ $title = "CSU-NVB - Remise de garde";
 ?>
 <input type="hidden" id="shiftDate" value="<?= $shiftsheet['date'] ?>"><!-- used to get date in javascrpt -->
 <input type="hidden" id="sheetID" value="<?= $shiftsheet['id'] ?>"><!-- used to get id in javascrpt -->
-<a href="?action=shiftList&id=<?= $shiftsheet["base_id"] ?>" class="text-dark d-print-none"><i
-            class="fas fa-angle-left backIcon"></i>Retour</a>
-<h1>
-    Remise de Garde
-</h1>
-<div style="display: flex;margin: 30px 0;">
-    <div style="min-width: 200px;">
-        <h6>
-            Jour : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?>
-        </h6>
-        <h6 style="margin: 15px 0;">
-            Base : <?= $shiftsheet['baseName'] ?> </h6>
-        <h6>
-            Status
-            : <?= $shiftsheet['displayname'] ?> <?= ($shiftsheet['status'] == 'close') ? ' par ' . $shiftsheet['closeBy'] : '' ?>
-        </h6>
-        <div>
-            <div class="d-print-none d-inline">
-                <?= $enableStateChange ? slugBtns("shift", $shiftsheet, $shiftsheet["status"]) : '' ?>
-                <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i>
-                </button>
-                <form method="POST" class="d-inline" action='?action=shiftLog&id=<?= $shiftsheet['id'] ?>'>
-                    <button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button>
-                </form>
-            </div>
+<div class="float-right d-print-none d-inline">
+    <div>
+        <div class="d-print-none d-inline">
+            <?= $enableStateChange ? slugBtns("shift", $shiftsheet, $shiftsheet["status"]) : '' ?>
+            <button class="btn blueBtn d-inline m-1" onclick="print_page()"><i class="fas fa-file-pdf fa-lg"></i>
+            </button>
+            <form method="POST" class="d-inline" action='?action=shiftLog&id=<?= $shiftsheet['id'] ?>'>
+                <button type="submit" class="btn blueBtn m-1"><i class="fas fa-history fa-lg"></i></button>
+            </form>
         </div>
     </div>
+</div>
+<h5>
+    Date : <?= date('d.m.Y', strtotime($shiftsheet['date'])) ?><br>
+    Base : <?= $shiftsheet['baseName'] ?><br>
+    Status : <?= $shiftsheet['displayname'] ?> <?= ($shiftsheet['status'] == 'close') ? ' par ' . $shiftsheet['closeBy'] : '' ?>
+</h5>
 
-    <div class="row" >
+<div>
+    <div class="row">
         <div class="row align-items-center">
             <?php foreach ($shiftsheet['teamDay'] as $team): ?>
                 <div data-team="<?= $team["team_id"] ?>" style="margin-bottom: 5px">
@@ -51,14 +42,14 @@ $title = "CSU-NVB - Remise de garde";
                     <div class="text-center selectForDay">
                         <?php if ($enableDataUpdate) : ?>
                             <select name="boss" class="SH_dropdownInfo">
-                                <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Resp.</option>' : '' ?>
-                                <?php foreach ($activUsers as $user): ?>
-                                    <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials']?></option>
-                                <?php endforeach; ?>
-                                <option disabled="disabled">----</option>
-                                <?php foreach ($inActivUsers as $user): ?>
-                                    <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
-                                <?php endforeach; ?>
+                            <?= ($team['boss'] == NULL) ? '<option value="NULL" selected disabled>Resp.</option>' : '' ?>
+                            <?php foreach ($activUsers as $user): ?>
+                                <option value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                            <?php endforeach; ?>
+                            <option disabled="disabled">----</option>
+                            <?php foreach ($inActivUsers as $user): ?>
+                                <option style="color: gray" value="<?= $user['id'] ?>" <?= ($team['boss'] == $user['initials']) ? 'selected' : '' ?>><?= $user['initials'] ?></option>
+                            <?php endforeach; ?>
                             </select><?php else : ?>
                             <?= (isset($team['boss'])) ? $team['boss'] : '-' ?>
                         <?php endif; ?>
@@ -160,32 +151,32 @@ $title = "CSU-NVB - Remise de garde";
                 </div>
             <?php endforeach; ?>
             <?php if ($enableStructureChange) : ?>
-            <div style="align-items: center;display: flex;margin-bottom: 5px" class="d-flex">
-                <div class="flex-container column" style="margin: 5px;align-items: center; -webkit-align-items: center; ">
-                    <div class="flex-item" style="margin-bottom: 5px">
-                        <form method='POST' class="flex-item"
-                              action='?action=addTeamForShift&id=<?= $shiftsheet['id'] ?>'>
-                            <input type="hidden" name="day" value="0">
-                            <button type="submit" class="btn btn-dark">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </form>
-                    </div>
-
-                    <?php if (count($shiftsheet['teamNight']) > 1) : ?>
-                        <div class="flex-item">
+                <div style="align-items: center;display: flex;margin-bottom: 5px" class="d-flex">
+                    <div class="flex-container column" style="margin: 5px;align-items: center; -webkit-align-items: center; ">
+                        <div class="flex-item" style="margin-bottom: 5px">
                             <form method='POST' class="flex-item"
-                                  action='?action=removeTeamForShift&id=<?= $shiftsheet['id'] ?>'>
+                                  action='?action=addTeamForShift&id=<?= $shiftsheet['id'] ?>'>
                                 <input type="hidden" name="day" value="0">
                                 <button type="submit" class="btn btn-dark">
-                                    <i class="fas fa-minus"></i>
+                                    <i class="fas fa-plus"></i>
                                 </button>
                             </form>
                         </div>
-                    <?php endif; ?>
 
+                        <?php if (count($shiftsheet['teamNight']) > 1) : ?>
+                            <div class="flex-item">
+                                <form method='POST' class="flex-item"
+                                      action='?action=removeTeamForShift&id=<?= $shiftsheet['id'] ?>'>
+                                    <input type="hidden" name="day" value="0">
+                                    <button type="submit" class="btn btn-dark">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        <?php endif; ?>
+
+                    </div>
                 </div>
-            </div>
             <?php endif; ?>
         </div>
     </div>

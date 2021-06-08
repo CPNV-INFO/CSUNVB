@@ -11,26 +11,24 @@ ob_start();
     var drugsheetmode = '<?= $drugsheet["slug"]; ?>';
 </script>
 <script src="js/drugs.js"></script>
-
-<div>
-    <h1>Stupéfiants</h1>
-    <h2>Semaine <?= $drugsheet["week"] ?> - Base de <?= $site['name'] ?> [<?= $drugsheet['displayname'] ?>]</h2>
-    <div class="d-flex justify-content-end d-print-none">
-        <button type='submit' class='btn btn-primary m-1 float-right' onclick="window.print()">Télécharger en PDF
-        </button>
-        <form>
-            <input type="hidden" name="action" value="listDrugSheets">
-            <input type="hidden" name="id" value="<?= $site['id'] ?>">
-            <button type="submit" class='btn btn-primary m-1 float-right'>Retour à la liste</button>
-        </form>
+<div class="float-right d-print-none d-inline">
+    <button type='submit' class='btn btn-primary m-1 float-right' onclick="window.print()">Télécharger en PDF
+    </button>
+    <div class="float-right d-print-none">
+        <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
     </div>
+</div>
+
+<h5>
+    Semaine <?= $drugsheet["week"] ?><br>
+    Base : <?= $site['name'] ?><br>
+    Status : <?= $drugsheet['displayname'] ?>
+</h5>
+<div class="d-flex justify-content-end d-print-none">
 </div>
 
 <?php if ($drugsheet['slug'] != "blank"): // We check if the drugsheet slug is "blank" or not to change the page to a preparation's page if it is?>
 
-    <div class="float-right d-print-none">
-        <?= slugBtns("drug", $drugsheet, $drugsheet['slug']) ?>
-    </div>
     <form action="?action=updateDrugSheet" method="POST">
         <button type="submit" class='btn btn-primary m-1 float-right' id="save" hidden>Enregistrer les données</button>
         <input type="hidden" name="drugsheetID" value="<?= $drugSheetID ?>">
