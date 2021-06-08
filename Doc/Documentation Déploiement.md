@@ -28,8 +28,12 @@ Le login qu’il faudra entrer : csunvb
 
 ### mise a jour du site
 Le dossier git du site se trouve dans le dossier home de l’utilisateur. Nous allons donc y naviguer:
-> Cd /home/csunvb/csunvb.mycpnv.ch/CSUNVB
+```
+Cd /home/csunvb/csunvb.mycpnv.ch/CSUNVB
+```
 
 Ensuite nous changeons de branche (si nécessaire) et nous mettons à jour avec le dépôt :
->Git checkout <branche>
->Git pull
+```
+Git checkout <branche>
+Git pull
+```
