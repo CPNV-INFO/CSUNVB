@@ -46,11 +46,12 @@ ob_start();
                     <th>
                         <?php //TODO: th a supprimer? ?>
                     </th>
-                    <th>Pharmacie (matin)</th>
+                    <th>Pharma</th>
                     <?php foreach ($novas as $nova): ?>
                         <th><?= $nova["number"] ?></th>
                     <?php endforeach; ?>
-                    <th>Pharmacie (soir)</th>
+                    <th>Spécial</th>
+                    <th>pharma</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -62,16 +63,16 @@ ob_start();
                             <?php $ncheck = getNovaCheckByDateAndDrug($date, $drug['id'], $nova['id'], $drugsheet['id']); // not great practice, but it spares repeated queries on the db
                             if ($ncheck == false) $ncheck = array("start" => 0, "end" => 0);
                             ?>
-                            <?php $UID = 'n' . $nova["number"] . 'd' . $drug["id"] . 'D' . $date ?>
+                            <?php $UID = 'n' . $nova["number"] . 'd' . $drug["id"] . 'D' . $date; ?>
                             <?php if ($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div ?>
                                 <td id="<?= $UID ?>" class="text-center">
-                                    <input type="number" min="0" class="text-center d-inline w-25 border-0"
+                                    <input type="number" min="0" class="text-center d-inline w-25 border-0 checkMorning"
                                            name="novaChecks[<?= $date ?>][<?= $nova['id'] ?>][<?= $drug['id'] ?>][start]"
                                            value="<?= (is_numeric($ncheck["start"]) ? $ncheck["start"] : '0') ?>"
                                            onchange="cellUpdate('<?= $UID ?>', 'start');"
                                            id="<?= $UID ?>start"
                                     > /
-                                    <input type="number" min="0" class="text-center d-inline w-25 border-0"
+                                    <input type="number" min="0" class="text-center d-inline w-25 border-0 checkEvening"
                                            name="novaChecks[<?= $date ?>][<?= $nova['id'] ?>][<?= $drug['id'] ?>][end]"
                                            value="<?= (is_numeric($ncheck["end"]) ? $ncheck["end"] : '0') ?>"
                                            onchange="cellUpdate('<?= $UID ?>', 'end');"
@@ -81,64 +82,87 @@ ob_start();
                             <?php else: ?>
                                 <td id="<?= $UID ?>" class="text-center">
                                     <div id="<?= $UID ?>start"
-                                         class="w-25 d-inline"><?= (is_numeric($ncheck["start"]) == true ? $ncheck["start"] : '0') ?></div>
+                                         class="mw-25 w-fit-content d-inline checkMorning"><?= (is_numeric($ncheck["start"]) == true ? $ncheck["start"] : '0') ?></div>
                                     /
                                     <div id="<?= $UID ?>end"
-                                         class="w-25 d-inline"><?= (is_numeric($ncheck["end"]) == true ? $ncheck["end"] : '0') ?></div>
+                                         class="mw-25 w-fit-content d-inline checkEvening"><?= (is_numeric($ncheck["end"]) == true ? $ncheck["end"] : '0') ?></div>
                                 </td>
                             <?php endif; ?>
-                            <?php array_push($UIDs, $UID); ?>
+                            <?php array_push($UIDs, $UID);
+
+                            ?>
                         <?php endforeach; ?>
+                        <td></td>
                         <td></td>
                     </tr>
                     <?php foreach ($batchesForSheetByDrugId[$drug["id"]] as $batch): ?>
-                        <?php $UID = "pharma_" . 'b' . $batch['id'] . 'D' . $date ?>
+                        <?php $UID = "pharma_" . 'b' . $batch['id'] . 'D' . $date; ?>
                         <?php $pcheck = getPharmaCheckByDateAndBatch($date, $batch['id'], $drugsheet['id']);
                         if ($pcheck == false) $pcheck = array("start" => 0, "end" => 0);
                         ?>
                         <tr>
                             <td class="text-right"><?= $batch['number'] ?></td>
                             <td class="text-center">
-                                <?php if ($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div  ?>
-                                <input type="number" min="0" class="text-center border-0"
-                                       name="pharmachecks[<?= $date ?>][<?= $batch['id'] ?>][start]"
-                                       value="<?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?>"
-                                       onchange="cellUpdate('<?= $UID ?>', 'start');"
-                                       id="<?= $UID ?>start"
-                                >
-                            </td>
-                            <?php else: ?>
-                                <div class="text-center"
-                                     id="<?= $UID ?>start"><?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?></div>
 
-                            <?php endif; ?>
+                                <?php if ($drugsheet['slug'] != "close"): // We check if the drugsheet is closed or not to change input to simple div    ?>
+
+                                    <input type="number" min="0" class="text-center border-0  checkMorning w-50"
+                                           name="pharmachecks[<?= $date ?>][<?= $batch['id'] ?>][start]"
+                                           value="<?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?>"
+                                           onchange="cellUpdate('<?= $UID ?>', 'start');"
+                                           id="<?= $UID ?>start">
+
+
+                                <?php else: ?>
+                                    <div class="text-center checkMorning mw-25 w-fit-content mx-auto"
+                                         id="<?= $UID ?>start"><?= (is_numeric($pcheck['start']) ? $pcheck['start'] : '0') ?></div>
+
+                                <?php endif; ?>
+                            </td>
                             <?php foreach ($novas as $nova): ?>
                                 <td class="text-center">
                                     <?php if ($drugsheet['slug'] != "close"): ?>
-                                        <input type="number" min="0" class="<?= $UID ?> nova text-center border-0"
+                                        <input type="number" min="0" class="text-center <?= $UID ?> restock border-0"
                                                name="restock[<?= $date ?>][<?= $batch['id'] ?>][<?= $nova['id'] ?>]"
-                                               value="<?= (getRestockByDateAndDrug($date, $batch['id'], $nova['id']) + 0) //+0 auto converts to a number, even if null   ?>"
-                                               onchange="cellUpdate('<?= $UID ?>')"
-
-                                        >
+                                               value="<?= (getRestockByDateAndDrug($date, $batch['id'], $nova['id']) + 0) //+0 auto converts to a number, even if null           ?>"
+                                               onchange="cellUpdate('<?= $UID ?>')">
                                     <?php else: ?>
-                                        <div class="<?= $UID ?> nova text-center"><?= (getRestockByDateAndDrug($date, $batch['id'], $nova['id']) ? getRestockByDateAndDrug($date, $batch['id'], $nova['id']) : '0') /*(getRestockByDateAndDrug($date, $batch['id'], $nova['id']) + 0) */ //+0 auto converts to a number, even if null   ?></div>
+                                        <div class="<?= $UID ?> restock text-center"><?= (getRestockByDateAndDrug($date, $batch['id'], $nova['id']) ? getRestockByDateAndDrug($date, $batch['id'], $nova['id']) : '0')  //+0 auto converts to a number, even if null        ?></div>
                                     <?php endif; ?>
                                 </td>
                             <?php endforeach; ?>
+                            <?php if ($drugsheet['slug'] != "close"): ?>
+                            <td>
+                                <div id='<?= $UID ?>special'
+                                     class="w-100 text-center"><?= isset($sumsOfSpecialDrugOutByDateAndBatch[$date][$batch['id']]) ? $sumsOfSpecialDrugOutByDateAndBatch[$date][$batch['id']] : 0 ?></div>
+                                <button type='button' class='btn btn-primary specialOutButton' data-toggle="modal"
+                                        data-target="#specialCheckModal"
+                                        onclick="showModalElementByDateAndBatch('<?= $date ?>',<?= $batch['id'] ?>,<?= $drugSheetID ?>,'<?= date("d.m.Y", strtotime($date))?>','<?=$batch['number']?>');">
+                                    Plus
+                                </button>
+                            </td>
+                            <?php else: ?>
+                                <td class="text-center">
+                                    <div id='<?= $UID ?>special'
+                                         class="w-100 text-center"><?= isset($sumsOfSpecialDrugOutByDateAndBatch[$date][$batch['id']]) ? $sumsOfSpecialDrugOutByDateAndBatch[$date][$batch['id']] : 0 ?></div>
+                                    <button type='button' class='btn btn-primary specialOutButton' data-toggle="modal"
+                                            data-target="#specialCheckModal"
+                                            onclick="showModalElementByDateAndBatch('<?= $date ?>',<?= $batch['id'] ?>,<?= $drugSheetID ?>,'<?= date("d.m.Y", strtotime($date))?>','<?=$batch['number']?>');">
+                                        Plus
+                                    </button>
+                                </td>
+                            <?php endif; ?>
                             <td id="<?= $UID ?>" class="text-center">
                                 <?php if ($drugsheet['slug'] != "close"): ?>
 
-                                    <input type="number" min="0" class="text-center border-0"
+                                    <input type="number" min="0" class="text-center border-0 checkEvening w-50"
                                            name="pharmachecks[<?= $date ?>][<?= $batch['id'] ?>][end]"
                                            value="<?= is_numeric($pcheck['end']) ? $pcheck['end'] : '0' ?>"
                                            onchange="cellUpdate('<?= $UID ?>', 'end');"
-                                           id="<?= $UID ?>end"
-
-                                    >
+                                           id="<?= $UID ?>end">
                                 <?php else: ?>
 
-                                    <div class="text-center"
+                                    <div class="text-center checkEvening mw-25 w-fit-content mx-auto"
                                          id="<?= $UID ?>end"><?= is_numeric($pcheck['end']) ? $pcheck['end'] : '0' ?></div>
 
                                 <?php endif; ?>
@@ -166,7 +190,7 @@ ob_start();
                                 $day = new DateTime($date);
                                 $today = new DateTime('now');
                                 if ($today >= $day) {
-                                    echo "<button type='button' class='btn btn-primary m-1' onclick='signDrugSheetDay(\"" . $date . "\"," . $drugSheetID . ")'>Signer</button>";
+                                    echo "<button type='button' class='btn btn-primary m-1 signDayButton' onclick='signDrugSheetDay(\"" . $date . "\"," . $drugSheetID . ")'>Signer</button>";
                                 }
                             }
                         }
@@ -177,6 +201,97 @@ ob_start();
             </table>
         <?php endforeach; ?>
     </form>
+    <div class="modal fade" id="specialCheckModal" tabindex="-1" role="dialog" aria-labelledby="specialCheckModalTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="specialCheckModalTitle">Sortie spéciale de stupéfiants du <span id="specialBatchOutDate"></span> pour le lot <span id="specialBatchOutBatch"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?php if ($drugsheet['slug'] != "close"): ?>
+                    <section>
+                        <form action="?action=newSpecialDrugOut" method="POST">
+                            <input id="specialCheckInputDate" type="text" name="date" hidden required>
+                            <input id="specialCheckInputBatchId" type="number" name="batchId" hidden required>
+                            <input id="specialCheckInputSheetId" type="number" name="sheetId" hidden required>
+                            <table id="specialCheckInputTable">
+                                <tr class="w-100">
+                                    <th>Quantité</th>
+                                    <td><input type="number" name="quantity" min="1" step="1"
+                                               value="0"
+                                               required class="h-100"></td>
+                                </tr>
+                                <tr>
+                                    <th>Admin à notifier</th>
+                                    <td>
+                                        <select name="admin" required>
+                                            <option value="" disabled selected></option>
+                                            <?php foreach ($adminsWithNumber as $admin): ?>
+                                                <option value="<?= $admin['id'] ?>"><?= $admin['initials'] ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Raison</th>
+                                    <td class="w-75"><textarea name="comment" class="w-100" required></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3">
+                                        <button type="submit" class='btn btn-primary m-1'>Envoyer</button>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </form>
+                    </section>
+                    <?php endif; ?>
+                    <section id="noSpecialOutData" hidden>
+                        Aucune sortie spéciale n'a été effectuée pour ce batch à cette date
+                    </section>
+                    <section>
+                        <?php foreach ($specialDrugsOutByDateAndBatch as $specialDrugsOutDateKey => $specialDrugsOutDateData): ?>
+                            <?php foreach ($specialDrugsOutDateData as $specialDrugsOutBatchKey => $specialDrugsOutBatchData): ?>
+                                <table id="tableSpecialD<?= $specialDrugsOutDateKey ?>B<?= $specialDrugsOutBatchKey ?>"
+                                       class="table table-bordered specialDrugOutTable" hidden>
+                                    <thead class="thead-dark">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Quantité</th>
+                                        <th>Commentaire</th>
+                                        <th>Admin Prévenu</th>
+                                        <th>Par</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="overflow-auto">
+                                    <?php foreach ($specialDrugsOutBatchData as $specialDrugOut): ?>
+                                        <tr>
+                                            <td><?= date("d.m.Y H:i:s", strtotime($specialDrugOut['execution_date'])) ?></td>
+                                            <td><?= $specialDrugOut['quantity'] ?></td>
+                                            <td><?= $specialDrugOut['comment'] ?></td>
+                                            <td><?= $specialDrugOut['notified_admin'] ?></td>
+                                            <td><?= $specialDrugOut['user'] ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                    </tbody>
+
+                                </table>
+                            <?php endforeach; ?>
+                        <?php endforeach; ?>
+                        <div id="test2" hidden>2</div>
+                        <div id="test3" hidden>3</div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php else: ?>
 
     <div class="d-flex flex-row float-right d-print-none">
@@ -318,13 +433,20 @@ ob_start();
     </table>
 <?php endif; ?>
 <script>
-    <?php
-    foreach ($UIDs as $UID) {
-        echo "drugCheck('" . $UID . "');\n";
+    let UIDS = [];
+    var defineUids = function () {
+
+
+        <?php
+        foreach ($UIDs as $UID) {
+            echo "UIDS.push('" . $UID . "');\n";
+        }
+        ?>
     }
-    ?>
     checkForEnable();
 </script>
+<span></span>
+
 <?php
 $content = ob_get_clean();
 require GABARIT;

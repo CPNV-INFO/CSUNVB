@@ -23,6 +23,18 @@ Celui-ci sera accessible et utilisable avec un pc ou une tablette, car le site, 
 
 Il aura également une API pour communiquer avec une application mobile.
 
+### Glossaire 
+| Mot | Description |
+| --- | --- |
+| Novacheck | Les novachecks sont les contrôles de pharmatie dans les ambulances (novas) |
+| Pharmacheck | Les pharmachecks sont les contrôles des lots de la pharmatie de la base. |
+
+#### Limites du système
+L'API sera utilisée par une application mobile et ce qu'elle attend et se qu'elle doit répondre doivent être précis.
+
+Le site sera utilisé par le CSU principalement sur une tablette et il doit être donc compatible
+
+
 ### Qu'est-ce que je dois faire pour pouvoir essayer ce site ?
 
 Pour l'instant, une version en développement, régulièrement mise à jour,  est disponible à l'adresse [csunvb.mycpnv.ch]. Cependant, il est nécessaire de posséder un identifiant pour s'y connecter. Pour le récupérer, il faut s'adresser au chef de projet, M. Carrel.
@@ -44,10 +56,20 @@ Ce site internet est lié à une base de données qui contient toutes les donné
 -- Permet la gestion des stocks de médicaments dans les ambulances et à la base
 
    MLD:
-![flashMessage image](../images/MLD_Drugs.png)
+![flashMessage image](/images/MLD_Drugs.png)
+
+   MCD:
+   A faire
 
 - L’administration
 -- Permet l’administration du site (utilisateurs, stocks, …)
+
+#### L'API:
+MLD:
+![flashMessage image](/images/MLD_Api.png)
+
+MCD:
+A faire
 
 #### Données
 
@@ -136,6 +158,13 @@ Pour l'API, nous utilisons le logiciel insomnia qui permet de faire des scénari
 
 ![insomia.png](images/insomnia.png)
 
+## Sources / acquisition de connaissances
+### How to properly use Bearer tokens?
+[https://stackoverflow.com/questions/40582161/how-to-properly-use-bearer-tokens](https://stackoverflow.com/questions/40582161/how-to-properly-use-bearer-tokens)
+
+### Bootstrap modal
+[https://getbootstrap.com/docs/4.0/components/modal/](https://getbootstrap.com/docs/4.0/components/modal/)
+
 ## Points techniques détaillés
 
 ### Utilisation de l'API
@@ -145,9 +174,15 @@ Les url disponibles pour effectuer des requètes à l'API sont les suviants:
 `https://[adresse du site]/api/index.php?action=[action]'
 | Action | Description |
 | --- | --- |
-| gettoken | L'API a un système d'authentification pour obtenir un token afin de pouvoir faire toutes les requêtes en nécéssitant un. <br><br> Voir chapitre "gettoken"|
-| bases | L'API permet de fournir la liste des bases sans fournir de token. <br><br>Voir chapitre "bases" |
-| reports | L'api permet d'avoir la liste des rapports de garde et de stupéfiants ou un utilisateur est référencé ou a effectué une action.<br><br> Voir chapitre 'reports'. 
+| gettoken | L'API a un système d'authentification pour obtenir un token afin de pouvoir faire toutes les requêtes en nécéssitant un. <br><br> Voir chapitre "gettoken".|
+| bases | L'API permet de fournir la liste des bases sans fournir de token. <br><br>Voir chapitre "bases". |
+| reports | L'API permet d'avoir la liste des rapports de garde et de stupéfiants ou un utilisateur est référencé ou a effectué une action.<br><br> Voir chapitre 'reports'. |
+| myactionsinshift | L'API permet de fournir la liste des rapports de gardes où un utilisateur à validé une tache.<br><br> Voir chapitre 'myactionsinshift'.|
+| novacheck | L'API permet d'insérer un nouveau novacheck. <br><br> Voir chapitre 'novacheck'. |
+| pharmacheck | L'API permet d'insérer un nouveau pharmacheck. <br><br> Voir chapitre 'pharmacheck'. |
+| missingchecks | L'API permet d'avoir la liste des pharmachecks et des novachecks dont la valeur est 0.  <br><br> Voir chapitre 'missingchecks'.|
+| Par défaut | Si la requête demande une action qui n'existe pas, une erreur HTTP 404 est retorunée. | 
+
 
 
 #### gettoken
@@ -172,10 +207,10 @@ L'API permet de fournir la liste des bases sans fournir de token.
 L'API retournera la liste des bases sous forme de JSON formaté de cette façon:
 ![insomia.png](images/json-bases.png)
 
-### reports
+#### reports
 L'api permet d'avoir la liste des rapports de garde et de stupéfiants ou un utilisateur est référencé ou a effectué une action.
 
-L'utilisateur doit s'authentifié à l'aide d'un token bearer. Voir chapitre 'gettoken'
+L'utilisateur doit s'authentifier à l'aide d'un token bearer. Voir chapitre 'gettoken'.
 
 L'API peut retourner des erreurs HTTP:
 | Code d'erreur | Raison |
@@ -187,6 +222,85 @@ L'API retournera la liste des rapports en JSON formatés de cette façon:
 
 ![insomia.png](images/json-reports.png)
 
+#### myactionsinshift
+L'API permet de fournir la liste des rapports de gardes où un utilisateur à validé une tache.
+
+L'utilisateur doit s'authentifier à l'aide d'un token bearer. Voir chapitre 'gettoken'.
+
+Un ID de base doit être fourni via un champ "id" en GET.
+
+L'API peut retourner des erreurs HTTP:
+| Code d'erreur | Raison |
+| --- | --- |
+| 400 - Bad Request | Aucun token n'a été transmis ou dans un format invalide.<br>Il peut aussi manquer l'id de base en GET. |
+| 401 - Unauthorized |  Token non-valide |
+
+L'API retournera la liste des rapports en JSON formatés de cette façon:
+![insomia.png](images/json-myactionsinshift.png)
+
+#### novacheck
+L'API permet d'insérer un nouveau novacheck.
+
+L'utilisateur doit s'authentifier à l'aide d'un token bearer. Voir chapitre 'gettoken'.
+
+Les champs suivants en POST sont requis:
+| Champ | Description |
+| --- | --- |
+| nova_id | L'ID de la nova |
+| drugsheet_id | l'ID du rapport de stupéfiant |
+| start | La valeur du matin |
+| end | La valeur du soir |
+| date | La date dans le rapport |
+| drug_id | l'ID du stupéfiant concerné |
+
+L'API peut retourner des erreurs HTTP:
+| Code d'erreur | Raison |
+| --- | --- |
+| 400 - Bad Request | Aucun token n'a été transmis ou dans un format invalide.<br>Il peut aussi manquer un des champs POST requis |
+| 401 - Unauthorized |  Token non-valide |
+| 500 - Internal server error | Il a du se produire un problème au niveau de la base de donnée. Ce n'est pas une très bonne implémentation, mais cette erreur va être retournée si le format des données n'est pas bon. |
+
+Si tout a bien fonctionné l'API retournera "Ok" dans le corps de la page.
+
+#### pharmachack
+L'API permet d'insérer un nouveau pharmachack.
+
+L'utilisateur doit s'authentifier à l'aide d'un token bearer. Voir chapitre 'gettoken'.
+
+Les champs suivants en POST sont requis:
+| Champ | Description |
+| --- | --- |
+| batch_id | L'ID du batch |
+| drugsheet_id | l'ID du rapport de stupéfiant |
+| start | La valeur du matin |
+| end | La valeur du soir |
+| date | La date dans le rapport |
+
+L'API peut retourner des erreurs HTTP:
+| Code d'erreur | Raison |
+| --- | --- |
+| 400 - Bad Request | Aucun token n'a été transmis ou dans un format invalide.<br>Il peut aussi manquer un des champs POST requis |
+| 401 - Unauthorized |  Token non-valide |
+| 500 - Internal server error | Il a du se produire un problème au niveau de la base de donnée. Ce n'est pas une très bonne implémentation, mais cette erreur va être retournée si le format des données n'est pas bon. |
+
+Si tout a bien fonctionné l'API retournera "Ok" dans le corps de la page.
+
+#### missingchecks
+L'API permet d'avoir la liste des pharmachecks et des novachecks dont la valeur est 0.
+
+L'utilisateur doit s'authentifier à l'aide d'un token bearer. Voir chapitre 'gettoken'.
+
+Un ID de base doit être fourni via un champ "id" en GET.
+
+L'API peut retourner des erreurs HTTP:
+| Code d'erreur | Raison |
+| --- | --- |
+| 400 - Bad Request | Aucun token n'a été transmis ou dans un format invalide.<br>Il peut aussi manquer l'id de base en GET. |
+| 401 - Unauthorized |  Token non-valide |
+
+L'API retournera la liste des rapports en JSON formatés de cette façon:
+![insomia.png](images/json-missingchecks_pharma.png)
+![insomia.png](images/json-missingchecks_nova.png)
 
 ### Comment marche le système de routage entre les différentes page du site ?
 
@@ -300,3 +414,12 @@ La subtilité de ce formulaire est que tous les champs qui ont des données à e
 ### Comment fonctionnent les boutons qui sont déjà à l'intérieur d'un autre formulaire dans la partie des rapports de stupéfiants ?
 La problématique est qu'il ne faut pas faire de formulaire dans un autre formulaire. Donc la solution suivante a été mise en place :
 Les boutons appellent une fonction javascript en lui donnant les données en paramètres et la fonction créent un formulaire caché qui est ajouté à la fin de la page et envoyés.  
+
+### Quelle est la différence entre la table "tokens" et la table "apitokens" dans la base de données ?
+
+La table "tokens" est utilisée par le site web pricipalement pour les récupérations de mots de passes.
+
+La table "apitokens" est  utilisée par l'API pour stocker les bearer tokens utilisés pour l'authentification lors des requêtes.
+
+
+

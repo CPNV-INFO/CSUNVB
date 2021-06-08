@@ -23,6 +23,19 @@ function showDrugSheet($drugSheetID, $edition = false) {
     $novas = getNovasForSheet($drugSheetID);
     $batchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
     $drugSignatures = getDrugSignaturesForDrugSheet($drugSheetID);
+    $adminsWithNumber = getAdminsWithMobileNumber();
+    $sumsOfSpecialDrugOut = getSumOfSpecialDrugOutForSheet($drugSheetID);
+    $specialDrugsOut = getSpecialDrugOutForSheet($drugSheetID);
+    $sumsOfSpecialDrugOutByDateAndBatch = array();
+    $specialDrugsOutByDateAndBatch = array();
+
+    foreach ($sumsOfSpecialDrugOut as $sumOfSpecialDrugOut){
+        $sumsOfSpecialDrugOutByDateAndBatch[$sumOfSpecialDrugOut['date']][$sumOfSpecialDrugOut['batch_id']] = $sumOfSpecialDrugOut['sum'];
+    }
+
+    foreach ($specialDrugsOut as $specialDrugOut){
+        $specialDrugsOutByDateAndBatch[$specialDrugOut['date']][$specialDrugOut['batch_id']][] = $specialDrugOut;
+    }
 
     foreach ($batchesForSheet as $p) {
         $batchesForSheetByDrugId[$p["drug_id"]][] = $p;
@@ -335,4 +348,34 @@ function fillSheet($sheetId){
             }
         }
     }
+}
+
+/** This function is used to insert new special out operation of drugs
+ *
+ */
+function newSpecialDrugOut(){
+    $date = $_POST['date'];
+    $batchId = $_POST['batchId'];
+    $drugsheetId = $_POST['sheetId'];
+    $quantity = $_POST['quantity'];
+    $comment = $_POST['comment'];
+    $adminId = $_POST['admin'];
+    $userId = $_SESSION['user']['id'];
+
+    $batch = getBatchByID($batchId);
+    $adminNumber = getNumberOfUser($adminId)['mobileNumber'];
+
+
+    $res = insertSpecialDrugOut($date, $batchId, $drugsheetId, $quantity, $comment, $adminId, $userId);
+    if ($res == false || $res == null) {
+        setFlashMessage("Une erreur est survenue. Impossible d'ajouter cette sortie spéciale'.");
+    } else {
+        setFlashMessage("La sortie spéciale a correctement été ajoutée.");
+        $resSms = json_decode(sendSms($adminNumber,$_SESSION['user']['initials']." a sorti ".$quantity." ampoule(s) de ".$batch['drugName']." du lot ".$batch['number']." à ".$_SESSION['base']['name'].". Raison: ".$comment));
+        if(!isset($resSms -> msgId) || $resSms == false){
+            setFlashMessage("Un problème a eu lieu avec l'envoi du sms.");
+        }
+    }
+
+    header('Location: ?action=showDrugSheet&id='.$drugsheetId);
 }
