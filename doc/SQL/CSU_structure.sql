@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `batches` (
   `drug_id` int NOT NULL,
   `base_id` int NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `number_UNIQUE` (`number`),
+  UNIQUE KEY `number_UNIQUE` (`number`,`drug_id`),
   KEY `fk_batches_drugs_idx` (`drug_id`),
   KEY `fk_batches_bases1_idx` (`base_id`),
   CONSTRAINT `fk_batches_bases1` FOREIGN KEY (`base_id`) REFERENCES `bases` (`id`),
