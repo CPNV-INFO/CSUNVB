@@ -114,6 +114,32 @@ INSERT INTO `todosheets` (`week`, `status_id`, `base_id`, `closeBy`, `template_n
 /*!40000 ALTER TABLE `todosheets` ENABLE KEYS */;
 
 
+-- Listage des données de la table csunvb_csu.todothings : ~20 rows (environ)
+/*!40000 ALTER TABLE `todothings` DISABLE KEYS */;
+INSERT INTO `todothings` (`id`, `description`, `daything`, `type`, `display_order`) VALUES
+	(21, 'Changer Bac chariot de nettoyage', 1, NULL, 5),
+	(22, 'Check Ambulance et Communication', 1, NULL, 2),
+	(23, 'Check bibliothèque', 1, NULL, 4),
+	(24, 'Check de nuit ', 0, NULL, 21),
+	(25, 'Commande mat et commande pharma.', 1, NULL, 6),
+	(26, 'Commande O2', 0, NULL, 25),
+	(27, 'Contrôle niveau véhicule', 1, NULL, 8),
+	(28, 'Contrôle stupéfiants + Date perf. Chaudes', 1, NULL, 3),
+	(29, 'Contrôle stupéfiants Nova .... (Morphine X4, Fentanyl X6)', 0, 'novas', 22),
+	(30, 'Désinfection + Inventaire hebdo Nova ....', 1, 'novas', 11),
+	(31, 'Tâches spécifiques de jour', 1, NULL, 13),
+	(32, 'Tâches spécifiques de nuit', 0, NULL, 23),
+	(33, 'Envoi rapport STUP hebdo à gt pharmacie', 1, NULL, 9),
+	(34, 'Fax 144 Transmission', 1, NULL, 1),
+	(35, 'Formation', 1, NULL, 14),
+	(36, 'Nettoyage centrale et garage', 1, NULL, 10),
+	(37, 'Rangement mat', 1, NULL, 7),
+	(38, 'Remise locaux ambulances ', 1, NULL, 15),
+	(39, 'Remise locaux Transmission', 0, NULL, 24),
+	(40, 'Tâches selon nécessité', 1, NULL, 12);
+/*!40000 ALTER TABLE `todothings` ENABLE KEYS */;
+
+/*!40000 ALTER TABLE `todos` DISABLE KEYS */;
 INSERT INTO `todos` (`todothing_id`, `todosheet_id`, `user_id`, `value`, `done_at`, `day_of_week`) VALUES
 (34, 1, NULL, NULL, NULL, 1),
 (22, 1, NULL, NULL, NULL, 1),
@@ -213,31 +239,7 @@ INSERT INTO `todos` (`todothing_id`, `todosheet_id`, `user_id`, `value`, `done_a
 (27, 1, NULL, NULL, NULL, 5),
 (33, 1, NULL, NULL, NULL, 7),
 (26, 1, NULL, NULL, NULL, 7);
-
--- Listage des données de la table csunvb_csu.todothings : ~20 rows (environ)
-/*!40000 ALTER TABLE `todothings` DISABLE KEYS */;
-INSERT INTO `todothings` (`id`, `description`, `daything`, `type`, `display_order`) VALUES
-	(21, 'Changer Bac chariot de nettoyage', 1, NULL, 5),
-	(22, 'Check Ambulance et Communication', 1, NULL, 2),
-	(23, 'Check bibliothèque', 1, NULL, 4),
-	(24, 'Check de nuit ', 0, NULL, 21),
-	(25, 'Commande mat et commande pharma.', 1, NULL, 6),
-	(26, 'Commande O2', 0, NULL, 25),
-	(27, 'Contrôle niveau véhicule', 1, NULL, 8),
-	(28, 'Contrôle stupéfiants + Date perf. Chaudes', 1, NULL, 3),
-	(29, 'Contrôle stupéfiants Nova .... (Morphine X4, Fentanyl X6)', 0, 'novas', 22),
-	(30, 'Désinfection + Inventaire hebdo Nova ....', 1, 'novas', 11),
-	(31, 'Tâches spécifiques de jour', 1, NULL, 13),
-	(32, 'Tâches spécifiques de nuit', 0, NULL, 23),
-	(33, 'Envoi rapport STUP hebdo à gt pharmacie', 1, NULL, 9),
-	(34, 'Fax 144 Transmission', 1, NULL, 1),
-	(35, 'Formation', 1, NULL, 14),
-	(36, 'Nettoyage centrale et garage', 1, NULL, 10),
-	(37, 'Rangement mat', 1, NULL, 7),
-	(38, 'Remise locaux ambulances ', 1, NULL, 15),
-	(39, 'Remise locaux Transmission', 0, NULL, 24),
-	(40, 'Tâches selon nécessité', 1, NULL, 12);
-/*!40000 ALTER TABLE `todothings` ENABLE KEYS */;
+/*!40000 ALTER TABLE `todos` ENABLE KEYS */;
 
 -- Listage des données de la table csunvb_csu.users : ~13 rows (environ)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
