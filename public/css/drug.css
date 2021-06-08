@@ -1,3 +1,37 @@
 /* ------------------------------------------------------------
 * CSS used for elements on stup pages
  -------------------------------------------------------------- */
+
+.checkMorning{
+    background-color:lightblue;
+    padding:10px;
+    margin-right:0px;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+
+.checkEvening{
+    background-color:black;
+    color:white;
+    padding:10px;
+    margin-left:0px;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+#specialCheckInputTable{
+    border: none;
+}
+
+#specialCheckInputTable td,tr{
+    word-wrap: break-word;
+    border: none;
+}
+
+#specialCheckInputTable th{
+    padding-right: 6px;
+}
+
+.w-fit-content{
+    width: fit-content;
+}

@@ -23,6 +23,19 @@ function showDrugSheet($drugSheetID, $edition = false) {
     $novas = getNovasForSheet($drugSheetID);
     $batchesForSheet = getBatchesForSheet($drugSheetID); // Obtient la liste des batches utilisées par ce rapport
     $drugSignatures = getDrugSignaturesForDrugSheet($drugSheetID);
+    $adminsWithNumber = getAdminsWithMobileNumber();
+    $sumsOfSpecialDrugOut = getSumOfSpecialDrugOutForSheet($drugSheetID);
+    $specialDrugsOut = getSpecialDrugOutForSheet($drugSheetID);
+    $sumsOfSpecialDrugOutByDateAndBatch = array();
+    $specialDrugsOutByDateAndBatch = array();
+
+    foreach ($sumsOfSpecialDrugOut as $sumOfSpecialDrugOut){
+        $sumsOfSpecialDrugOutByDateAndBatch[$sumOfSpecialDrugOut['date']][$sumOfSpecialDrugOut['batch_id']] = $sumOfSpecialDrugOut['sum'];
+    }
+
+    foreach ($specialDrugsOut as $specialDrugOut){
+        $specialDrugsOutByDateAndBatch[$specialDrugOut['date']][$specialDrugOut['batch_id']][] = $specialDrugOut;
+    }
 
     foreach ($batchesForSheet as $p) {
         $batchesForSheetByDrugId[$p["drug_id"]][] = $p;
@@ -84,7 +97,14 @@ function drugsDeleteSheet($baseID = null) {
     redirect("listDrugSheets", $baseID);
 }
 function drugSheetSwitchState() {
-    updateSheetState($_POST["id"], getStatusID($_POST['newSlug']));
+    $sheetId = $_POST["id"];
+    $newSlug = $_POST['newSlug'];
+    updateSheetState($sheetId, getStatusID($newSlug));
+
+    if($_POST['newSlug'] == "open"){
+        fillSheet($sheetId);
+    }
+
     redirect("listDrugSheets", $_SESSION["base"]["id"]);
 }
 
@@ -103,7 +123,7 @@ function updateDrugSheet() {
         foreach ($novaChecks as $date => $novas){
             foreach ($novas as $novaID => $drugs){
                 foreach ($drugs as $drugID => $drug){
-                    $res = inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID);
+                    $res = insertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID,$_SESSION['user']['id']);
                     if($res == null || $res === false ) {
                         $errors = true;
                     }
@@ -113,7 +133,7 @@ function updateDrugSheet() {
 
         foreach ($pharmaChecks as $date => $bateches){
             foreach ($bateches as $batchID => $batch){
-                $res = insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID);
+                $res = insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID,$_SESSION['user']['id']);
                 if($res == null || $res === false) $errors = true;
             }
         }
@@ -122,7 +142,7 @@ function updateDrugSheet() {
             foreach ($batches as $batchID => $novas){
                 foreach ($novas as $novaID => $restockamount){
                     if($restockamount != ""){
-                        $res = inertOrUpdateRestock($date,$batchID,$novaID,$restockamount);
+                        $res = inertOrUpdateRestock($date,$batchID,$novaID,$restockamount,$drugSheetID);
                         if($res == null || $res === false) $errors = true;
                     }
 
@@ -293,4 +313,69 @@ function createBatch(){
         setFlashMessage("Le lot à correctement été ajouté.");
     }
     header('Location: ?action=showBatchList');
+}
+
+/** This function is used to fill drug sheets with 0 as value for every navachecks, pharmachecks and restocks
+ * @param $sheetId - The ID of the drugsheet
+ */
+function fillSheet($sheetId){
+    $drugsheet = getDrugSheetById($sheetId);
+    $dates = getDaysForWeekNumber($drugsheet["week"]);
+    $novas = getNovasForSheet($sheetId);
+    $batchesForSheet = getBatchesForSheet($sheetId);
+    $drugs = getDrugsInDrugSheet($sheetId);
+    $value = array("start"=>0,"end"=>0);
+    $userId = $_SESSION['user']['id'];
+
+    foreach ($dates as $date){
+        foreach ($drugs as $drug){
+            foreach ($novas as $nova){
+                insertOrUpdateNovaChecks($date,$value,$drug['id'],$nova['id'],$sheetId,$userId);
+            }
+        }
+    }
+
+    foreach ($dates as $date){
+        foreach ($batchesForSheet as $batch){
+            insertOrUpdatePharmaChecks($date,$value,$batch['id'],$sheetId,$userId);
+        }
+    }
+
+    foreach ($dates as $date){
+        foreach ($batchesForSheet as $batch){
+            foreach ($novas as $nova){
+                inertOrUpdateRestock($date,$batch['id'],$nova['id'],0,$sheetId);
+            }
+        }
+    }
+}
+
+/** This function is used to insert new special out operation of drugs
+ *
+ */
+function newSpecialDrugOut(){
+    $date = $_POST['date'];
+    $batchId = $_POST['batchId'];
+    $drugsheetId = $_POST['sheetId'];
+    $quantity = $_POST['quantity'];
+    $comment = $_POST['comment'];
+    $adminId = $_POST['admin'];
+    $userId = $_SESSION['user']['id'];
+
+    $batch = getBatchByID($batchId);
+    $adminNumber = getNumberOfUser($adminId)['mobileNumber'];
+
+
+    $res = insertSpecialDrugOut($date, $batchId, $drugsheetId, $quantity, $comment, $adminId, $userId);
+    if ($res == false || $res == null) {
+        setFlashMessage("Une erreur est survenue. Impossible d'ajouter cette sortie spéciale'.");
+    } else {
+        setFlashMessage("La sortie spéciale a correctement été ajoutée.");
+        $resSms = json_decode(sendSms($adminNumber,$_SESSION['user']['initials']." a sorti ".$quantity." ampoule(s) de ".$batch['drugName']." du lot ".$batch['number']." à ".$_SESSION['base']['name'].". Raison: ".$comment));
+        if(!isset($resSms -> msgId) || $resSms == false){
+            setFlashMessage("Un problème a eu lieu avec l'envoi du sms.");
+        }
+    }
+
+    header('Location: ?action=showDrugSheet&id='.$drugsheetId);
 }

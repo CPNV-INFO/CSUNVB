@@ -3,49 +3,65 @@
  * Date: Décembre 2020
  **/
 
+$('document').ready(function() {
+    defineUids();
+    for (let i = 0; i < UIDS.length; i++){
+        drugCheck(UIDS[i]);
+    }
+});
 
 function cellUpdate(UID, time = '') {
     document.getElementById("save").removeAttribute("hidden");
     document.cookie = "drug" + UID + time + "=" + document.getElementById(UID + time).value;
+    let allSignButtons = document.querySelectorAll(".signDayButton");
+    let allSpecialOutButtons = document.querySelectorAll(".specialOutButton");
+    if (allSignButtons != null) {
+        for (var i = 0; i < allSignButtons.length; i++) {
+            allSignButtons[i].disabled = true;
+            allSignButtons[i].title = "Enregistrez le rapport d'abord!"
+        }
+    }
+    if (allSpecialOutButtons != null) {
+        for (var j = 0; j < allSpecialOutButtons.length; j++) {
+            allSpecialOutButtons[j].disabled = true;
+            allSpecialOutButtons[j].title = "Enregistrez le rapport d'abord!"
+        }
+    }
+
     drugCheck(UID);
 }
 
 function drugCheck(UID) {
-    if(drugsheetmode !== "close") {
-        let expectedAmount = Number(document.getElementById(UID + "start").value);
-        let endAmount = Number(document.getElementById(UID + "end").value);
-
-        //pharmacheck?
-        if (UID.indexOf("pharma") !== -1) {
-            let novaCells = document.querySelectorAll("." + UID + ".nova");
-            //not cells.forEach because then no way to get value out of callback function
-            for (let i = 0; i < novaCells.length; i++) {
+    let expectedAmount;
+    let endAmount;
+    if (drugsheetmode !== "close") {
+        expectedAmount = Number(document.getElementById(UID + "start").value);
+        endAmount = Number(document.getElementById(UID + "end").value);
+    } else {
+        expectedAmount = Number(document.getElementById(UID + "start").textContent);
+        endAmount = Number(document.getElementById(UID + "end").textContent);
+    }
+    //pharmacheck?
+    if (UID.indexOf("pharma") !== -1) {
+        let novaCells = document.querySelectorAll("." + UID + ".restock");
+        //not cells.forEach because then no way to get value out of callback function
+        for (let i = 0; i < novaCells.length; i++) {
+            if (drugsheetmode !== "close") {
                 expectedAmount -= Number(novaCells[i].value);
-            }
-        }
-        if (endAmount !== expectedAmount) {
-            document.getElementById(UID).style = "background-color: orange;"
-        } else {
-            document.getElementById(UID).removeAttribute("style");
-        }
-    }else{
-        let expectedAmount = Number(document.getElementById(UID + "start").textContent);
-        let endAmount = Number(document.getElementById(UID + "end").textContent);
-
-        //pharmacheck?
-        if (UID.indexOf("pharma") !== -1) {
-            let novaCells = document.querySelectorAll("." + UID + ".nova");
-            //not cells.forEach because then no way to get value out of callback function
-            for (let i = 0; i < novaCells.length; i++) {
+            } else {
                 expectedAmount -= Number(novaCells[i].textContent);
             }
         }
+        expectedAmount -= Number(document.getElementById(UID + "special").textContent);
+    }
 
-        if (endAmount !== expectedAmount) {
-            document.getElementById(UID).style = "background-color: orange;"
-        } else {
-            document.getElementById(UID).removeAttribute("style");
-        }
+
+    if (endAmount !== expectedAmount) {
+            document.getElementById(UID+"end").style = "background-color: orange;"
+            document.getElementById(UID+"end").style.color = "black"
+    } else {
+        document.getElementById(UID+"end").removeAttribute("style");
+        document.getElementById(UID+"end").style.color = "white"
     }
 }
 
@@ -55,9 +71,9 @@ function drugListUpdate() {
 
     batchList.selectedIndex = 0
 
-    for(let i = 1; i <= batchList.length -1; i++){
+    for (let i = 1; i <= batchList.length - 1; i++) {
 
-        batchList[i].classList.contains("drug_"+ drugList.value) ? batchList[i].hidden = false : batchList[i].hidden = true
+        batchList[i].classList.contains("drug_" + drugList.value) ? batchList[i].hidden = false : batchList[i].hidden = true
 
 
     }
@@ -65,7 +81,7 @@ function drugListUpdate() {
     batchSelectionMissing()
 }
 
-function batchSelectionMissing(){
+function batchSelectionMissing() {
     let batchList = document.getElementById('batchToAddList')
     let addBatchBtn = document.getElementById('addBatchBtn')
 
@@ -73,7 +89,7 @@ function batchSelectionMissing(){
 
 }
 
-function NovaListUpdate(){
+function NovaListUpdate() {
     let novaList = document.getElementById('novaToAddList')
     let addNovaBtn = document.getElementById('addNovaBtn')
 
@@ -81,7 +97,7 @@ function NovaListUpdate(){
 
 }
 
-function checkForEnable(){
+function checkForEnable() {
     let novas = document.querySelectorAll(".novacount");
     let batches = document.querySelectorAll(".batchcount");
     let btnSwitchState = document.getElementById('btn_submit_SheetSwitchState');
@@ -89,15 +105,15 @@ function checkForEnable(){
     (novas.length >= 1 && batches.length >= 1) || btnSwitchState.textContent != "Activer" ? btnSwitchState.disabled = false : btnSwitchState.disabled = true;
 }
 
-/** This function is used to submit a isgnature
+/** This function is used to submit a signature
  *
  * @param day - The day we want to sign
  * @param drugSheet - The drugsheet where there is the day
  */
-function signDrugSheetDay(day,drugSheet){
+function signDrugSheetDay(day, drugSheet) {
     var confirm = window.confirm("Êtes vous bien sûr de vouloir signer cette journée ?");
 
-    if(confirm === true){
+    if (confirm === true) {
         const form = document.createElement('form');
         form.method = "post";
         form.action = "?action=signDrugSheetDay";
@@ -128,13 +144,13 @@ function signDrugSheetDay(day,drugSheet){
  * @param baseID - The ID of the base where the new batch will be created
  * @param drugID - The drug ID of the batch
  */
-function createNewBatch(baseID,drugID){
+function createNewBatch(baseID, drugID) {
     var batch = prompt("Numéro du lot");
 
-    if(batch == null || batch == ""){
+    if (batch == null || batch == "") {
 
 
-    }else {
+    } else {
         const form = document.createElement('form');
         form.method = "post";
         form.action = "?action=createBatch";
@@ -163,5 +179,40 @@ function createNewBatch(baseID,drugID){
         document.body.appendChild(form);
 
         form.submit();
+    }
+}
+
+function showModalElementByDateAndBatch(date, batchId, sheetId, formattedDate, batchNumber) {
+
+    let formDate = document.getElementById("specialBatchOutDate");
+    let formBatch = document.getElementById("specialBatchOutBatch");
+    let noData = document.getElementById("noSpecialOutData");
+
+    formDate.textContent = formattedDate;
+    formBatch.textContent = batchNumber;
+    noData.hidden = true;
+
+    if (drugsheetmode !== "close") {
+        let inputDate = document.getElementById("specialCheckInputDate");
+        let inputBatch = document.getElementById("specialCheckInputBatchId");
+        let inputDrugSheetId = document.getElementById("specialCheckInputSheetId");
+        inputDate.value = date;
+        inputBatch.value = batchId;
+        inputDrugSheetId.value = sheetId;
+    }
+
+
+    let allTables = document.querySelectorAll(".specialDrugOutTable");
+    if (allTables != null) {
+        for (var i = 0; i < allTables.length; i++) {
+            allTables[i].hidden = true;
+        }
+    }
+
+    let selectedBatchTable = document.getElementById("tableSpecialD" + date + "B" + batchId);
+    if (selectedBatchTable != null) {
+        selectedBatchTable.hidden = false;
+    }else{
+        noData.hidden = false;
     }
 }

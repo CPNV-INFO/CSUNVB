@@ -116,7 +116,8 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `initials`, `password`, `adm
 (9, 'Damaris', 'Bourgeois', 'DMS', '$2y$10$enagKYdNGrztWs1pHSLB/.QaupoFkHc9hOCa9LoyjwWZpGvlKtYZ6', 0, 1, NULL, NULL),
 (10, 'Laurent', 'Scheurer', 'LSR', '$2y$10$yyM/oFu8x.3Sfqrl4WrJUuVuTHVO/QDWAsm/dvco715c8ph1qk1Om', 0, 0, NULL, NULL),
 (11, 'Galien', 'Wolfer', 'GWR', '$2y$10$wPiLR73utWWTt1DajuAQTuG50lcJFkemE9IvEgez16Ykau0p3L3Ca', 0, 1, NULL, NULL),
-(12, 'Damaris ', 'Bourgeois', 'DBS', '$2y$10$3Cdjk8G095JgQjPqjZP6l.uFrbkF0/SF65UHCRZ/BKwdStrCLOXlK', 0, 0, NULL, NULL);
+(12, 'Damaris ', 'Bourgeois', 'DBS', '$2y$10$3Cdjk8G095JgQjPqjZP6l.uFrbkF0/SF65UHCRZ/BKwdStrCLOXlK', 0, 0, NULL, NULL),
+(13, 'Théo', 'Gautier', 'TGR', '$2y$10$fd/bS2LnrXKOsy9S2h9y9Ok/7tMbV6Gi3gaugo7qrkPZ.pjuHvAqi', 0, 0, 'Theo.Gautier@cpnv.ch', NULL);
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;

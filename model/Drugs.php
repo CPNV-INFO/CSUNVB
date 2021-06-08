@@ -15,6 +15,7 @@ function updateDrugName($updatedName, $drugID) {
     return execute("UPDATE drugs SET name='$updatedName' WHERE id=:drug", ['drug' => $drugID]);
 }
 
+
 //-------------------------------------- drugs --------------------------------------------
 /**
  *  Retourne une sheet précise
@@ -100,6 +101,10 @@ function getBatchesForBase($baseID) {
     return selectMany("SELECT batches.id AS id, number, drug_id, state FROM batches WHERE base_id=:baseID", ['baseID' => $baseID ]);
 }
 
+function getBatchByID($batchID){
+    return selectOne("Select batches.number, drugs.name drugName from batches join drugs on drugs.id = batches.drug_id where batches.id = :batchId",['batchId'=>$batchID]);
+}
+
 /** This function is used to Insert a batch in a sheet
  * @param $drugSheetID - The ID of the drugsheet
  * @param $batchToAdd - The number of the batch (as displayed to the user, not the ID)
@@ -144,8 +149,8 @@ function getPharmaCheckByDateAndBatch($date, $batch, $drugSheetID) {
  * @param $drugSheetID - The drugsheet ID
  * @return string|null
  */
-function insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID){
-    return insert('INSERT INTO pharmachecks (date, start, end, batch_id, user_id, drugsheet_id) VALUES(:date,:batch_start,:batch_end,:batch_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :batch_start, END =:batch_end, user_id = :user_id;', ['date'=>$date,"batch_start"=>$batch['start'],"batch_end"=>$batch['end'],"batch_id"=>$batchID,"user_id"=>$_SESSION['user']['id'],'drugsheet_id'=>$drugSheetID]);
+function insertOrUpdatePharmaChecks($date,$batch,$batchID,$drugSheetID,$userId){
+    return insert('INSERT INTO pharmachecks (date, start, end, batch_id, user_id, drugsheet_id) VALUES(:date,:batch_start,:batch_end,:batch_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :batch_start, END =:batch_end, user_id = :user_id;', ['date'=>$date,"batch_start"=>$batch['start'],"batch_end"=>$batch['end'],"batch_id"=>$batchID,"user_id"=>$userId,'drugsheet_id'=>$drugSheetID]);
 }
 
 /**
@@ -163,8 +168,8 @@ function getNovaCheckByDateAndDrug($date, $drug, $nova, $drugSheetID) {
  * @param $drugSheetID - The drugsheet ID
  * @return string|null
  */
-function inertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID){
-    return insert('INSERT INTO novachecks (date, start, end, drug_id, nova_id, user_id,drugsheet_id) VALUES(:date, :start, :end,:drug_id,:nova_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :start, END =:end, user_id = :user_id;', ['date' => $date,'start' => $drug["start"],'end'=>$drug["end"],'drug_id'=>$drugID,'nova_id'=>$novaID,'user_id'=>$_SESSION['user']['id'],'drugsheet_id'=>$drugSheetID]);
+function insertOrUpdateNovaChecks($date,$drug,$drugID,$novaID,$drugSheetID,$userId){
+    return insert('INSERT INTO novachecks (date, start, end, drug_id, nova_id, user_id,drugsheet_id) VALUES(:date, :start, :end,:drug_id,:nova_id,:user_id,:drugsheet_id) ON DUPLICATE KEY UPDATE START = :start, END =:end, user_id = :user_id;', ['date' => $date,'start' => $drug["start"],'end'=>$drug["end"],'drug_id'=>$drugID,'nova_id'=>$novaID,'user_id'=>$userId,'drugsheet_id'=>$drugSheetID]);
 }
 
 /**
@@ -182,8 +187,8 @@ function getRestockByDateAndDrug($date, $batch, $nova) {
  * @param $restockamount - The amount of the restock
  * @return string|null
  */
-function inertOrUpdateRestock($date,$batchID,$novaID,$restockamount){
-    return insert('INSERT INTO restocks (DATE, quantity, batch_id, nova_id, user_id) VALUES (:date,:restockamount,:batchID,:novaID,:userID) ON DUPLICATE KEY UPDATE quantity= :restockamount,user_id = :userID;',['date'=>$date, 'restockamount'=>$restockamount,'batchID'=>$batchID,'novaID'=>$novaID,'userID'=>$_SESSION['user']['id']]);
+function inertOrUpdateRestock($date,$batchID,$novaID,$restockamount,$sheetID){
+    return insert('INSERT INTO restocks (DATE, quantity, batch_id, nova_id, user_id, drugsheet_id) VALUES (:date,:restockamount,:batchID,:novaID,:userID,:sheetID) ON DUPLICATE KEY UPDATE quantity= :restockamount,user_id = :userID;',['date'=>$date, 'restockamount'=>$restockamount,'batchID'=>$batchID,'novaID'=>$novaID,'userID'=>$_SESSION['user']['id'],'sheetID'=>$sheetID]);
 }
 
 function getLatestDrugSheetWeekNb($base_id) {
@@ -271,4 +276,65 @@ function getDrugSignaturesForDrugSheet($sheetID){
  */
 function insertDrugSignatures($drugSheetID,$day,$userID,$baseID){
     return insert("INSERT INTO drugsignatures (day, drugsheet_id, user_id, base) values (:day,:drugSheetID,:userID,:baseID);",['drugSheetID' => $drugSheetID, 'day'=>$day,'userID'=>$userID,'baseID'=>$baseID]);
+}
+
+/** This function is used to insert new special out operation of drugs in the database
+ * @param $date - The Date in the drug sheet
+ * @param $batchId - The ID of the Batch
+ * @param $drugsheetId - The ID of the drug sheet
+ * @param $quantity - The amount
+ * @param $comment - The comment
+ * @param $adminId - The notified admin
+ * @param $userId - The ID of the user that performed the action
+ * @return string|null
+ */
+function insertSpecialDrugOut($date, $batchId, $drugsheetId, $quantity, $comment, $adminId, $userId){
+    return insert("INSERT into specialdrugout(date, batch_id, drugsheet_id, quantity, comment, notified_admin_id,user_id) values (:date, :batch_id,:drugsheet_id,:quantity,:comment,:admin_id,:user_id)",["date" => $date,"batch_id"=>$batchId,"drugsheet_id"=>$drugsheetId,"quantity"=>$quantity,"comment"=>$comment,"admin_id"=>$adminId,"user_id"=>$userId]);
+}
+
+/** Get the sum of special out operation of drugs for a drug sheet
+ * @param $sheetId
+ * @return array|mixed|null
+ */
+function getSumOfSpecialDrugOutForSheet($sheetId){
+    return selectMany("select specialdrugout.date,specialdrugout.batch_id,sum(specialdrugout.quantity) as sum from specialdrugout where drugsheet_id = :sheetId group by specialdrugout.date, specialdrugout.batch_id order by specialdrugout.date,specialdrugout.batch_id",["sheetId"=>$sheetId]);
+}
+
+/** Get the list of special out operation of drugs for a drug sheet
+ * @param $sheetId
+ * @return array|mixed|null
+ */
+function getSpecialDrugOutForSheet($sheetId){
+    return selectMany("Select specialdrugout.date,specialdrugout.execution_date, specialdrugout.batch_id,specialdrugout.quantity,specialdrugout.comment, usersnotified.initials as notified_admin, users.initials as user from specialdrugout
+join users usersnotified on usersnotified.id = specialdrugout.notified_admin_id
+join users on users.id = specialdrugout.user_id
+where specialdrugout.drugsheet_id = :sheetId",["sheetId"=>$sheetId]);
+}
+/* ---- API ----- */
+
+/** This function is use to get the list of the drug sheets where a given user performed an action.
+ *  This is for the API.
+ * @param $userId - The ID of the user
+ * @return array|mixed|null
+ */
+function getDrugSheetWhereUserAction($userId){
+    return selectMany("(select drugsheets.id, drugsheets.week, bases.name base from drugsheets
+    join bases on bases.id = drugsheets.base_id
+    join drugsignatures on drugsheets.id = drugsignatures.drugsheet_id
+    where drugsignatures.user_id = :userId)
+    union
+    (select drugsheets.id, drugsheets.week, bases.name base from drugsheets
+    join bases on bases.id = drugsheets.base_id
+    join novachecks on drugsheets.id = novachecks.drugsheet_id
+    where novachecks.user_id = :userId)
+    union
+    (select drugsheets.id, drugsheets.week, bases.name base from drugsheets
+    join bases on bases.id = drugsheets.base_id
+    join pharmachecks on drugsheets.id = pharmachecks.drugsheet_id
+    where pharmachecks.user_id = :userId)
+    union
+    (select drugsheets.id, drugsheets.week, bases.name base from drugsheets
+    join bases on bases.id = drugsheets.base_id
+    join restocks on drugsheets.id = restocks.drugsheet_id
+    where restocks.user_id = :userId);", ["userId" => $userId]);
 }

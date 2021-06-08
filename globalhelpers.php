@@ -1,7 +1,7 @@
 <?php
 
 setlocale(LC_ALL, 'fr_CH'); // pour les format de dates
-
+error_reporting(0);
 /**
  * getVersion : show actual project version
  */
