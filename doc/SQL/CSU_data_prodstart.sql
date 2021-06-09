@@ -39,12 +39,7 @@ INSERT INTO `drugsheets` (`week`, `status_id`, `base_id`) VALUES (2122, 3, 2);
 
 -- Listage des données de la table csunvb_csu.novas : ~11 rows (environ)
 /*!40000 ALTER TABLE `novas` DISABLE KEYS */;
-INSERT INTO `novas` (`number`) VALUES
-	(31),
-	(32),
-	(33),
-	(35),
-	(36);
+INSERT INTO `novas` (`number`) VALUES (31),(32),(33),(34),(35),(36),(57),(58),(75),(76),(77);
 /*!40000 ALTER TABLE `novas` ENABLE KEYS */;
 
 -- Listage des données de la table csunvb_csu.shiftactions : ~19 rows (environ)
