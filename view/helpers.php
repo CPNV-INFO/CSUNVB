@@ -369,7 +369,7 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
             return "<h1>Header pour la page non défini</h1>";
     }
     //Liste déroulante pour le choix de la base
-    $header = "<form><h1 class='mr-3 d-inline'>" . $title . " à</h1><input type='hidden' name='action' value='" . $switchBaseAction . "'><select onchange='this.form.submit()' name='id' size='1' class='bigfont mb-3'>";
+    $header = "<form><h1 class='mr-3 d-inline'>Site </h1><input type='hidden' name='action' value='" . $switchBaseAction . "'><select onchange='this.form.submit()' name='id' size='1' class='bigfont mb-3'>";
     foreach ($bases as $base) {
         $header .= "<option value='" . $base['id'] . "'";
         if ($selectedBaseID == $base['id']) {
@@ -381,7 +381,7 @@ function headerForList($page, $bases, $selectedBaseID, $models, $emptyBase)
 
     //Création d'une nouveau rapport
     if (ican('createsheet') && $_SESSION['base']['id'] == $selectedBaseID) {
-        $header .= "<div class='sheetForm newSheet'><form method='POST' action='" . $newSheetAction . "' class='float-right'>Modèle : <select name='selectedModel' class='choseModel'>";
+        $header .= "<div class='float-right pl-5'><form method='POST' action='" . $newSheetAction . "'>Modèle : <select name='selectedModel' class='choseModel'>";
         if ($emptyBase == false) {
             $header .= "<option value='lastModel' selected=selected>Dernier rapport clôturé</option>";
         }

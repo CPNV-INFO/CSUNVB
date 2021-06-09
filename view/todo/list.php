@@ -10,10 +10,10 @@
 ob_start();
 $title = "CSU-NVB - Tâches hebdomadaires";
 ?>
-<div>
+<div class="row">
     <form><!-- Liste déroulante pour le choix de la base -->
         <input type="hidden" name="action" value="listtodoforbase">
-        <h1 class="mr-3 d-inline">Tâches hebdomadaires à </h1>
+        <h1 class="d-inline pl-3">Site </h1>
         <select onchange="this.form.submit()" name="id" size="1" class="bigfont mb-3">
             <?php foreach ($baseList as $base) : ?>
                 <option value="<?= $base['id'] ?>" <?= ($baseID == $base['id']) ? 'selected' : '' ?>
@@ -23,7 +23,7 @@ $title = "CSU-NVB - Tâches hebdomadaires";
     </form>
 
     <?php if (ican('createsheet') && ($_SESSION['base']['id'] == $baseID)) : ?>
-        <div class="sheetForm newSheet">
+        <div class="ml-5">
             <form method="POST" action="?action=addWeek">
                 Modèle :
                 <select name="selectModel" id="selectTodoModel" class="choseModel">
