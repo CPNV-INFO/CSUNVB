@@ -107,11 +107,11 @@ function getBatchByID($batchID){
 
 /** This function is used to Insert a batch in a sheet
  * @param $drugSheetID - The ID of the drugsheet
- * @param $batchToAdd - The number of the batch (as displayed to the user, not the ID)
+ * @param $batchToAdd - The ID of the batch
  * @return string|null
  */
 function insertBatchInSheet($drugSheetID,$batchToAdd){
-return insert("INSERT INTO drugsheet_use_batch (drugsheet_id,batch_id) VALUES (:drugSheetID,(SELECT batches.id from batches WHERE batches.number = :batchToAdd));",['drugSheetID' =>$drugSheetID,'batchToAdd' => $batchToAdd]);
+return insert("INSERT INTO drugsheet_use_batch (drugsheet_id,batch_id) VALUES (:drugSheetID,:batchToAdd);",['drugSheetID' =>$drugSheetID,'batchToAdd' => $batchToAdd]);
 }
 
 /** This function is used to Insert a batch in a base
@@ -126,11 +126,11 @@ return insert("INSERT INTO batches (base_id,drug_id,number) VALUES (:baseID,:dru
 
 /** This function is used to remove a batch from a sheet
  * @param $drugSheetID - The ID of the drugsheet
- * @param $batchToRemove - The number of the batch (as displayed to the user, not the ID)
+ * @param $batchToRemove - The ID of the batch
  * @return bool|null
  */
 function removeBatchFromSheet($drugSheetID,$batchToRemove){
-    return execute("DELETE FROM drugsheet_use_batch WHERE drugsheet_use_batch.drugsheet_id = :drugSheetID AND drugsheet_use_batch.batch_id = (SELECT batches.id from batches WHERE batches.number =:batchToRemove)",['drugSheetID' =>$drugSheetID,'batchToRemove' => $batchToRemove]);
+    return execute("DELETE FROM drugsheet_use_batch WHERE drugsheet_use_batch.drugsheet_id = :drugSheetID AND drugsheet_use_batch.batch_id = :batchToRemove",['drugSheetID' =>$drugSheetID,'batchToRemove' => $batchToRemove]);
 }
 
 
@@ -248,7 +248,7 @@ function getStatusID($slug) {
  * @return array|mixed|null
  */
 function getDrugsWithUsableBatches($baseID){
-    return(selectMany("SELECT drugs.name AS name FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used' GROUP BY name;",['base_id' => $baseID]));
+    return(selectMany("SELECT drugs.id, drugs.name AS name FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used' GROUP BY name;",['base_id' => $baseID]));
 }
 
 /** This function is used to get the list of the batches who are usable (That have not the state "used") for a specific base
@@ -256,7 +256,7 @@ function getDrugsWithUsableBatches($baseID){
  * @return array|mixed|null
  */
 function getUsableBatches($baseID){
-    return(selectMany("SELECT drugs.name as name,batches.drug_id as drug_id, batches.number as number, batches.state AS state FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
+    return(selectMany("SELECT drugs.name as name,batches.drug_id as drug_id, batches.id, batches.number as number, batches.state AS state FROM batches INNER JOIN drugs WHERE batches.drug_id = drugs.id AND batches.base_id = :base_id AND NOT batches.state = 'used';",['base_id' => $baseID]));
 }
 
 /** This function is used to get the list of the signatures for a drugsheet

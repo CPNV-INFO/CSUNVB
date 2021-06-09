@@ -331,7 +331,7 @@ ob_start();
                                 class="missingDrugChoice float-right" onchange="batchSelectionMissing()">
                             <option value="default"></option>
                             <?php foreach ($usableBatches as $usableBatch): ?>
-                                <option name="Batch" value="<?= $usableBatch['number'] ?>" hidden
+                                <option name="Batch" value="<?= $usableBatch['id'] ?>" hidden
                                         class="drug_<?= $usableBatch['name'] ?>"><?= $usableBatch['number'] . " - " . $usableBatch['state'] ?></option>
                             <?php endforeach; ?>
                         </select>
@@ -381,7 +381,7 @@ ob_start();
                               class="d-inline">
                             <input type="hidden" name="nova" value="<?= $nova["number"] ?>">
                             <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
-                            <button type="submit" id="removeNovaBtn" class='btn trashButtons'><i
+                            <button type="submit" id="removeNovaBtn" class='btn trashButton'><i
                                         class="fas fa-trash"></i></button>
                         </form>
                     <?php endif; ?>
@@ -408,9 +408,9 @@ ob_start();
                             <form method="POST" action="?action=removeBatchFromDrugSheet"
                                   onsubmit="return confirm('Est ce que vous voulez vraiment retirer le lot <?= $batch['number'] ?> du rapoort?');"
                                   class="d-inline">
-                                <input type="hidden" name="batch" value="<?= $batch['number'] ?>">
+                                <input type="hidden" name="batch" value="<?= $batch['id'] ?>">
                                 <input type="hidden" name="drugSheetID" value="<?= $drugSheetID ?>">
-                                <button type="submit" id="removeBatchBtn" class='btn trashButtons'><i
+                                <button type="submit" id="removeBatchBtn" class='btn trashButton'><i
                                             class="fas fa-trash"></i></button>
                             </form>
                         <?php endif; ?>

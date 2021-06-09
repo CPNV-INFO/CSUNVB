@@ -191,7 +191,7 @@ function addBatchesToDrugSheet(){
         if ($res == false) {
             setFlashMessage("Une erreur est survenue. Impossible d'ajouter le lot au rapport.");
         } else {
-            setFlashMessage("Le lot " . $batchToAdd . " a été correctement ajouté.");
+            setFlashMessage("Le lot a été correctement ajouté.");
         }
     }else{
         setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
@@ -211,7 +211,7 @@ function removeBatchFromDrugSheet(){
         if ($res == false) {
             setFlashMessage("Une erreur est survenue. Impossible de retirer le lot du rapport.");
         } else {
-            setFlashMessage("Le lot " . $batchToRemove . " a été correctement retiré.");
+            setFlashMessage("Le lot a été correctement retiré.");
         }
     }else{
         setFlashMessage("Vous n'avez pas les droits nécéssaires pour effectuer cette action");
