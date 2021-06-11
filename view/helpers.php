@@ -67,7 +67,7 @@ function displayDate($date, $format)
 }
 
 
-function showState($slug, $plural = 0)
+function showState($slug)
 {
     // todo (VB) : Utilisation de la base de données (displayname)
     switch ($slug) {
@@ -76,24 +76,15 @@ function showState($slug, $plural = 0)
             break;
         case "open":
             $result = "actif";
-            if ($plural) {
-                $result = $result . "(s)";
-            }
             break;
         case "reopen":
             $result = "en correction";
             break;
         case "close":
             $result = "clôturé";
-            if ($plural) {
-                $result = $result . "(s)";
-            }
             break;
         case "archive":
             $result = "archivé";
-            if ($plural) {
-                $result = $result . "(s)";
-            }
             break;
         default:
             $result = "[Non défini]";
@@ -137,12 +128,12 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
     } else {
         $detailAction = "showtodo";
     }
-    $html = "<h3>Rapport(s) " . showState($slug, 1) . "</h3>
-<i class='fas fa-caret-square-down fa-2x showSheetsList d-none' data-list='" . $slug . "' id='show-" . $slug . "'></i>
-                        <i class='fas fa-caret-square-up fa-2x hideSheetsList' data-list='" . $slug . "' id='hide-" . $slug . "'></i>
+    $html = "<h3>" . ucfirst(showState($slug)) ." (".count($sheets).")</h3>
+<i class='fas fa-caret-square-down fa-2x hideSheetsList d-none' data-list='" . $slug . "' id='hide-" . $slug . "'></i>
+                        <i class='fas fa-caret-square-right fa-2x showSheetsList' data-list='" . $slug . "' id='show-" . $slug . "'></i>
                     </div>";
     if (!empty($sheets)) {
-        $html = $html . "<div class='" . $slug . "Sheets' style='margin-top: 0px;'><table class='table table-bordered' style='margin-top: 0px;'>
+        $html = $html . "<div class='d-none " . $slug . "Sheets' style='margin-top: 0px;'><table class='table table-bordered' style='margin-top: 0px;'>
                             <thead class='thead-dark'><th>Semaine n°</th><th class='actions'>Actions</th></thead>
                         
                             <tbody>";
@@ -162,20 +153,18 @@ function listTodoOrDrugSheet($slug, $sheets, $zone)
             $html = $html . "<td><div class='d-flex justify-content-around'><a type='button' class='btn blueBtn m-1' href='?action=" . $detailAction . "&id=" . $sheet['id'] . "'>Détails</a>" . slugBtns($zone, $sheet, $slug) . "</div></td>";
         }
         $html = $html . "</tr> </tbody> </table></div>";
-    } else {
-        $html = $html . "<div class='" . $slug . "Sheets'><p>Aucun rapport de tâche n'est actuellement " . showState($slug) . ".</p></div>";
     }
     return $html;
 }
 
 function listShiftSheet($slug, $shiftList, $zone)
 {
-    $html = "<h3>Rapport(s) " . showState($slug, 1) . "</h3>
-                    <i class='fas fa-caret-square-down fa-2x showSheetsList d-none' data-list='" . $slug . "' id='show-" . $slug . "'></i>
-                    <i class='fas fa-caret-square-up fa-2x hideSheetsList' data-list='" . $slug . "' id='hide-" . $slug . "'></i>
+    $html = "<h3>" . ucfirst(showState($slug)) ." (".count($shiftList).")</h3>
+                    <i class='fas fa-caret-square-right fa-2x showSheetsList' data-list='" . $slug . "' id='show-" . $slug . "'></i>
+                    <i class='fas fa-caret-square-down fa-2x hideSheetsList d-none' data-list='" . $slug . "' id='hide-" . $slug . "'></i>
                     </div>";
     if (count($shiftList) > 0) {
-        $head = '<table class="table table-bordered ' . $slug . 'Sheets" style="margin-top:0px; text-align: center">
+        $head = '<table class="d-none table table-bordered ' . $slug . 'Sheets" style="margin-top:0px; text-align: center">
         <thead class="thead-dark">
         <th>Date</th>
         <th>Véhicules</th>
@@ -229,8 +218,6 @@ function listShiftSheet($slug, $shiftList, $zone)
         $foot = "</table>";
         $table = $head . $body . $foot;
         $html .= $table;
-    } else {
-        $html .= "<div class='" . $slug . "Sheets'><p>Aucun rapport de tâche n'est actuellement " . showState($slug) . ".</p></div>";
     }
     return $html;
 }

@@ -25,7 +25,7 @@ $page = getPage($_GET["action"]);
     <?php
     switch ($page) {
         case "shift":
-            echo '<link href="css/shift.css" rel="stylesheet"><script src="js/shiftt.js" defer></script>';
+            echo '<link href="css/shift.css" rel="stylesheet"><script src="js/shift.js" defer></script>';
             break;
         case "todo":
             echo '<link href="css/todo.css" rel="stylesheet"><script src="js/todo.js" defer></script>';
