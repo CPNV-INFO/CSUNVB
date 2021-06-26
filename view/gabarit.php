@@ -66,13 +66,13 @@ $page = getPage($_GET["action"]);
                         <li class="nav-item <?= ($page == "shift") ? 'active' : '' ?>">
                             <a class="nav-link" href="?action=shiftList">Gardes</a>
                         </li>
-                        <li class="nav-item <?= ($page == "todo") ? 'active' : '' ?>">
-                            <a class="nav-link" href="?action=listtodo">Tâches</a>
-                        </li>
-                        <li class="nav-item <?= ($page == "drug") ? 'active' : '' ?>">
-                            <a class="nav-link" href="?action=listDrugSheets">Stupéfiants</a>
-                        </li>
                         <?php if ($_SESSION["user"]["admin"] == 1): ?>
+                            <li class="nav-item <?= ($page == "todo") ? 'active' : '' ?>">
+                                <a class="nav-link" href="?action=listtodo">Tâches</a>
+                            </li>
+                            <li class="nav-item <?= ($page == "drug") ? 'active' : '' ?>">
+                                <a class="nav-link" href="?action=listDrugSheets">Stupéfiants</a>
+                            </li>
                             <li class="nav-item <?= ($page == "admin") ? 'active' : '' ?>">
                                 <a class="nav-link" href="?action=adminHome">Administration</a>
                             </li>
@@ -82,7 +82,7 @@ $page = getPage($_GET["action"]);
                         <div style="display: flex;align-items: center" class="navbar-nav">
                             <a href="?action=disconnect" class="nav-item nav-link">
                                 <i class="fas fa-sign-out-alt fa-lg"></i>
-                                <div class="d-inline"><?= $_SESSION['user']['initials'] ?>@<?= $_SESSION['base']['name']?></div>
+                                <div class="d-inline"><?= $_SESSION['user']['initials'] ?>@<?= $_SESSION['base']['name'] ?></div>
                             </a>
                         </div>
                     <?php endif; ?>
