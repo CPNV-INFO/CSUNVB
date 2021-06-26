@@ -20,7 +20,7 @@ function addNewUserT($lastname, $firstname, $initials, $email, $tel)
 
 function SaveUserPassword($hash, $id)       //Met à jour le mdp d'un utilisateur
 {
-    return execute("UPDATE users SET password= :password, status= :status where id = :id", ['password' => $hash, 'status' => 0, 'id' => $id]);
+    return execute("UPDATE users SET password= :password, status= :status where id = :id", ['password' => $hash, 'status' => 1, 'id' => $id]);
 }
 
 /** update the user
