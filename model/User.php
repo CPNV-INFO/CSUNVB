@@ -8,19 +8,19 @@ function getUsers()     //Récupère tous les utilisateurs
     return selectMany("SELECT * FROM users order by  initials ASC", []);
 }
 
-function addNewUser($prenomUser, $nomUser, $initialesUser, $hash, $admin, $firstconnect)
+function addNewUser($prenomUser, $nomUser, $initialesUser, $hash, $admin, $status)
 {
-    return intval(insert("INSERT INTO users (firstname, lastname, initials, password, admin, firstconnect) VALUES (:firstname, :lastname, :initials, :password, :admin, :firstconnect)", ['firstname' => $prenomUser, 'lastname' => $nomUser, 'initials' => $initialesUser, 'password' => $hash, 'admin' => $admin, 'firstconnect' => $firstconnect]));       //à optimiser/simplifier avec un tableau
+    return intval(insert("INSERT INTO users (firstname, lastname, initials, password, admin, status) VALUES (:firstname, :lastname, :initials, :password, :admin, :status)", ['firstname' => $prenomUser, 'lastname' => $nomUser, 'initials' => $initialesUser, 'password' => $hash, 'admin' => $admin, 'status' => $status]));       //à optimiser/simplifier avec un tableau
 }
 
 function addNewUserT($lastname, $firstname, $initials, $email, $tel)
 {
-    return intval(insert("INSERT INTO users (firstname, lastname, initials,email,mobileNumber, admin, firstconnect) VALUES (:firstname, :lastname, :initials,:email,:mobileNumber, 0, 1)", ['firstname' => $firstname, 'lastname' => $lastname, 'initials' => $initials,"email" => $email,"mobileNumber" => $tel]));       //à optimiser/simplifier avec un tableau
+    return intval(insert("INSERT INTO users (firstname, lastname, initials,email,mobileNumber, admin, status) VALUES (:firstname, :lastname, :initials,:email,:mobileNumber, 0, 0)", ['firstname' => $firstname, 'lastname' => $lastname, 'initials' => $initials,"email" => $email,"mobileNumber" => $tel]));       //à optimiser/simplifier avec un tableau
 }
 
 function SaveUserPassword($hash, $id)       //Met à jour le mdp d'un utilisateur
 {
-    return execute("UPDATE users SET password= :password, firstconnect= :firstconnect where id = :id", ['password' => $hash, 'firstconnect' => 0, 'id' => $id]);
+    return execute("UPDATE users SET password= :password, status= :status where id = :id", ['password' => $hash, 'status' => 0, 'id' => $id]);
 }
 
 /** update the user
@@ -29,7 +29,7 @@ function SaveUserPassword($hash, $id)       //Met à jour le mdp d'un utilisateu
 function SaveUser($user)
 {
     unset($user['password']);
-    unset($user['firstconnect']);
+    unset($user['status']);
     unset($user['number']);
     return execute("UPDATE users SET firstname= :firstname, lastname= :lastname, initials = :initials, admin = :admin, email = :email, mobileNumber = :mobileNumber where id = :id", $user);
 }

@@ -72,7 +72,7 @@ function tryLogin()
     $password = $_POST['password'];
     $baseLogin = $_POST['base'];
     $user = getUserByInitials($initials);
-    if($user['firstconnect'] == true){
+    if($user['status'] != 1){
         setFlashMessage("Ce compte semble inactif, vérifiez votre boite mail, vous avez peut-être reçu un lien d'activation pour le compte, si ce n'est pas le cas, contacter un administrateur");
         displayLoginPage();
     }else{
