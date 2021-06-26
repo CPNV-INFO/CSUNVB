@@ -626,7 +626,7 @@ CREATE TABLE `tokens` (
   UNIQUE KEY `token_UNIQUE` (`value`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_table1_users1_idx` (`user_id`),
-  CONSTRAINT `fk_table1_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `fk_table1_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -706,4 +706,5 @@ CREATE TABLE `worktimes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-26  9:57:26
+-- Dump completed on 2021-06-26 10:04:39
+
