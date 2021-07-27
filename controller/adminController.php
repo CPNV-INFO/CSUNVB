@@ -71,6 +71,24 @@ function saveNewUser()
 }
 
 /**
+ * Updates the firstname, lastname and initials only
+ */
+function updateUser()
+{
+    $user = getUser($_POST['idUser']);
+    if (!$user) redirect("/");
+    $user["firstname"] = ucfirst($_POST["fname"]);
+    $user["lastname"] = ucfirst($_POST["lname"]);
+    $user["initials"] = strtoupper($_POST["initials"]);
+    if (saveUser($user)) {
+        setFlashMessage("L'utilisateur a été enregistré");
+    } else {
+        setFlashMessage("L'utilisateur n'a pas pu être enregistré. Ces initiales sont probablement déjà utilisées");
+    }
+    redirect("adminCrew");
+}
+
+/**
  * change an user to admin or an admin to user
  */
 function changeUserAdmin()
@@ -82,7 +100,7 @@ function changeUserAdmin()
     } else {
         $user['admin'] = 1;
     }
-    $res = SaveUser($user);
+    $res = saveUser($user);
     if ($res == true) {
         if ($user['admin']) {
             setFlashMessage($user['initials'] . " est désormais administrateur.");
@@ -211,7 +229,7 @@ function changeEmail()
     $changeUser = $_POST['userID'];
     $user = getUser($changeUser);
     $user['email'] = $_POST['mail'];
-    SaveUser($user);
+    saveUser($user);
 }
 
 function changeTel()
@@ -219,7 +237,7 @@ function changeTel()
     $changeUser = $_POST['userID'];
     $user = getUser($changeUser);
     $user['mobileNumber'] = $_POST['tel'];
-    SaveUser($user);
+    saveUser($user);
 }
 
 function showNova($novaID)

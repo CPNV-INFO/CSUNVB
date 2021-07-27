@@ -35,7 +35,7 @@ $title = "CSU-NVB - Administration - Secouristes";
                 </div>
                 <div style="margin-left: 12px;">
                     <a href="?action=showUser&id=<?= $user['id'] ?>" class="text-dark">
-                        <i class="far fa-calendar-alt fa-2x modify"></i>
+                        <i class="fas fa-pen modify"></i>
                     </a>
                 </div>
             </div>

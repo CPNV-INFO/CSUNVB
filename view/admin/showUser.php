@@ -6,13 +6,32 @@
 ob_start();
 $title = "CSU-NVB - Administration - Planning";
 ?>
-<h1><?= $user["firstname"] ?> <?= $user["lastname"] ?></h1>
 <div>
     <form>
         <input type="hidden" name="action" value="adminCrew">
         <button type="submit" class="btn blueBtn m-1 float-right">Retour à la liste</button>
     </form>
 </div>
+<h1>Profil de <?= $user["firstname"] ?> <?= $user["lastname"] ?></h1>
+<form action="?action=updateUser" method="POST">
+    <input type="hidden" name="idUser" value="<?= $user["id"] ?>">
+    <div class="form-row">
+        <div class="col-form-label col-2">Prénom</div>
+        <input type="text" name="fname" class="form-control col-4" style="text-transform: capitalize;" required value="<?= $user["firstname"] ?>" />
+    </div>
+    <div class="form-row">
+        <div class="col-form-label col-2">Nom</div>
+        <input type="text" name="lname" class="form-control col-4" style="text-transform: capitalize;" required value="<?= $user["lastname"] ?>"/>
+    </div>
+    <div class="form-row">
+        <div class="col-form-label col-2">Initiales</div>
+        <input type="text" name="initials" style="text-transform: uppercase;" minlength="3" maxlength="3" class="form-control col-1" value="<?= $user["initials"] ?>"/>
+    </div>
+    <button type="submit" class="btn btn-primary m-1">Enregistrer</button>
+    <a class="btn btn-secondary m-1" href="?action=adminCrew">Annuler</a>
+</form>
+<hr>
+<h3>Horaire</h3>
 <div style="margin-top: 40px;margin-bottom: 20px" class="d-flex">
     <form action="?action=showUser&id=<?= $user["id"] ?>" method="POST">
         <input type="hidden" name="month" value="<?= ($selectedMonth == 1) ? "12" : $selectedMonth - 1 ?>">
