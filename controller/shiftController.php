@@ -128,7 +128,7 @@ function canIEditShift($shiftsheet)
  */
 function checkShift()
 {
-    $res = checkActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["D/N"]);
+    $res = checkActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["D/N"],1);
     if ($res == false) {
         setFlashMessage("Une erreur est survenue. Impossible de valider la tâche.");
     } else {
@@ -136,6 +136,25 @@ function checkShift()
         $time = "nuit";
         if ($_POST["D/N"] == 1) $time = "jour";
         writeLog("SHIFT", $_POST["sheetID"], getShiftActionName($_POST["actionID"]) . " " . $time . " validé");
+    }
+    redirect("shiftShow", $_POST["sheetID"]);
+}
+
+/**
+ * ignoreShift : Mark a task as ignore and who said so
+ * @param none
+ * shows a message to confirm action or an error message
+ */
+function ignoreShift()
+{
+    $res = checkActionForShift($_POST["actionID"], $_POST["sheetID"], $_POST["D/N"],0);
+    if ($res == false) {
+        setFlashMessage("Une erreur est survenue. Impossible de valider la tâche.");
+    } else {
+        setFlashMessage("La tâche a bien été marquée comme ignorée !");
+        $time = "nuit";
+        if ($_POST["D/N"] == 1) $time = "jour";
+        writeLog("SHIFT", $_POST["sheetID"], getShiftActionName($_POST["actionID"]) . " " . $time . " ignorée");
     }
     redirect("shiftShow", $_POST["sheetID"]);
 }

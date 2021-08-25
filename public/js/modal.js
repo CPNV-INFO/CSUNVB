@@ -58,6 +58,26 @@ checkShiftBtns.forEach((item) => {
     }, false);
 })
 
+var ignoreShiftBtns = document.querySelectorAll('.ignoreShiftBtn');
+ignoreShiftBtns.forEach((item) => {
+    item.addEventListener('click', function (event) {
+        $("#mainModalForm").attr('action', '?action=ignoreShift');
+        var day = $(this).parent().attr("value");
+        if (day == 1) {
+            var time = "Jour";
+        } else {
+            var time = "Nuit";
+        }
+        setTitleModal("Remise de Garde du : " + $("#shiftDate").val());
+        setBodyModal("Ignorer  : " + $(this).parent().parent().find('.SH_actionName').html() + " (" + time + ")<br>");
+        addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + $(this).parent().parent().attr("value") + '>');
+        addBodyModal('<input type="hidden" name="sheetID" id="todoSheetID" value=' + $("#sheetID").val() + '>');
+        addBodyModal('<input type = "hidden" name="D/N" id="D/N" value="' + day + '">');
+        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Ok" data-focus>');
+        showModal();
+    }, false);
+})
+
 var unCheckShiftBtns = document.querySelectorAll('.unCheckShiftBtn');
 unCheckShiftBtns.forEach((item) => {
     item.addEventListener('click', function (event) {

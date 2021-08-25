@@ -210,33 +210,29 @@ $title = "CSU-NVB - Remise de garde";
                     </td>
                     <?php if ($enableFilling): ?>
                         <!-- Check for the day -->
-                        <td class="SH_checkCase" value="1">
+                        <td class="SH_checkCase text-center" value="1">
                             <?php if (count($action["checksDay"]) == 0): ?>
-                                <button class="btn btn-secondary checkShiftBtn">A Valider</button>
+                                <button class="btn btn-primary checkShiftBtn">Valider</button>
+                                <button class="btn btn-secondary mt-2 ignoreShiftBtn">Ignorer</button>
                             <?php else: ?>
-                                <button class="btn btn-success unCheckShiftBtn">
-                                    Validé Par
-                                    <div class="text-success bg-white rounded mt-1">
-                                        <?php foreach ($action["checksDay"] as $check): ?>
-                                            <?= $check["initials"] ?>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </button>
+                                <?php foreach ($action["checksDay"] as $check): ?>
+                                    <button class="btn <?= $check['value'] ? 'btn-success' : 'btn-light btn-sm text-muted' ?> unCheckShiftBtn">
+                                        <?= $check["initials"] ?>
+                                    </button>
+                                <?php endforeach; ?>
                             <?php endif; ?>
                         </td>
                         <!-- Check for the night -->
                         <td class="SH_checkCase" value="0">
                             <?php if (count($action["checksNight"]) == 0): ?>
-                                <button class="btn btn-secondary checkShiftBtn">A Valider</button>
+                                <button class="btn btn-primary checkShiftBtn">Valider</button>
+                                <button class="btn btn-secondary mt-2 ignoreShiftBtn">Ignorer</button>
                             <?php else: ?>
-                                <button class="btn btn-success unCheckShiftBtn">
-                                    Validé Par
-                                    <div class="text-success bg-white rounded mt-1">
-                                        <?php foreach ($action["checksNight"] as $check): ?>
-                                            <?= $check["initials"] ?>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </button>
+                                <?php foreach ($action["checksNight"] as $check): ?>
+                                    <button class="btn <?= $check['value'] ? 'btn-success' : 'btn-light btn-sm text-muted' ?> unCheckShiftBtn">
+                                        <?= $check["initials"] ?>
+                                    </button>
+                                <?php endforeach; ?>
                             <?php endif; ?>
                         </td>
                         <!-- Comments for the action -->

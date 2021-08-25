@@ -347,6 +347,7 @@ CREATE TABLE `shiftchecks` (
   `shiftsheet_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `shiftaction_id` int(11) NOT NULL,
+  `value` INT(11) NOT NULL DEFAULT 1 COMMENT '0 = I ignored it\n1 = I did it',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_shiftChecks_shiftSheets1_idx` (`shiftsheet_id`),

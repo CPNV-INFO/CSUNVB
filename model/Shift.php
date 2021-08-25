@@ -8,7 +8,7 @@
 
 function getshiftchecksForAction($action_id, $shiftsheet_id, $day)
 {
-    $checks = selectMany('SELECT shiftchecks.time, users.initials as initials FROM shiftchecks inner join users on users.id = shiftchecks.user_id where shiftaction_id =:action_id and shiftsheet_id =:shiftsheet_id and day=:day', ['action_id' => $action_id, 'shiftsheet_id' => $shiftsheet_id, 'day' => $day]);
+    $checks = selectMany('SELECT shiftchecks.time, users.initials as initials, value FROM shiftchecks inner join users on users.id = shiftchecks.user_id where shiftaction_id =:action_id and shiftsheet_id =:shiftsheet_id and day=:day', ['action_id' => $action_id, 'shiftsheet_id' => $shiftsheet_id, 'day' => $day]);
     return $checks;
 }
 
@@ -116,9 +116,10 @@ function getNbshiftsheet($status,$base_id){
     return selectOne("SELECT COUNT(shiftsheets.id) as number FROM  shiftsheets inner join status on status.id = shiftsheets.status_id where status.slug = :status and shiftsheets.base_id =:base_id", ['status' => $status, 'base_id' => $base_id])["number"];
 }
 
-function checkActionForShift($action_id, $shiftSheet_id, $day)
+// $value says if it's a real check (1) or an 'ignore' (0)
+function checkActionForShift($action_id, $shiftSheet_id, $day, $value)
 {
-    return execute("Insert into shiftchecks(day,shiftsheet_id,shiftaction_id,user_id)values(:day,:shiftSheet_id,:action_id,:user_id)", ["day" => $day, "user_id" => $_SESSION['user']['id'], "shiftSheet_id" => $shiftSheet_id, "action_id" => $action_id]);
+    return execute("Insert into shiftchecks(day,shiftsheet_id,shiftaction_id,user_id,value)values(:day,:shiftSheet_id,:action_id,:user_id,:value)", ["day" => $day, "user_id" => $_SESSION['user']['id'], "shiftSheet_id" => $shiftSheet_id, "action_id" => $action_id, "value" => $value]);
 }
 
 function unCheckActionForShift($action_id, $shiftSheet_id, $day){
