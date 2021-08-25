@@ -1,5 +1,6 @@
 function showModal() {
     $("#mainModal").modal("toggle");
+    setTimeout(function() { $('[data-focus]').focus() }, 500); // must allow time for fade in effect (?)
 }
 
 function setTitleModal(content) {
@@ -31,7 +32,7 @@ addShiftCommentBtns.forEach((item) => {
         setBodyModal("Ajouter un commentaire à  : " + $(this).parent().parent().find('.SH_actionName').html() + "<br>");
         addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + $(this).parent().parent().attr("value") + '>');
         addBodyModal('<input type="hidden" name="sheetID" id="todoSheetID" value=' + $("#sheetID").val() + '>');
-        addBodyModal('<textarea rows="3" name="comment" id="comment" style="margin:10px 0 0 0; width:400px;"></textarea>');
+        addBodyModal('<textarea rows="3" name="comment" id="comment" style="margin:10px 0 0 0; width:400px;" data-focus></textarea>');
         setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Valider">');
         showModal();
     }, false);
@@ -52,7 +53,7 @@ checkShiftBtns.forEach((item) => {
         addBodyModal('<input type="hidden" name="actionID" id="actionID" value=' + $(this).parent().parent().attr("value") + '>');
         addBodyModal('<input type="hidden" name="sheetID" id="todoSheetID" value=' + $("#sheetID").val() + '>');
         addBodyModal('<input type = "hidden" name="D/N" id="D/N" value="' + day + '">');
-        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Valider">');
+        setSubmitModal('<input type="submit" class="btn btn-primary" onclick="savePosY()" value="Valider" data-focus>');
         showModal();
     }, false);
 })
