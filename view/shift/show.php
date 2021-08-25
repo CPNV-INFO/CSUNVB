@@ -72,7 +72,7 @@ $title = "CSU-NVB - Remise de garde";
                     </div>
                 </div>
             <?php endforeach; ?>
-            <?php if ($enableStructureChange) : ?>
+            <?php if ($enableDataUpdate) : ?>
                 <div style="align-items: center; margin-bottom: 5px" class="d-flex">
                     <div class="flex-container column" style="margin: 5px;align-items: center; -webkit-align-items: center; ">
                         <div class="flex-item" style="margin-bottom: 5px">
@@ -150,7 +150,7 @@ $title = "CSU-NVB - Remise de garde";
                     </div>
                 </div>
             <?php endforeach; ?>
-            <?php if ($enableStructureChange) : ?>
+            <?php if ($enableDataUpdate) : ?>
                 <div style="align-items: center;display: flex;margin-bottom: 5px" class="d-flex">
                     <div class="flex-container column" style="margin: 5px;align-items: center; -webkit-align-items: center; ">
                         <div class="flex-item" style="margin-bottom: 5px">

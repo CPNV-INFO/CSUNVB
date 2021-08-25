@@ -78,10 +78,10 @@ function shiftShow($shiftid)
     $shiftsheet["teamNight"] = getShiftTeam($shiftsheet["id"], 0);
     $sections = getshiftsections($shiftid, $shiftsheet["baseID"]);
 
-    $enableDataUpdate = ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true);
+    $enableDataUpdate = ($shiftsheet['status'] == "blank" || $shiftsheet['status'] == "open");
     $enableFilling = canIEditShift($shiftsheet);
     $enableStateChange = ((date('Y-m-d') <= date('Y-m-d', strtotime($shiftsheet["date"] . ' + 3 days'))) or $_SESSION['user']['admin']);
-    $enableStructureChange = ($shiftsheet['status'] == "blank" && $_SESSION['user']['admin'] == true);
+    $enableStructureChange = ($shiftsheet['status'] == "blank");
 
     $model = getModelByID($shiftsheet['model']);
     $novas = getNovas();
