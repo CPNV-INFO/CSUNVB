@@ -80,6 +80,7 @@ function updateUser()
     $user["firstname"] = ucfirst($_POST["fname"]);
     $user["lastname"] = ucfirst($_POST["lname"]);
     $user["initials"] = strtoupper($_POST["initials"]);
+    $user["status"] = $_POST["status"];
     if (saveUser($user)) {
         setFlashMessage("L'utilisateur a été enregistré");
     } else {

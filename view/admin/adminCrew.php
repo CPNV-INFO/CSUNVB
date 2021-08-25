@@ -27,7 +27,7 @@ $title = "CSU-NVB - Administration - Secouristes";
     </thead>
     <tbody>
     <?php foreach ($users as $user) { ?>
-        <tr id="user-<?= $user['id'] ?>">
+        <tr id="user-<?= $user['id'] ?>" <?= $user['status'] == 2 ? 'class=bg-secondary' :'' ?>>
         <td style="width: 110px">
             <div style="margin: 0 !important;" class="row">
                 <div style="margin-top: 5px">
@@ -39,7 +39,6 @@ $title = "CSU-NVB - Administration - Secouristes";
                     </a>
                 </div>
             </div>
-
         </td>
         <td><?= $user['firstname'] ?></td>
         <td><?= $user['lastname'] ?></td>

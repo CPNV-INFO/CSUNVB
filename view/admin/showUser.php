@@ -27,6 +27,13 @@ $title = "CSU-NVB - Administration - Planning";
         <div class="col-form-label col-2">Initiales</div>
         <input type="text" name="initials" style="text-transform: uppercase;" minlength="3" maxlength="3" class="form-control col-1" value="<?= $user["initials"] ?>"/>
     </div>
+    <div class="form-row">
+        <div class="col-form-label col-2">Status</div>
+        <select name="status">
+            <option value="1" <?= $user['status'] == 1 ? 'selected' : ''?>>Actif</option>
+            <option value="2" <?= $user['status'] == 2 ? 'selected' : ''?>>Inactif</option>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary m-1">Enregistrer</button>
     <a class="btn btn-secondary m-1" href="?action=adminCrew">Annuler</a>
 </form>

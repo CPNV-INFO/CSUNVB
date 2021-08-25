@@ -29,9 +29,8 @@ function SaveUserPassword($hash, $id)       //Met à jour le mdp d'un utilisateu
 function saveUser($user)
 {
     unset($user['password']);
-    unset($user['status']);
     unset($user['number']);
-    return execute("UPDATE users SET firstname= :firstname, lastname= :lastname, initials = :initials, admin = :admin, email = :email, mobileNumber = :mobileNumber where id = :id", $user);
+    return execute("UPDATE users SET firstname= :firstname, lastname= :lastname, initials = :initials, admin = :admin, email = :email, mobileNumber = :mobileNumber, status = :status where id = :id", $user);
 }
 
 /** return the user from database
