@@ -266,21 +266,39 @@ $title = "CSU-NVB - Remise de garde";
                             </button>
                         </td>
                     <?php else: ?>
-                        <td <?= ($shiftsheet['status'] == 'close' and count($action["checksDay"]) == 0) ? 'class="incompleteTask"' : '' ?> >
-                            <?php foreach ($action["checksDay"] as $check): ?>
-                                <?= $check["initials"] ?>
-                            <?php endforeach; ?>
-                        </td>
-                        <td <?= ($shiftsheet['status'] == 'close' and count($action["checksNight"]) == 0) ? 'class="incompleteTask"' : '' ?> >
-                            <?php foreach ($action["checksNight"] as $check): ?>
-                                <?= $check["initials"] ?>
-                            <?php endforeach; ?>
+                        <td>
+                            <?php if (!$enableStructureChange) : // don't show feedback cells' content while working on structure ?>
+                                <?php if (count($action["checksDay"]) == 0) : ?>
+                                    <div class="incompleteTask pl-5 pr-5">&nbsp;</div>
+                                <?php else : ?>
+                                    <div class="<?= $action["checksDay"][0]["value"] == 0 ? "bg-light text-muted pl-5 pr-5" : "bg-success pl-5 pr-5" ?>">
+                                        <?php foreach ($action["checksDay"] as $check): ?>
+                                            <?= $check["initials"] ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </td>
                         <td>
-                            <?php foreach ($action["comments"] as $comment): ?>
-                                [ <?= $comment['initials'] ?>, <?= $comment['time'] ?> ] : <?= $comment['message'] ?>
-                                <br>
-                            <?php endforeach; ?>
+                            <?php if (!$enableStructureChange) : // don't show feedback cells' content while working on structure  ?>
+                                <?php if (count($action["checksNight"]) == 0) : ?>
+                                    <div class="incompleteTask pl-5 pr-5">&nbsp;</div>
+                                <?php else : ?>
+                                    <div class="<?= $action["checksNight"][0]["value"] == 0 ? "bg-light text-muted pl-5 pr-5" : "bg-success pl-5 pr-5" ?>">
+                                        <?php foreach ($action["checksNight"] as $check): ?>
+                                            <?= $check["initials"] ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if (!$enableStructureChange) : // don't show comment cells' content while working on structure  ?>
+                                <?php foreach ($action["comments"] as $comment): ?>
+                                    [ <?= $comment['initials'] ?>, <?= $comment['time'] ?> ] : <?= $comment['message'] ?>
+                                    <br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </td>
                     <?php endif; ?>
                 </tr>
